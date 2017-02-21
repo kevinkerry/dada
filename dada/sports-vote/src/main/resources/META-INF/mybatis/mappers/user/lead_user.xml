@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.vote.domain.user.LeadUser" >
+	<resultMap id="leadUserResult" type="LeadUser" >
+	<id column="id" property="id" />
+	<result column="userId" property="userId" />
+	<result column="createTime" property="createTime" />
+	</resultMap>
+<sql id="commonSelect" >
+		select * 
+		from leadUser u
+</sql>
+<select id="getById" resultMap="leadUserResult" parameterType="java.lang.Long" >
+	<include refid="commonSelect"/>
+	where u.id = #{id}
+</select>
+<select id="queryPage" resultMap="leadUserResult">
+	 <include refid="commonSelect"/>
+</select>
+<delete id="delete" parameterType="LeadUser" >
+	 delete from leadUser
+	where id = #{id}
+</delete>
+<insert id="save" parameterType="LeadUser" >
+	insert into leadUser (id,userId,createTime
+)
+ values (#{id},#{userId},#{createTime}
+)
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+</insert>
+<update id="update" parameterType="LeadUser" >
+	update leadUser set userId=#{userId},createTime=#{createTime}
+	where id = #{id}
+</update>
+
+</mapper>

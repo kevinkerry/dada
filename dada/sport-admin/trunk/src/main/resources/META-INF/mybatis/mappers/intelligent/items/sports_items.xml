@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.youyisi.admin.domain.intelligent.items.SportsItems">
+
+	<resultMap type="SportsItems" id="sportsItemsMap">
+		<id column="id" property="id" />
+		<result column="achievement" property="achievement" />
+		<result column="name" property="name" />
+		<result column="startTime" property="startTime" />
+		<result column="endTime" property="endTime" />
+		<result column="userId" property="userId" />
+	</resultMap>
+	<sql id="commonSelect">
+		select s.id as id,
+		       s.achievement as achievement,
+		        s.userId as userId,
+			   s.name as name,
+			   s.startTime as startTime,
+			    s.endTime as endTime
+		from website.sportsItems s
+	</sql>
+	
+	<select id="getById" parameterType="java.lang.Long" resultMap="sportsItemsMap">
+		<include refid="commonSelect"/>
+		where s.id=#{id}
+	</select>
+	
+	<select id="getByUserId" parameterType="java.lang.Long" resultMap="sportsItemsMap">
+		<include refid="commonSelect"/>
+		where s.userId=#{id}
+	</select>
+	
+	
+	<insert id="save" parameterType="SportsItems">
+		insert into website.sportsItems(achievement,name,startTime,endTime,userId) 
+			        values (#{achievement},#{name},#{startTime},#{endTime},#{userId})
+		<selectKey keyProperty="id" resultType="java.lang.Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	
+	
+	
+	<update id="update" parameterType="SportsItems">
+		update website.sportsItems s set s.achievement=#{achievement},s.name=#{name},s.startTime=#{startTime},s.endTime=#{endTime},s.userId=#{userId}
+		where s.id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="SportsItems">
+		delete from website.sportsItems where id=#{id}
+	</delete>
+	
+	
+	<select id="queryPage" resultMap="sportsItemsMap">
+		<include refid="commonSelect"/>
+		<where>
+			<if test="params.name != null and params.name != ''">
+				s.name like concat(concat('%',#{params.name}),'%')
+			</if>
+		</where>
+	</select>
+
+</mapper>

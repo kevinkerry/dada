@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.soa.infrastructure.persist.show.ShowMapper" >
+ <resultMap id="BaseResultMap" type="Show">
+		<id column="SHOW_ID" property="showId" jdbcType="BIGINT" />
+		<result column="SHOW_DESC" property="showDesc" jdbcType="VARCHAR" />
+		<result column="PARENT_CATEGORY" property="parentCategory"
+			jdbcType="VARCHAR" />
+		<result column="CATEGORY_CODE" property="categoryCode"
+			jdbcType="VARCHAR" />
+		<result column="CITY" property="city" jdbcType="VARCHAR" />
+		<result column="GPS_X" property="gpsX" jdbcType="VARCHAR" />
+		<result column="GPS_Y" property="gpsY" jdbcType="VARCHAR" />
+		<result column="LOCATION" property="locations" jdbcType="VARCHAR" />
+		<result column="RECOMMEND_FLAG" property="recommendFlag"
+			jdbcType="INTEGER" />
+		<result column="VIEW_QUANTITY" property="viewQuantity"
+			jdbcType="INTEGER" />
+		<result column="FOCUS_WEIGHT" property="focusWeight" jdbcType="INTEGER" />
+		<result column="CREATOR" property="creator" jdbcType="BIGINT" />
+		<result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+		<result column="MODIFIER" property="modifier" jdbcType="BIGINT" />
+		<result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+
+	</resultMap>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		T_SPORT_SHOW
+		where SHOW_ID = #{showId,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="Show" useGeneratedKeys="true"
+		keyProperty="showId">
+		insert into T_SPORT_SHOW (SHOW_DESC, PARENT_CATEGORY,
+		CATEGORY_CODE, CITY, GPS_X,
+		GPS_Y,LOCATION,RECOMMEND_FLAG,VIEW_QUANTITY, FOCUS_WEIGHT,
+		CREATOR, CREATED_TIME, MODIFIER,
+		UPDATED_TIME, STATUS)
+		values
+		(#{showDesc,jdbcType=VARCHAR}, #{parentCategory,jdbcType=VARCHAR},
+		#{categoryCode,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR},
+		#{gpsX,jdbcType=VARCHAR},
+		#{gpsY,jdbcType=VARCHAR},
+		#{locations,jdbcType=VARCHAR},
+		#{recommendFlag,jdbcType=INTEGER},
+		#{viewQuantity,jdbcType=INTEGER}, #{focusWeight,jdbcType=INTEGER},
+		#{creator,jdbcType=BIGINT}, #{createdTime,jdbcType=TIMESTAMP},
+		#{modifier,jdbcType=BIGINT},
+		#{updatedTime,jdbcType=TIMESTAMP},
+		#{status,jdbcType=CHAR})
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="Show">
+		update
+		T_SPORT_SHOW
+		set SHOW_DESC = #{showDesc,jdbcType=VARCHAR},
+		PARENT_CATEGORY = #{parentCategory,jdbcType=VARCHAR},
+		CATEGORY_CODE =
+		#{categoryCode,jdbcType=VARCHAR},
+		CITY = #{city,jdbcType=VARCHAR},
+		GPS_X = #{gpsX,jdbcType=VARCHAR},
+		GPS_Y = #{gpsY,jdbcType=VARCHAR},
+		LOCATION=#{locations,jdbcType=VARCHAR},
+		RECOMMEND_FLAG=#{recommendFlag,jdbcType=INTEGER},
+		VIEW_QUANTITY = #{viewQuantity,jdbcType=INTEGER},
+		FOCUS_WEIGHT =
+		#{focusWeight,jdbcType=INTEGER},
+		CREATOR = #{creator,jdbcType=BIGINT},
+		CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+		MODIFIER =
+		#{modifier,jdbcType=BIGINT},
+		UPDATED_TIME =
+		#{updatedTime,jdbcType=TIMESTAMP},
+		STATUS = #{status,jdbcType=CHAR}
+		where SHOW_ID = #{showId,jdbcType=BIGINT}
+	</update>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select SHOW_ID, SHOW_DESC, PARENT_CATEGORY,
+		CATEGORY_CODE, CITY, GPS_X,
+		GPS_Y,LOCATION, RECOMMEND_FLAG,VIEW_QUANTITY,
+		FOCUS_WEIGHT, CREATOR,
+		CREATED_TIME, MODIFIER, UPDATED_TIME, STATUS
+		from T_SPORT_SHOW
+		where
+		SHOW_ID = #{showId,jdbcType=BIGINT}
+	</select>
+	<select id="selectAll" resultMap="BaseResultMap">
+		select SHOW_ID, SHOW_DESC, PARENT_CATEGORY,
+		CATEGORY_CODE, CITY, GPS_X,
+		GPS_Y,LOCATION, RECOMMEND_FLAG,VIEW_QUANTITY,
+		FOCUS_WEIGHT, CREATOR,
+		CREATED_TIME, MODIFIER, UPDATED_TIME, STATUS
+		from T_SPORT_SHOW
+	</select>
+
+	<select id="queryPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select SHOW_ID, SHOW_DESC, PARENT_CATEGORY,
+		CATEGORY_CODE, CITY, GPS_X,
+		GPS_Y,LOCATION, RECOMMEND_FLAG,VIEW_QUANTITY,
+		FOCUS_WEIGHT, CREATOR,
+		CREATED_TIME, MODIFIER, UPDATED_TIME, STATUS
+		from T_SPORT_SHOW t
+		where 1=1
+		<include refid="query" />
+		limit ${offset},${pageSize}
+	</select>
+
+	<select id="getCount" parameterType="java.util.Map" resultType="java.lang.Long">
+		select count(1) from T_SPORT_SHOW t
+		where 1=1
+		<include refid="query" />
+	</select>
+
+	<sql id="query">
+
+	</sql>
+</mapper>

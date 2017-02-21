@@ -1,0 +1,103 @@
+html, body {
+    height: 100%;
+    background-color: #fff;
+}
+.header {
+    position: relative;
+    height: 50px;
+}
+.header .logo {
+    position: absolute;
+    left: 1%;
+    top: 50%;
+    width: 100px;
+    height: 40px;
+    transform: translateY(-50%);
+}
+.header .btn-add {
+    position: absolute;
+    right: 1%;
+    top: 50%;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    background-color: #eb5f25;
+    outline: none;
+    transform: translateY(-50%);
+}
+.u-search, .u-user-container {
+    width: 98%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.u-search {
+    position: relative;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+.u-search .form-search {
+    display: block;
+    width: 100%;
+    padding: 5px 60px 5px 5px;
+    border-radius: 5px;
+    border: 1px solid #eb5f25;
+    font-size: 1.1rem;
+    padding: 12px 60px 12px 5px;
+    min-height: 40px;
+    outline: none;
+}
+.u-search .btn-search {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 100px;
+    height: 55px;
+    border: none;
+    background: url(../images/search.png) 58px no-repeat;
+    background-size: 45px 45px;
+    transform: translateY(-50%);
+}
+.u-user-container .u-user-list {
+    float: left;
+    width: 49.5%;
+}
+.u-user-container .u-user-list:first-child {
+    margin-right: 1%;
+}
+.u-user-list .item {
+    margin-bottom: 5px;
+}
+.u-user-list .item .user-img {
+    display: block;
+    width: 100%;
+    border: 1px solid #ddd;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+.u-user-list .item .user-info {
+    padding: 10px 12px;
+    color: #B4B4B4;
+    border: 1px solid #ddd;
+    border-top: none;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.u-user-list .item .user-id {
+    margin-right: 10px;
+}
+.loading {
+    opacity: 0;
+    text-align: center;
+    transition: all 0.3s ease-in-out 0.1s;
+}
+.loading .loading-img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5px;
+}

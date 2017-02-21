@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.vote.domain.luck.Luck" >
+	<resultMap id="luckResult" type="Luck" >
+	<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="num" property="num" />
+		<result column="total" property="total" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select l.id, l.name, l.num, l.total
+		from luck l
+	</sql>
+	<select id="getById" resultMap="luckResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where l.id = #{id}
+	</select>
+	<select id="selectById" resultMap="luckResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where l.id = #{luckId}
+	</select>
+	
+	<select id="getLuck" resultMap="luckResult"  >
+		<include refid="commonSelect"/>
+		order by l.id asc
+	</select>
+	<select id="queryPage" resultMap="luckResult">
+		<include refid="commonSelect"/>
+		order by l.id asc
+	</select>
+	
+	
+	<delete id="delete" parameterType="Luck" >
+		delete from luck
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="Luck" >
+		insert into luck (id,name,num,total
+		)
+ 		values (#{id},#{name},#{num},#{total}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="Luck" >
+		update luck set name=#{name},num=#{num},total=#{total}
+		where id = #{id}
+</update>
+</mapper>

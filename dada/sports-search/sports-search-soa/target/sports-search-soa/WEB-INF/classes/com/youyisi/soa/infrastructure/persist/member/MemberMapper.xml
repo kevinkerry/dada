@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.soa.infrastructure.persist.member.MemberMapper">
+	<resultMap id="MemberMap" type="Member">
+		<id column="MEMBER_ID" property="memberId" jdbcType="BIGINT" />
+    <result column="MEMBER_CODE" property="memberCode" jdbcType="VARCHAR" />
+    <result column="USER_ID" property="userId" jdbcType="BIGINT" />
+    <result column="USER_CODE" property="userCode" jdbcType="VARCHAR" />
+    <result column="MEMBER_NAME" property="memberName" jdbcType="VARCHAR" />
+    <result column="MEMBER_ALIAS" property="memberAlias" jdbcType="VARCHAR" />
+    <result column="MEMBER_HEIGHT" property="memberHeight" jdbcType="INTEGER" />
+    <result column="MEMBER_WEIGHT" property="memberWeight" jdbcType="DOUBLE" />
+    <result column="SEX" property="sex" jdbcType="CHAR" />
+    <result column="BIRTHDAY" property="birthday" jdbcType="TIMESTAMP" />
+    <result column="MEMBER_LOGO" property="memberLogo" jdbcType="VARCHAR" />
+    <result column="BACKDROP_IMG" property="backdropImg" jdbcType="VARCHAR" />
+    <result column="CITY" property="city" jdbcType="VARCHAR" />
+    <result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="MEMBER_STATE" property="memberState" jdbcType="CHAR" />
+    <result column="MEMBER_LEVEL" property="memberLevel" jdbcType="BIGINT" />
+    <result column="CONSTELLATION" property="constellation" jdbcType="VARCHAR" />
+    <result column="MARITAL_STATUS" property="maritalStatus" jdbcType="CHAR" />
+    <result column="HOMETOWN" property="hometown" jdbcType="VARCHAR" />
+    <result column="OCCUPATION" property="occupation" jdbcType="VARCHAR" />
+    <result column="LIVING_SCOPE" property="livingScope" jdbcType="VARCHAR" />
+    <result column="MEMBER_DESC" property="memberDesc" jdbcType="VARCHAR" />
+    <result column="SCHOOL" property="school" jdbcType="VARCHAR" />
+    <result column="WORKUNIT" property="workunit" jdbcType="VARCHAR" />
+    <result column="PROFESSION" property="profession" jdbcType="VARCHAR" />
+    <result column="DEGREE" property="degree" jdbcType="VARCHAR" />
+    <result column="SPORT_CATEGORY01" property="sportCategory01" jdbcType="VARCHAR" />
+    <result column="SPORT_CATEGORY02" property="sportCategory02" jdbcType="VARCHAR" />
+    <result column="SPORT_CATEGORY03" property="sportCategory03" jdbcType="VARCHAR" />
+    <result column="SPORT_CATEGORY04" property="sportCategory04" jdbcType="VARCHAR" />
+    <result column="SPORT_CATEGORY05" property="sportCategory05" jdbcType="VARCHAR" />
+    <result column="RECOMMENDED_CODE" property="recommendedCode" jdbcType="VARCHAR" />
+    <result column="WECHAT" property="wechat" jdbcType="VARCHAR" />
+    <result column="COMMENTS" property="comments" jdbcType="VARCHAR" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="MODIFIER" property="modifier" jdbcType="VARCHAR" />
+    <result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="RECOMMEND_ORDER" property="recommendOrder" jdbcType="INTEGER" />
+    <result column="RECOMMEND_FLAG" property="recommendFlag" jdbcType="INTEGER" />
+    <result column="BASIC_INFO" property="basicInfo" jdbcType="INTEGER" />
+    <result column="CERTIFICATION" property="certification" jdbcType="INTEGER" />
+    <result column="TAG" property="tag" jdbcType="VARCHAR" />
+    <result column="WORK_ADDRESS" property="workAddress" jdbcType="VARCHAR" />
+    <result column="PHONE_INFO" property="phoneInfo" jdbcType="VARCHAR" />
+    <result column="OFTEN_VENUE" property="oftenVenue" jdbcType="VARCHAR" />
+    <result column="MONEY_PACKAGE" property="moneyPackage" jdbcType="VARCHAR" />
+    <result column="WANT_SEX" property="wantSex" jdbcType="CHAR" />
+    <result column="WANT_CATEGORY" property="wantCategory" jdbcType="VARCHAR" />
+    <result column="CREATE_TOPIC" property="createTopic" jdbcType="INTEGER" />
+    <result column="SUCCESS_TOPIC" property="successTopic" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<resultMap id="ApplyMemberMap" type="com.youyisi.sports.model.custom.ApplyMember">
+		<result column="USER_ID" property="userId" jdbcType="BIGINT" />
+		<result column="MEMBER_ALIAS" property="memberAlias" jdbcType="VARCHAR" />
+		<result column="SEX" property="sex" jdbcType="CHAR" />
+		<result column="MEMBER_LOGO" property="memberLogo" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="getApplyMemberByUserId" resultMap="ApplyMemberMap"
+		parameterType="java.lang.Long">
+		select  USER_ID, MEMBER_ALIAS, SEX,  MEMBER_LOGO
+       from T_SPORT_MEMBER
+       where USER_ID = #{userId,jdbcType=BIGINT}
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		T_SPORT_MEMBER
+		where MEMBER_ID = #{memberId,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="Member" useGeneratedKeys="true"
+		keyProperty="memberId">
+		insert into T_SPORT_MEMBER (MEMBER_CODE, USER_ID, 
+      USER_CODE, MEMBER_NAME, MEMBER_ALIAS, 
+      MEMBER_HEIGHT, MEMBER_WEIGHT, SEX, 
+      BIRTHDAY, MEMBER_LOGO, BACKDROP_IMG, 
+      CITY, MOBILE, EMAIL, 
+      MEMBER_STATE, MEMBER_LEVEL, CONSTELLATION, 
+      MARITAL_STATUS, HOMETOWN, OCCUPATION, 
+      LIVING_SCOPE, MEMBER_DESC, SCHOOL, 
+      WORKUNIT, PROFESSION, DEGREE, 
+      SPORT_CATEGORY01, SPORT_CATEGORY02, SPORT_CATEGORY03, 
+      SPORT_CATEGORY04, SPORT_CATEGORY05, RECOMMENDED_CODE, 
+      WECHAT, COMMENTS, CREATED_TIME, 
+      MODIFIER, UPDATED_TIME, RECOMMEND_ORDER, 
+      RECOMMEND_FLAG, BASIC_INFO, CERTIFICATION, 
+      TAG, WORK_ADDRESS, PHONE_INFO, 
+      OFTEN_VENUE, MONEY_PACKAGE, WANT_SEX, 
+      WANT_CATEGORY, CREATE_TOPIC, SUCCESS_TOPIC
+      )
+    values ( #{memberCode,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT}, 
+      #{userCode,jdbcType=VARCHAR}, #{memberName,jdbcType=VARCHAR}, #{memberAlias,jdbcType=VARCHAR}, 
+      #{memberHeight,jdbcType=INTEGER}, #{memberWeight,jdbcType=DOUBLE}, #{sex,jdbcType=CHAR}, 
+      #{birthday,jdbcType=TIMESTAMP}, #{memberLogo,jdbcType=VARCHAR}, #{backdropImg,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{memberState,jdbcType=CHAR}, #{memberLevel,jdbcType=BIGINT}, #{constellation,jdbcType=VARCHAR}, 
+      #{maritalStatus,jdbcType=CHAR}, #{hometown,jdbcType=VARCHAR}, #{occupation,jdbcType=VARCHAR}, 
+      #{livingScope,jdbcType=VARCHAR}, #{memberDesc,jdbcType=VARCHAR}, #{school,jdbcType=VARCHAR}, 
+      #{workunit,jdbcType=VARCHAR}, #{profession,jdbcType=VARCHAR}, #{degree,jdbcType=VARCHAR}, 
+      #{sportCategory01,jdbcType=VARCHAR}, #{sportCategory02,jdbcType=VARCHAR}, #{sportCategory03,jdbcType=VARCHAR}, 
+      #{sportCategory04,jdbcType=VARCHAR}, #{sportCategory05,jdbcType=VARCHAR}, #{recommendedCode,jdbcType=VARCHAR}, 
+      #{wechat,jdbcType=VARCHAR}, #{comments,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, 
+      #{modifier,jdbcType=VARCHAR}, #{updatedTime,jdbcType=TIMESTAMP}, #{recommendOrder,jdbcType=INTEGER}, 
+      #{recommendFlag,jdbcType=INTEGER}, #{basicInfo,jdbcType=INTEGER}, #{certification,jdbcType=INTEGER}, 
+      #{tag,jdbcType=VARCHAR}, #{workAddress,jdbcType=VARCHAR}, #{phoneInfo,jdbcType=VARCHAR}, 
+      #{oftenVenue,jdbcType=VARCHAR}, #{moneyPackage,jdbcType=VARCHAR}, #{wantSex,jdbcType=CHAR}, 
+      #{wantCategory,jdbcType=VARCHAR}, #{createTopic,jdbcType=INTEGER}, #{successTopic,jdbcType=INTEGER}
+      )
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="Member">
+		update T_SPORT_MEMBER
+    set MEMBER_CODE = #{memberCode,jdbcType=VARCHAR},
+      USER_ID = #{userId,jdbcType=BIGINT},
+      USER_CODE = #{userCode,jdbcType=VARCHAR},
+      MEMBER_NAME = #{memberName,jdbcType=VARCHAR},
+      MEMBER_ALIAS = #{memberAlias,jdbcType=VARCHAR},
+      MEMBER_HEIGHT = #{memberHeight,jdbcType=INTEGER},
+      MEMBER_WEIGHT = #{memberWeight,jdbcType=DOUBLE},
+      SEX = #{sex,jdbcType=CHAR},
+      BIRTHDAY = #{birthday,jdbcType=TIMESTAMP},
+      MEMBER_LOGO = #{memberLogo,jdbcType=VARCHAR},
+      BACKDROP_IMG = #{backdropImg,jdbcType=VARCHAR},
+      CITY = #{city,jdbcType=VARCHAR},
+      MOBILE = #{mobile,jdbcType=VARCHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      MEMBER_STATE = #{memberState,jdbcType=CHAR},
+      MEMBER_LEVEL = #{memberLevel,jdbcType=BIGINT},
+      CONSTELLATION = #{constellation,jdbcType=VARCHAR},
+      MARITAL_STATUS = #{maritalStatus,jdbcType=CHAR},
+      HOMETOWN = #{hometown,jdbcType=VARCHAR},
+      OCCUPATION = #{occupation,jdbcType=VARCHAR},
+      LIVING_SCOPE = #{livingScope,jdbcType=VARCHAR},
+      MEMBER_DESC = #{memberDesc,jdbcType=VARCHAR},
+      SCHOOL = #{school,jdbcType=VARCHAR},
+      WORKUNIT = #{workunit,jdbcType=VARCHAR},
+      PROFESSION = #{profession,jdbcType=VARCHAR},
+      DEGREE = #{degree,jdbcType=VARCHAR},
+      SPORT_CATEGORY01 = #{sportCategory01,jdbcType=VARCHAR},
+      SPORT_CATEGORY02 = #{sportCategory02,jdbcType=VARCHAR},
+      SPORT_CATEGORY03 = #{sportCategory03,jdbcType=VARCHAR},
+      SPORT_CATEGORY04 = #{sportCategory04,jdbcType=VARCHAR},
+      SPORT_CATEGORY05 = #{sportCategory05,jdbcType=VARCHAR},
+      RECOMMENDED_CODE = #{recommendedCode,jdbcType=VARCHAR},
+      WECHAT = #{wechat,jdbcType=VARCHAR},
+      COMMENTS = #{comments,jdbcType=VARCHAR},
+      CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      MODIFIER = #{modifier,jdbcType=VARCHAR},
+      UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+      RECOMMEND_ORDER = #{recommendOrder,jdbcType=INTEGER},
+      RECOMMEND_FLAG = #{recommendFlag,jdbcType=INTEGER},
+      BASIC_INFO = #{basicInfo,jdbcType=INTEGER},
+      CERTIFICATION = #{certification,jdbcType=INTEGER},
+      TAG = #{tag,jdbcType=VARCHAR},
+      WORK_ADDRESS = #{workAddress,jdbcType=VARCHAR},
+      PHONE_INFO = #{phoneInfo,jdbcType=VARCHAR},
+      OFTEN_VENUE = #{oftenVenue,jdbcType=VARCHAR},
+      MONEY_PACKAGE = #{moneyPackage,jdbcType=VARCHAR},
+      WANT_SEX = #{wantSex,jdbcType=CHAR},
+      WANT_CATEGORY = #{wantCategory,jdbcType=VARCHAR},
+      CREATE_TOPIC = #{createTopic,jdbcType=INTEGER},
+      SUCCESS_TOPIC = #{successTopic,jdbcType=INTEGER}
+    where MEMBER_ID = #{memberId,jdbcType=BIGINT}
+	</update>
+	<select id="selectByPrimaryKey" resultMap="MemberMap"
+		parameterType="java.lang.Long">
+		select MEMBER_ID, MEMBER_CODE, USER_ID, USER_CODE, MEMBER_NAME, MEMBER_ALIAS, MEMBER_HEIGHT, 
+    MEMBER_WEIGHT, SEX, BIRTHDAY, MEMBER_LOGO, BACKDROP_IMG, CITY, MOBILE, EMAIL, MEMBER_STATE, 
+    MEMBER_LEVEL, CONSTELLATION, MARITAL_STATUS, HOMETOWN, OCCUPATION, LIVING_SCOPE, 
+    MEMBER_DESC, SCHOOL, WORKUNIT, PROFESSION, DEGREE, SPORT_CATEGORY01, SPORT_CATEGORY02, 
+    SPORT_CATEGORY03, SPORT_CATEGORY04, SPORT_CATEGORY05, RECOMMENDED_CODE, WECHAT, COMMENTS, 
+    CREATED_TIME, MODIFIER, UPDATED_TIME, RECOMMEND_ORDER, RECOMMEND_FLAG, BASIC_INFO, 
+    CERTIFICATION, TAG, WORK_ADDRESS, PHONE_INFO, OFTEN_VENUE, MONEY_PACKAGE, WANT_SEX, 
+    WANT_CATEGORY, CREATE_TOPIC, SUCCESS_TOPIC
+    from T_SPORT_MEMBER
+    where MEMBER_ID = #{memberId,jdbcType=BIGINT}
+	</select>
+
+
+	<select id="selectByUserId" resultMap="MemberMap" parameterType="java.lang.Long">
+		select MEMBER_ID, MEMBER_CODE, USER_ID, USER_CODE, MEMBER_NAME, MEMBER_ALIAS, MEMBER_HEIGHT, 
+    MEMBER_WEIGHT, SEX, BIRTHDAY, MEMBER_LOGO, BACKDROP_IMG, CITY, MOBILE, EMAIL, MEMBER_STATE, 
+    MEMBER_LEVEL, CONSTELLATION, MARITAL_STATUS, HOMETOWN, OCCUPATION, LIVING_SCOPE, 
+    MEMBER_DESC, SCHOOL, WORKUNIT, PROFESSION, DEGREE, SPORT_CATEGORY01, SPORT_CATEGORY02, 
+    SPORT_CATEGORY03, SPORT_CATEGORY04, SPORT_CATEGORY05, RECOMMENDED_CODE, WECHAT, COMMENTS, 
+    CREATED_TIME, MODIFIER, UPDATED_TIME, RECOMMEND_ORDER, RECOMMEND_FLAG, BASIC_INFO, 
+    CERTIFICATION, TAG, WORK_ADDRESS, PHONE_INFO, OFTEN_VENUE, MONEY_PACKAGE, WANT_SEX, 
+    WANT_CATEGORY, CREATE_TOPIC, SUCCESS_TOPIC
+    from T_SPORT_MEMBER
+		where
+		USER_ID =
+		#{userId}
+	</select>
+
+	<select id="selectAll" resultMap="MemberMap">
+		select MEMBER_ID, MEMBER_CODE, USER_ID, USER_CODE, MEMBER_NAME, MEMBER_ALIAS, MEMBER_HEIGHT, 
+    MEMBER_WEIGHT, SEX, BIRTHDAY, MEMBER_LOGO, BACKDROP_IMG, CITY, MOBILE, EMAIL, MEMBER_STATE, 
+    MEMBER_LEVEL, CONSTELLATION, MARITAL_STATUS, HOMETOWN, OCCUPATION, LIVING_SCOPE, 
+    MEMBER_DESC, SCHOOL, WORKUNIT, PROFESSION, DEGREE, SPORT_CATEGORY01, SPORT_CATEGORY02, 
+    SPORT_CATEGORY03, SPORT_CATEGORY04, SPORT_CATEGORY05, RECOMMENDED_CODE, WECHAT, COMMENTS, 
+    CREATED_TIME, MODIFIER, UPDATED_TIME, RECOMMEND_ORDER, RECOMMEND_FLAG, BASIC_INFO, 
+    CERTIFICATION, TAG, WORK_ADDRESS, PHONE_INFO, OFTEN_VENUE, MONEY_PACKAGE, WANT_SEX, 
+    WANT_CATEGORY, CREATE_TOPIC, SUCCESS_TOPIC
+    from T_SPORT_MEMBER
+	</select>
+
+	<select id="queryPage" resultMap="MemberMap" parameterType="java.util.Map">
+		select MEMBER_ID, MEMBER_CODE, USER_ID, USER_CODE, MEMBER_NAME, MEMBER_ALIAS, MEMBER_HEIGHT, 
+    MEMBER_WEIGHT, SEX, BIRTHDAY, MEMBER_LOGO, BACKDROP_IMG, CITY, MOBILE, EMAIL, MEMBER_STATE, 
+    MEMBER_LEVEL, CONSTELLATION, MARITAL_STATUS, HOMETOWN, OCCUPATION, LIVING_SCOPE, 
+    MEMBER_DESC, SCHOOL, WORKUNIT, PROFESSION, DEGREE, SPORT_CATEGORY01, SPORT_CATEGORY02, 
+    SPORT_CATEGORY03, SPORT_CATEGORY04, SPORT_CATEGORY05, RECOMMENDED_CODE, WECHAT, COMMENTS, 
+    CREATED_TIME, MODIFIER, UPDATED_TIME, RECOMMEND_ORDER, RECOMMEND_FLAG, BASIC_INFO, 
+    CERTIFICATION, TAG, WORK_ADDRESS, PHONE_INFO, OFTEN_VENUE, MONEY_PACKAGE, WANT_SEX, 
+    WANT_CATEGORY, CREATE_TOPIC, SUCCESS_TOPIC
+    from T_SPORT_MEMBER t
+		where 1=1
+		<include refid="query" />
+		<if test="pageSize!=0">
+			limit ${offset},${pageSize}
+		</if>
+	</select>
+
+	<select id="queryAroundPage" resultMap="MemberMap"
+		parameterType="java.util.Map">
+		select t.MEMBER_ID, t.MEMBER_CODE,
+		t.USER_ID, t.USER_CODE,
+		t.MEMBER_NAME,
+		t.MEMBER_ALIAS,t.MEMBER_HEIGHT, t.MEMBER_WEIGHT, t.SEX,
+		t.BIRTHDAY,
+		t.MEMBER_LOGO,t.BACKDROP_IMG, t.CITY,
+		t.MOBILE, t.EMAIL,
+		t.MEMBER_STATE, t.MEMBER_LEVEL,
+		t.CONSTELLATION,
+		t.MARITAL_STATUS,
+		t.HOMETOWN,
+		t.OCCUPATION, t.LIVING_SCOPE,
+		t.MEMBER_DESC,
+		t.SCHOOL,t.WORKUNIT, t.PROFESSION,
+		t.DEGREE,
+		t.SPORT_CATEGORY01,
+		t.SPORT_CATEGORY02, t.SPORT_CATEGORY03,
+		t.SPORT_CATEGORY04,
+		t.SPORT_CATEGORY05,
+		t.RECOMMENDED_CODE,t.WECHAT, t.COMMENTS,
+		t.CREATED_TIME,
+		t.MODIFIER,
+		t.UPDATED_TIME,(ACOS(SIN((#{lat}* 3.1415) /
+		180 ) *
+		SIN((gps.GPS_X * 3.1415) / 180 )+COS((#{lat} * 3.1415) / 180 )
+		*
+		COS((gps.GPS_X * 3.1415) / 180 )*COS((#{lon}* 3.1415) / 180 -
+		(gps.GPS_Y * 3.1415) / 180 ))*6380000) AS distance
+		from
+		T_SPORT_MEMBER t
+		left join T_SPORT_USER_GPS gps on
+		gps.USER_ID=t.USER_ID
+		where 1=1
+		and
+		gps.GPS_X &lt;&gt; 0
+		and t.USER_ID!=#{userId}
+		AND gps.GPS_Y &gt;
+		#{around[1]}
+		AND gps.GPS_Y &lt;
+		#{around[3]}
+		AND gps.GPS_X &gt;
+		#{around[0]}
+		AND gps.GPS_X &lt;
+		#{around[2]}
+		and t.USER_ID not in (select
+		MEMBER_ID from
+		T_SPORT_FRIENDS where USER_ID=#{userId})
+		<include refid="query" />
+		<if test="pageSize!=0">
+			limit ${offset},${pageSize}
+		</if>
+	</select>
+
+	<select id="getAroundCount" parameterType="java.util.Map"
+		resultType="java.lang.Long">
+		select count(1) from
+		T_SPORT_MEMBER t
+		left join
+		T_SPORT_USER_GPS gps on gps.USER_ID=t.USER_ID
+		where 1=1
+		and gps.GPS_X
+		&lt;&gt; 0
+		and t.USER_ID!=#{userId}
+		AND gps.GPS_Y &gt; #{around[1]}
+		AND
+		gps.GPS_Y &lt;
+		#{around[3]}
+		AND gps.GPS_X &gt; #{around[0]}
+		AND gps.GPS_X
+		&lt;
+		#{around[2]}
+		and t.USER_ID not in (select MEMBER_ID from
+		T_SPORT_FRIENDS where USER_ID=#{userId})
+	</select>
+
+	<select id="getCount" parameterType="java.util.Map" resultType="java.lang.Long">
+		select count(1) from T_SPORT_MEMBER t
+		where 1=1
+		<include refid="query" />
+	</select>
+
+	<sql id="query">
+		<if test="userId != null">
+			and t.USER_ID=#{userId}
+		</if>
+	</sql>
+
+
+	<select id="getActivityCommentPraise" resultMap="MemberMap"
+		parameterType="java.lang.Long">
+		SELECT t.*
+		FROM T_SPORT_MEMBER t
+		LEFT JOIN
+		T_SPORT_ACTIVITY_COMMENTS c ON c.CREATOR = t.USER_ID
+		WHERE
+		c.ACTIVITY_ID = #{activityId}
+		AND
+		c.COMMENT_TYPE = 2
+		AND c.STATUS='A'
+		ORDER BY c.CREATED_TIME
+	</select>
+
+	<select id="getShowCommentPraise" resultMap="MemberMap"
+		parameterType="java.lang.Long">
+		SELECT t.* FROM
+		T_SPORT_MEMBER t
+		LEFT JOIN
+		T_SPORT_SHOW_COMMENTS s
+		ON s.CREATOR = t.USER_ID
+		WHERE
+		s.SHOW_ID =
+		#{showId}
+		AND s.COMMENT_TYPE = 2
+		AND s.STATUS = 'A'
+		ORDER BY
+		s.CREATED_TIME
+	</select>
+
+	<select id="getActivityApplyUser" resultMap="MemberMap"
+		parameterType="java.lang.Long">
+		SELECT t.* FROM
+		T_SPORT_MEMBER t
+		LEFT JOIN
+		T_SPORT_ACTIVITY_APPLY a ON t.USER_ID = a.USER_ID
+		WHERE
+		a.ACTIVITY_ID =
+		#{activityId}
+		AND
+		a.AUDIT_STATUS=2
+		ORDER BY a.APPLY_TIME
+	</select>
+
+	<select id="getMemberList" resultMap="MemberMap" parameterType="java.lang.String">
+		SELECT * FROM T_SPORT_MEMBER t
+		WHERE
+		t.MEMBER_ALIAS like CONCAT(CONCAT('%',#{condition}), '%')
+	</select>
+
+	<select id="getAllUserId" resultType="java.lang.Long">
+		select USER_ID
+		from
+		T_SPORT_MEMBER
+	</select>
+
+	<select id="getMemberByTopicId" resultMap="MemberMap"
+		parameterType="java.lang.Long">
+		SELECT t.* FROM T_SPORT_MEMBER t
+		LEFT JOIN T_SPORT_TOPIC_COMMENTS c ON t.USER_ID = c.CREATOR
+		WHERE
+		c.TOPIC_ID = #{topicId}
+		AND c.COMMENT_TYPE = 2
+		AND c.STATUS = 'A'
+		<if test="pageSize!=0">
+			limit ${offset},${pageSize}
+		</if>
+	</select>
+
+
+</mapper>

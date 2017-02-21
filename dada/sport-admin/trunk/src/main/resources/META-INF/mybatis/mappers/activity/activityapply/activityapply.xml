@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.activity.activityapply.ActivityApply">
+	<resultMap id="activityApplyResult" type="ActivityApply">
+		<id column="APPLY_ID" property="applyId" />
+		<result column="USER_ID" property="userId" />
+		<result column="ACTIVITY_ID" property="activityId" />
+		<result column="PHONE" property="phone" />
+		<result column="NAME" property="name" />
+		<result column="WEIXIN" property="weixin" />
+		<result column="WORKUNIT" property="workunit" />
+		<result column="APPLY_DESC" property="applyDesc" />
+		<result column="APPLY_TIME" property="applyTime" />
+		<result column="AUDIT_STATUS" property="auditStatus" />
+		<result column="AUDIT_COMMENTS" property="auditComments" />
+		<result column="AUDIT_TIME" property="auditTime" />
+		<result column="AUDITOR" property="auditor" />
+		<association column="USER_ID" property="member" select="com.youyisi.admin.domain.member.Member.getByUserId"/>
+		
+	</resultMap>
+	<sql id="commonSelect">
+		select t.APPLY_ID, t.ACTIVITY_ID, t.USER_ID,
+		t.PHONE,
+		t.NAME, t.WEIXIN, t.WORKUNIT, t.APPLY_DESC, t.APPLY_TIME,
+		t.AUDIT_STATUS, t.AUDIT_COMMENTS, t.AUDIT_TIME, t.AUDITOR
+		from
+		sports.T_SPORT_ACTIVITY_APPLY t
+	</sql>
+	<select id="getById" resultMap="activityApplyResult"
+		parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where t.APPLY_ID = #{applyId}
+	</select>
+	<select id="getByUserIdAndActivityId" resultMap="activityApplyResult">
+		<include refid="commonSelect" />
+		where t.USER_ID = #{userId} and t.ACTIVITY_ID = #{activityId}
+	</select>
+	<select id="getApplyCount" resultType="Long" parameterType="java.lang.Long">
+		select count(*) from sports.T_SPORT_ACTIVITY_APPLY t where
+		t.ACTIVITY_ID = #{activityId}
+	</select>
+	<select id="queryAll" resultMap="activityApplyResult"
+		parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where t.ACTIVITY_ID = #{activityId}
+	</select>
+
+	<select id="queryPage" resultMap="activityApplyResult">
+		<include refid="commonSelect" />
+		<where>
+			1=1
+			<if test="params.activityId != null">
+				and t.ACTIVITY_ID= #{params.activityId}
+			</if>
+		</where>
+		order by t.APPLY_ID asc
+	</select>
+
+	<delete id="delete" parameterType="ActivityApply">
+		delete from
+		sports.T_SPORT_ACTIVITY_APPLY
+		where APPLY_ID = #{applyId}
+	</delete>
+	<insert id="save" parameterType="ActivityApply">
+		insert into sports.T_SPORT_ACTIVITY_APPLY
+		(APPLY_ID,ACTIVITY_ID,USER_ID,PHONE,NAME,WEIXIN,WORKUNIT,APPLY_DESC,APPLY_TIME,AUDIT_STATUS,AUDIT_COMMENTS,AUDIT_TIME,AUDITOR
+		)
+		values
+		(#{applyId},#{activityId},#{userId},#{phone},#{name},#{weixin},#{workunit},#{applyDesc},#{applyTime},#{auditStatus},#{auditComments},#{auditTime},#{auditor}
+		)
+		<selectKey keyProperty="applyId" resultType="Long"
+			statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="ActivityApply">
+		update
+		sports.T_SPORT_ACTIVITY_APPLY set
+		APPLY_ID=#{applyId},ACTIVITY_ID=#{activityId},USER_ID=#{userId},PHONE=#{phone},NAME=#{name},WEIXIN=#{weixin},WORKUNIT=#{workunit},APPLY_DESC=#{applyDesc},APPLY_TIME=#{applyTime},AUDIT_STATUS=#{auditStatus},AUDIT_COMMENTS=#{auditComments},AUDIT_TIME=#{auditTime},AUDITOR=#{auditor}
+		where APPLY_ID = #{applyId}
+	</update>
+</mapper>
+

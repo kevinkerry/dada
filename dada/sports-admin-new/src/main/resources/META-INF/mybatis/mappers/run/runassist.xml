@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.run.RunAssist">
+	<resultMap id="runAssistResult" type="RunAssist">
+		<id column="id" property="id" />
+		<result column="run_id" property="runId" />
+		<result column="create_time" property="createTime" />
+		<result column="avspeed" property="avspeed" />
+		<result column="distance" property="distance" />
+	</resultMap>
+	<sql id="commonSelect">
+		select r.id, r.run_id, r.create_time,
+		r.avspeed, r.distance
+		from dada_sports.run_assist r
+	</sql>
+	<select id="getById" resultMap="runAssistResult" parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where r.id = #{id}
+	</select>
+	<select id="queryPage" resultMap="runAssistResult">
+		<include refid="commonSelect" />
+		order by r.id asc
+	</select>
+	<delete id="delete" parameterType="RunAssist">
+		delete from
+		dada_sports.run_assist
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="RunAssist">
+		insert into dada_sports.run_assist
+		(id,run_id,create_time,avspeed,distance )
+		values (#{id},#{runId},#{createTime},#{avspeed},#{distance} )
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="RunAssist">
+		update
+		dada_sports.run_assist set
+		run_id=#{runId},create_time=#{createTime},avspeed=#{avspeed},distance=#{distance}
+		where id = #{id}
+	</update>
+	
+	
+	<select id="getRunAssistByRunId" resultMap="runAssistResult">
+		<include refid="commonSelect" />
+		where r.run_id = #{runId}
+		order by r.create_time asc
+	</select>
+	
+</mapper>

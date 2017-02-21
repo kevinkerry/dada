@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.activity.Activity" >
+	<resultMap id="activityResult" type="Activity" >
+	<id column="id" property="id" />
+		<result column="title" property="title" />
+		<result column="cover" property="cover" />
+		<result column="hot" property="hot" />
+		<result column="type" property="type" />
+		<result column="begin_time" property="beginTime" />
+		<result column="end_time" property="endTime" />
+		<result column="date" property="date" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+	</resultMap>
+	
+	<resultMap id="activityWithHugThighActivityResult" type="ActivityWithHugThighActivity" >
+	<id column="id" property="id" />
+		<result column="title" property="title" />
+		<result column="cover" property="cover" />
+		<result column="hot" property="hot" />
+		<result column="type" property="type" />
+		<result column="begin_time" property="beginTime" />
+		<result column="end_time" property="endTime" />
+		<result column="date" property="date" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<association property="hugThighActivity" column="id" select="com.youyisi.sports.domain.thigh.HugThighActivity.getByActivityId"></association>
+	</resultMap>
+	
+	<resultMap id="activityWithInviteFriendActivityResult" type="ActivityWithInviteFriendActivity" >
+	<id column="id" property="id" />
+		<result column="title" property="title" />
+		<result column="cover" property="cover" />
+		<result column="hot" property="hot" />
+		<result column="type" property="type" />
+		<result column="begin_time" property="beginTime" />
+		<result column="end_time" property="endTime" />
+		<result column="date" property="date" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<association property="inviteFriendActivity" column="id" select="com.youyisi.sports.domain.activity.InviteFriendActivity.getByActivityId"></association>
+	</resultMap>
+	
+	<resultMap id="activityWithRelayRaceActivityResult" type="ActivityWithRelayRaceActivity" >
+	<id column="id" property="id" />
+		<result column="title" property="title" />
+		<result column="cover" property="cover" />
+		<result column="hot" property="hot" />
+		<result column="type" property="type" />
+		<result column="begin_time" property="beginTime" />
+		<result column="end_time" property="endTime" />
+		<result column="date" property="date" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<association property="relayRaceActivity" column="id" select="com.youyisi.sports.domain.activity.RelayRaceActivity.getByActivityId"></association>
+	</resultMap>
+	
+	<resultMap id="activityWithSnatchActivityResult" type="ActivityWithSnatchActivity" >
+	<id column="id" property="id" />
+		<result column="title" property="title" />
+		<result column="cover" property="cover" />
+		<result column="hot" property="hot" />
+		<result column="type" property="type" />
+		<result column="begin_time" property="beginTime" />
+		<result column="end_time" property="endTime" />
+		<result column="date" property="date" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<association property="snatchActivity" column="id" select="com.youyisi.sports.domain.snatch.SnatchActivity.getByActivityId"></association>
+	</resultMap>
+	
+	<sql id="commonSelect" >
+		select a.id, a.title, a.cover, a.hot, a.type, a.begin_time, a.end_time, a.date, a.status, a.create_time, a.update_time
+		from dada_sports.activity a
+	</sql>
+	<select id="getById" resultMap="activityResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where a.id = #{id}
+	</select>
+	
+	<select id="getLatest" resultMap="activityWithSnatchActivityResult">
+		<include refid="commonSelect"/>
+		where a.type = #{type} and #{time}>a.begin_time order by a.end_time desc limit 0,1
+	</select>
+	
+	<select id="getActivityWithSnatchActivityById" resultMap="activityWithSnatchActivityResult" parameterType="java.lang.Long"  >
+		<include refid="commonSelect"/>
+		where a.id = #{id}
+	</select>
+	
+	<select id="getActivityWithRelayRaceActivityById" resultMap="activityWithRelayRaceActivityResult" parameterType="java.lang.Long"  >
+		<include refid="commonSelect"/>
+		where a.id = #{id}
+	</select>
+	<select id="getActivityWithHugThighActivityById" resultMap="activityWithHugThighActivityResult" parameterType="java.lang.Long"  >
+		<include refid="commonSelect"/>
+		where a.id = #{id}
+	</select>
+	<select id="getActivityWithInviteFriendActivityById" resultMap="activityWithInviteFriendActivityResult" parameterType="java.lang.Long"  >
+		<include refid="commonSelect"/>
+		where a.id = #{id}
+	</select>
+	
+	<select id="queryPage" resultMap="activityResult">
+		<include refid="commonSelect"/>
+		where 1=1
+		<if test="params.type!=null">
+		and #{params.type}>=a.type
+		</if>
+		<if test="params.status!=null and params.status==0">
+		and #{params.currentDate}>a.begin_time and a.end_time>#{params.currentDate} order by a.date asc
+		</if>
+		<if test="params.status!=null and params.status==-1">
+		and #{params.currentDate}>a.end_time order by a.date desc
+		</if>
+		<if test="params.status!=null and params.status==1">
+		and a.begin_time>#{params.currentDate}  order by a.date asc
+		</if>
+		
+	</select>
+	<delete id="delete" parameterType="Activity" >
+		delete from dada_sports.activity
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="Activity" >
+		insert into dada_sports.activity (id,title,cover,hot,type,begin_time,end_time,date,status,create_time,update_time
+		)
+ 		values (#{id},#{title},#{cover},#{hot},#{type},#{beginTime},#{endTime},#{date},#{status},#{createTime},#{updateTime}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="Activity" >
+		update dada_sports.activity set title=#{title},cover=#{cover},hot=#{hot},type=#{type},begin_time=#{beginTime},end_time=#{endTime},date=#{date},status=#{status},create_time=#{createTime},update_time=#{updateTime}
+		where id = #{id}
+</update>
+</mapper>

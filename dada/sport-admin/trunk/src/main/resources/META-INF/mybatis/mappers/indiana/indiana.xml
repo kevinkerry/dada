@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.indiana.Indiana" >
+	<resultMap id="indianaResult" type="Indiana" >
+		<result column="INDIANA_ID" property="indianaId" />
+		<result column="TITLE" property="title" />
+		<result column="CREATER" property="creater" />
+		<result column="CREATED_TIME" property="createdTime" />
+		<result column="LIMIT" property="limit" />
+		<result column="STATUS" property="status" />
+		<result column="COMPLETE" property="complete" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select t.INDIANA_ID, t.TITLE, t.CREATER, t.CREATED_TIME, t.LIMIT, t.STATUS, t.COMPLETE
+		from sports.T_SPORT_INDIANA t
+	</sql>
+	<select id="getById" resultMap="indianaResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where t.INDIANA_ID = #{indianaId}
+	</select>
+	<select id="queryPage" resultMap="indianaResult">
+		<include refid="commonSelect"/>
+		order by t.INDIANA_ID asc
+	</select>
+	<delete id="delete" parameterType="Indiana" >
+		delete from sports.T_SPORT_INDIANA
+		where INDIANA_ID = #{indianaId}
+	</delete>
+	<insert id="save" parameterType="Indiana" >
+		insert into sports.T_SPORT_INDIANA (INDIANA_ID,TITLE,CREATER,CREATED_TIME,LIMIT,STATUS,COMPLETE
+		)
+ 		values (#{indianaId},#{title},#{creater},#{createdTime},#{limit},#{status},#{complete}
+		)
+		<selectKey keyProperty="indianaId" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="Indiana" >
+		update sports.T_SPORT_INDIANA set INDIANA_ID=#{indianaId},TITLE=#{title},CREATER=#{creater},CREATED_TIME=#{createdTime},LIMIT=#{limit},STATUS=#{status},COMPLETE=#{complete}
+		where INDIANA_ID = #{indianaId}
+	</update>
+</mapper>

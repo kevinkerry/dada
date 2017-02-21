@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.user.UserSnatch">
+	<resultMap id="userSnatchResult" type="UserSnatch">
+		<id column="id" property="id" />
+		<result column="activity_id" property="activityId" />
+		<result column="user_id" property="userId" />
+		<result column="snatch_fee_id" property="snatchFeeId" />
+		<result column="pay_status" property="payStatus" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+	</resultMap>
+
+	<resultMap id="userSnatchMoreResult" type="UserSnatch">
+		<id column="id" property="id" />
+		<result column="activity_id" property="activityId" />
+		<result column="user_id" property="userId" />
+		<result column="snatch_fee_id" property="snatchFeeId" />
+		<result column="pay_status" property="payStatus" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="count" property="count" />
+		<result column="money" property="money" />
+		
+		<association property="user" column="user_id" select="com.youyisi.admin.domain.user.User.getById"/>
+		
+		<association property="bonus" column="{userId=user_id,activityId=activity_id}" select="com.youyisi.admin.domain.snatch.SnatchWin.getSnatchWinByActivityIdAndUserId"/>
+	</resultMap>
+	
+
+	<sql id="commonSelect">
+		select u.id, u.activity_id, u.user_id,
+		u.snatch_fee_id, u.pay_status, u.status, u.create_time
+		from
+		dada_sports.user_snatch u
+	</sql>
+	<select id="getById" resultMap="userSnatchResult" parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where u.id = #{id}
+	</select>
+	<select id="getByActivityId" resultMap="userSnatchMoreResult"
+		parameterType="java.lang.Long">
+		select u.id, u.activity_id, u.user_id,
+		u.snatch_fee_id, u.pay_status, u.status, u.create_time,sum(s.count) count,s.money
+		from dada_sports.user_snatch u
+		left join dada_sports.snatch_fee s on
+		s.id=u.snatch_fee_id
+		where u.pay_status=1 and u.status=1 and
+		u.activity_id = #{activityId} group by u.user_id
+	</select>
+
+	<select id="queryPage" resultMap="userSnatchMoreResult">
+		select u.id, u.activity_id, u.user_id,
+		u.snatch_fee_id, u.pay_status, u.status, u.create_time,s.count,s.money
+		from dada_sports.user_snatch u
+		left join dada_sports.snatch_fee s on u.snatch_fee_id=s.id
+		left join dada_sports.user us on us.id = u.user_id
+		where u.pay_status=1 
+	      and u.status=1
+	      <if test="params.activityId != null">
+	      	 and u.activity_id = #{params.activityId}
+	      </if>
+	     <if test="params.condition != null">
+	     	 and (us.id LIKE CONCAT(CONCAT('%',#{params.condition}),'%') or
+		  	  	 us.nickname LIKE CONCAT(CONCAT('%',#{params.condition}),'%'))
+	     </if>
+	     
+		order by u.create_time desc
+	</select>
+	
+	<delete id="delete" parameterType="UserSnatch">
+		delete from
+		dada_sports.user_snatch
+		where id = #{id}
+	</delete>
+	
+	<insert id="save" parameterType="UserSnatch">
+		insert into dada_sports.user_snatch
+		(id,activity_id,user_id,snatch_fee_id,pay_status,status,create_time )
+		values
+		(#{id},#{activityId},#{userId},#{snatchFeeId},#{payStatus},#{status},#{createTime}
+		)
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	
+	<update id="update" parameterType="UserSnatch">
+		update
+		dada_sports.user_snatch set
+		activity_id=#{activityId},user_id=#{userId},snatch_fee_id=#{snatchFeeId},pay_status=#{payStatus},status=#{status},create_time=#{createTime}
+		where id = #{id}
+	</update>
+	
+	
+	<select id="getUserSnatchCount" resultType="java.lang.Integer">
+		select
+			<if test="type==1">
+				count(u.id)
+			</if> 
+			<if test="type==2">
+				sum(s.count)
+			</if>
+			 from dada_sports.user_snatch u
+			left join dada_sports.snatch_fee s on u.snatch_fee_id=s.id
+			where u.pay_status=1   and u.status=1 and u.activity_id = #{activityId} and s.activity_id = #{activityId}
+	</select>
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.youyisi.soa.infrastructure.persist.question.QuestionMapper">
+	<resultMap id="QuestionMap" type="Question">
+		<id column="QUESTION_ID" property="questionId" jdbcType="BIGINT" />
+		<result column="QUESTION" property="question" jdbcType="VARCHAR" />
+		<result column="TYPE" property="type" jdbcType="INTEGER" />
+		<result column="WEIGHT" property="weight" jdbcType="INTEGER" />
+	</resultMap>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from T_SPORT_QUESTION
+		where QUESTION_ID = #{questionId,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="Question" useGeneratedKeys="true" keyProperty="questionId">
+		insert into T_SPORT_QUESTION ( QUESTION, TYPE,
+		WEIGHT)
+		values ( #{question,jdbcType=VARCHAR},
+		#{type,jdbcType=INTEGER},
+		#{weight,jdbcType=INTEGER})
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="Question">
+		update T_SPORT_QUESTION
+		set QUESTION = #{question,jdbcType=VARCHAR},
+		TYPE = #{type,jdbcType=INTEGER},
+		WEIGHT = #{weight,jdbcType=INTEGER}
+		where QUESTION_ID = #{questionId,jdbcType=BIGINT}
+	</update>
+	<select id="selectByPrimaryKey" resultMap="QuestionMap"
+		parameterType="java.lang.Long">
+		select QUESTION_ID, QUESTION, TYPE, WEIGHT
+		from T_SPORT_QUESTION
+		where QUESTION_ID = #{questionId,jdbcType=BIGINT}
+	</select>
+	<select id="selectAll" resultMap="QuestionMap">
+		select QUESTION_ID, QUESTION, TYPE, WEIGHT
+		from T_SPORT_QUESTION
+	</select>
+	
+		<select id="queryPage" resultMap="QuestionMap"
+		parameterType="java.util.Map">
+		select QUESTION_ID, QUESTION, TYPE, WEIGHT
+		from T_SPORT_QUESTION t
+		where 1=1
+		<include refid="query" />
+		<if test="pageSize!=0">
+			limit ${offset},${pageSize}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="java.util.Map" resultType="java.lang.Long">
+		select count(1) from T_SPORT_QUESTION t
+		where 1=1
+		<include refid="query" />
+	</select>
+
+	<sql id="query">
+		<if test="question != null">
+			and t.QUESTION=#{question}
+		</if>
+	</sql>
+</mapper>

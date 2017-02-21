@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.relay.RelayMemberFavour" >
+	<resultMap id="relayMemberFavourResult" type="RelayMemberFavour" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="relay_member_id" property="relayMemberId" />
+		<result column="type" property="type" />
+		<result column="date" property="date" />
+		<result column="create_time" property="createTime" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select r.id, r.user_id, r.relay_member_id, r.type, r.date, r.create_time
+		from dada_sports.relay_member_favour r
+	</sql>
+	<select id="getById" resultMap="relayMemberFavourResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where r.id = #{id}
+	</select>
+	
+	<select id="getPraiseCountByRelayMemberId" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+	select count(1)
+		from dada_sports.relay_member_favour r
+		where r.relay_member_id=#{relayMemberId} and r.type=1
+	</select>
+	
+	<select id="getCheerCountByRelayMemberId" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+	select count(1)
+		from dada_sports.relay_member_favour r
+		where r.relay_member_id=#{relayMemberId} and r.type=2
+	</select>
+	
+	<select id="getByMap" resultMap="relayMemberFavourResult" >
+		<include refid="commonSelect"/>
+		where 1=1
+		<if test="userId!=null">
+		and r.user_id = #{userId}
+		</if>
+		<if test="type!=null">
+		and r.type = #{type}
+		</if>
+		<if test="date!=null">
+		and r.date = #{date}
+		</if>
+		<if test="relayMemberId!=null">
+		and r.relay_member_id = #{relayMemberId}
+		</if>
+		limit 0,1
+	</select>
+	
+	<select id="queryPage" resultMap="relayMemberFavourResult">
+		<include refid="commonSelect"/>
+		order by r.id asc
+	</select>
+	<delete id="delete" parameterType="RelayMemberFavour" >
+		delete from dada_sports.relay_member_favour
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="RelayMemberFavour" >
+		insert into dada_sports.relay_member_favour (id,user_id,relay_member_id,type,date,create_time
+		)
+ 		values (#{id},#{userId},#{relayMemberId},#{type},#{date},#{createTime}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="RelayMemberFavour" >
+		update dada_sports.relay_member_favour set user_id=#{userId},relay_member_id=#{relayMemberId},type=#{type},date=#{date},create_time=#{createTime}
+		where id = #{id}
+</update>
+</mapper>

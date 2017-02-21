@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.user.UserLotteryWin">
+	<resultMap id="userLotteryWinResult" type="UserLotteryWin">
+		<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="lottery_id" property="lotteryId" />
+		<result column="lottery_win_id" property="lotteryWinId" />
+		<result column="expiry_time" property="expiryTime" />
+		<result column="create_time" property="createTime" />
+		<result column="status" property="status" />
+		<result column="update_time" property="updateTime" />
+		
+		<association column="lottery_win_id" property="lotteryWin" select="com.youyisi.admin.domain.lottery.LotteryWin.getById" />
+		
+		<association column="{userId=user_id,activityId=lottery_id}" property="userCoupon" select="com.youyisi.admin.domain.user.UserCoupon.getLotteryUserCoupon" />
+	</resultMap>
+	
+	<resultMap id="userLotteryWinResultList" type="UserLotteryWin">
+		<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="lottery_id" property="lotteryId" />
+		<result column="lottery_win_id" property="lotteryWinId" />
+		<result column="expiry_time" property="expiryTime" />
+		<result column="create_time" property="createTime" />
+		<result column="status" property="status" />
+		<result column="update_time" property="updateTime" />
+		
+		<association property="user" column="user_id" select="com.youyisi.admin.domain.user.User.getById" />
+	</resultMap>
+	
+	<sql id="commonSelect">
+		select u.id, u.user_id, u.lottery_id,
+		u.lottery_win_id, u.expiry_time, u.create_time, u.status,
+		u.update_time
+		from dada_sports.user_lottery_win u
+	</sql>
+	<select id="getById" resultMap="userLotteryWinResult"
+		parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where u.id = #{id}
+	</select>
+	<select id="queryPage" resultMap="userLotteryWinResult">
+		<include refid="commonSelect" />
+		order by u.id asc
+	</select>
+	<delete id="delete" parameterType="UserLotteryWin">
+		delete from
+		dada_sports.user_lottery_win
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="UserLotteryWin">
+		insert into dada_sports.user_lottery_win
+		(id,user_id,lottery_id,lottery_win_id,expiry_time,create_time,status,update_time
+		)
+		values
+		(#{id},#{userId},#{lotteryId},#{lotteryWinId},#{expiryTime},#{createTime},#{status},#{updateTime}
+		)
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="UserLotteryWin">
+		update
+		dada_sports.user_lottery_win set
+		user_id=#{userId},lottery_id=#{lotteryId},lottery_win_id=#{lotteryWinId},expiry_time=#{expiryTime},create_time=#{createTime},status=#{status},update_time=#{updateTime}
+		where id = #{id}
+	</update>
+	
+	<select id="getLevelNumber" resultType="java.lang.Integer">
+		 SELECT count(u.id) FROM dada_sports.user_lottery_win u
+		 LEFT JOIN dada_sports.lottery_win l ON u.lottery_win_id = l.id
+		 WHERE u.lottery_id = #{lotteryId} AND l.level = #{level} AND l.lottery_id = #{lotteryId}
+	</select>
+	
+	<select id="getUserLotteryWinByUserIdAndLotteryId" resultMap="userLotteryWinResult" >
+		<include refid="commonSelect" />
+		where u.user_id = #{userId} and u.lottery_id = #{lotteryId} LIMIT 0,1
+	</select>
+	
+	
+	<select id="getUserLotteryWinList" resultMap="userLotteryWinResultList">
+		<include refid="commonSelect" />
+		where u.expiry_time  <![CDATA[>=]]> #{beginTime} and u.expiry_time <![CDATA[<=]]> #{endTime} and u.status = 0
+	</select>
+	
+	<select id="sumGoldBean"  resultType="java.lang.Double" parameterType="java.lang.Long">
+		SELECT sum(l.gold_bean) from dada_sports.user_lottery_win u LEFT JOIN dada_sports.lottery_win l on u.lottery_win_id = l.id where u.lottery_id = #{lotteryId}
+	</select>
+	
+</mapper>

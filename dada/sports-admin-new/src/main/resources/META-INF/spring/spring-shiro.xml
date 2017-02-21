@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager" />
+		 <property name="loginUrl" value="/adminuser/login" />
+		<property name="successUrl" value="/home" />
+		<property name="unauthorizedUrl" value="/adminuser/unauthorized" /> 
+		<property name="filterChainDefinitions">
+			<value>
+				/adminuser/login = anon
+				/adminuser/register = anon
+				/adminuser/exist = anon
+				/upload = anon
+				/async = anon
+				/resources/** = anon
+				/ = anon
+				/** = authc
+				<!-- roles[201201]  perms[check:audition]-->
+			</value>
+		</property>
+	</bean>
+	
+	<import resource="classpath:META-INF/shiro/shiro-context.xml"/>
+	
+</beans>

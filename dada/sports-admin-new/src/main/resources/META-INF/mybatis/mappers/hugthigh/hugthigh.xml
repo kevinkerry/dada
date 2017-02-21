@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.hugthigh.HugThigh">
+	<resultMap id="hugThighResult" type="HugThigh">
+		<id column="id" property="id" />
+		<result column="thigh_id" property="thighId" />
+		<result column="user_id" property="userId" />
+		<result column="activity_id" property="activityId" />
+		<result column="pay_type" property="payType" />
+		<result column="pay_status" property="payStatus" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+
+		<association property="user" column="user_id" select="com.youyisi.admin.domain.user.User.getById" />
+
+	</resultMap>
+	<sql id="commonSelect">
+		select h.id, h.thigh_id, h.user_id,
+		h.activity_id,
+		h.pay_type, h.pay_status, h.status, h.create_time
+		from
+		dada_sports.hug_thigh h
+	</sql>
+	<select id="getById" resultMap="hugThighResult" parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where h.id = #{id}
+	</select>
+	<select id="queryPage" resultMap="hugThighResult">
+		<include refid="commonSelect" />
+		where 1=1
+		<if test="params.thighId">
+			and h.thigh_id = #{params.thighId}
+		</if>
+		and h.pay_status=1
+		<if test="params.field !=null">
+			order by ${params.field} ${params.sort}
+		</if>
+		<if test="params.field ==null">
+			order by h.create_time desc
+		</if>
+	</select>
+	<delete id="delete" parameterType="HugThigh">
+		delete from
+		dada_sports.hug_thigh
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="HugThigh">
+		insert into dada_sports.hug_thigh
+		(id,thigh_id,user_id,activity_id,pay_type,pay_status,status,create_time
+		)
+		values
+		(#{id},#{thighId},#{userId},#{activityId},#{payType},#{payStatus},#{status},#{createTime}
+		)
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="HugThigh">
+		update
+		dada_sports.hug_thigh
+		set
+		thigh_id=#{thighId},user_id=#{userId},activity_id=#{activityId},pay_type=#{payType},pay_status=#{payStatus},status=#{status},create_time=#{createTime}
+		where id = #{id}
+	</update>
+
+
+	<select id="countHugThigh" resultType="java.lang.Integer">
+		SELECT
+		<if test="resultType == 1">
+			count(*)
+		</if>
+		<if test="resultType == 2">
+			COUNT(DISTINCT h.user_id)
+		</if>
+		FROM dada_sports.hug_thigh h WHERE h.activity_id = #{activityId} AND
+		h.pay_status = 1
+		<if test="thighId !=null ">
+			AND h.thigh_id = #{thighId}
+		</if>
+	</select>
+
+	<select id="countHugThighNum" resultType="java.lang.Integer"
+		parameterType="java.lang.Long">
+		SELECT count(*) FROM dada_sports.hug_thigh h WHERE
+		h.thigh_id = #{thighId} and h.pay_status = 1
+	</select>
+	
+	
+	<select id="countHugThighByUserId" resultType="java.lang.Integer"
+		parameterType="java.lang.Long">
+		SELECT count(*) FROM dada_sports.hug_thigh h WHERE
+		h.user_id = #{userId} and h.pay_status = 1
+	</select>
+	
+	<select id="query" resultMap="hugThighResult">
+		<include refid="commonSelect" />
+		where 1=1
+		<if test="thighId">
+			and h.thigh_id = #{thighId}
+		</if>
+		<if test="userId">
+			and h.user_id = #{userId}
+		</if>
+		<if test="activityId">
+			and h.activity_id = #{activityId}
+		</if>
+		and h.pay_status=1
+		order by h.create_time desc
+	</select>
+	
+</mapper>

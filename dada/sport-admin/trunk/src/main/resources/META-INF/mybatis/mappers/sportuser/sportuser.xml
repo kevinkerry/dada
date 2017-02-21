@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.sportuser.SportUser" >
+	<resultMap id="sportUserResult" type="SportUser" >
+		<result column="USER_ID" property="userId" />
+		<result column="USER_CODE" property="userCode" />
+		<result column="USER_NAME" property="userName" />
+		<result column="USER_PWD" property="userPwd" />
+		<result column="USER_TYPE" property="userType" />
+		<result column="REG_SOURCE" property="regSource" />
+		<result column="EXTERNAL_IDENTIFIER" property="externalIdentifier" />
+		<result column="CLIENT_TYPE" property="clientType" />
+		<result column="REGISTER_TIME" property="registerTime" />
+		<result column="STATUS" property="status" />
+		<result column="CLIENT_ID" property="clientId" />
+		<association property="member" column="USER_ID" javaType="com.youyisi.admin.domain.member.Member" select="com.youyisi.admin.domain.member.Member.getByUserId"></association>
+	</resultMap>
+<sql id="commonSelect" >
+		select t.USER_ID, t.USER_CODE, t.USER_NAME, t.USER_PWD, t.USER_TYPE, t.REG_SOURCE, t.EXTERNAL_IDENTIFIER, t.CLIENT_TYPE, t.REGISTER_TIME, t.STATUS, t.CLIENT_ID
+		from sports.T_SPORT_USER t
+</sql>
+<select id="getById" resultMap="sportUserResult" parameterType="java.lang.Integer" >
+	<include refid="commonSelect"/>
+	where t.USER_ID = #{userId}
+</select>
+<select id="getByUserName" resultMap="sportUserResult" parameterType="java.lang.String" >
+	<include refid="commonSelect"/>
+	where t.USER_NAME = #{userName}
+</select>
+<select id="queryPage" resultMap="sportUserResult">
+	 <include refid="commonSelect"/>
+	order by t.USER_ID asc
+</select>
+<delete id="delete" parameterType="SportUser" >
+	 delete from sports.T_SPORT_USER
+	where USER_ID = #{userId}
+</delete>
+<insert id="save" parameterType="SportUser" >
+	insert into sports.T_SPORT_USER (USER_CODE,USER_NAME,USER_PWD,USER_TYPE,REG_SOURCE,EXTERNAL_IDENTIFIER,CLIENT_TYPE,REGISTER_TIME,STATUS,CLIENT_ID
+)
+ values (#{userCode},#{userName},#{userPwd},#{userType},#{regSource},#{externalIdentifier},#{clientType},#{registerTime},#{status},#{clientId}
+)
+		<selectKey keyProperty="userId" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+</insert>
+<update id="update" parameterType="SportUser" >
+	update sports.T_SPORT_USER set USER_ID=#{userId},USER_CODE=#{userCode},USER_NAME=#{userName},USER_PWD=#{userPwd},USER_TYPE=#{userType},REG_SOURCE=#{regSource},EXTERNAL_IDENTIFIER=#{externalIdentifier},CLIENT_TYPE=#{clientType},REGISTER_TIME=#{registerTime},STATUS=#{status},CLIENT_ID=#{clientId}
+	where USER_ID = #{userId}
+</update>
+</mapper>

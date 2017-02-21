@@ -1,0 +1,92 @@
+body{
+	height:calc(100% - 50px);
+}
+.container{
+	width:100%;
+	height:calc(100% - 50px);
+}
+.login {
+    position:absolute;
+    height:510px;
+    width:510px;
+    top:calc(50% - 150px);
+    left:calc(50% - 255px);
+}
+.login .form-signin {
+    max-width: 510px;
+    height: 350px;
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    box-shadow:0 0 10px rgba(0,0,0,.3);
+}
+.login .form-signin .form-signin-heading {
+	text-align: center;
+	color:#7C838C;
+	font-size:30px;
+	padding:0;
+	height:70px;
+	line-height:70px;
+	border-bottom:1px solid #EDEDED;
+	margin-bottom:35px
+}
+
+.login .form-signin .input-group {
+	margin-bottom: 20px;
+	position:relative;
+	left:90px;
+}
+input,input:focus{
+	outline:0;
+	box-shadow:none;
+	border:1px solid #bbb;
+	padding:3px 5px
+}
+.form-signin .input-group input{
+	width:300px;
+	height:40px;
+	text-indent:15px;
+	border-radius:2px;
+	background-color:#F8F8F9;
+	font-weight:400;
+}
+.form-signin button{
+	width:340px;
+	height:40px;
+	border-radius:5px;
+	color:#fff;
+	font-size:16px;
+	margin-left: 90px;
+}
+.btn-block{
+	background:#4280CB;
+	transition:.3s;
+}
+.btn:focus,.btn:hover{
+	color:#fff;
+	background:#2D6CB8;
+	outline:0;
+}
+.checkbox{
+	margin-left:90px;
+}
+.checkbox #agree{
+	width:20px;
+	height:15px;
+	margin-top:3px;
+}
+p.login-validation{
+	color:#878788;
+	margin-left:90px;
+	padding-top:10px;
+	font-size:12px;
+}
+#login_footer {
+    width: 100%;
+	height: 50px;
+	border-top-style: solid;
+	border-top-width: 1px;
+	border-top-color: #e7e7e7;
+    position: absolute;  
+    bottom: 0;
+    left:0; 
+}

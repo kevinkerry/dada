@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.activity.Activity" >
+	<resultMap id="activityResult" type="Activity" >
+		<id column="ACTIVITY_ID" property="activityId" />
+		<result column="ACTIVITY_TITLE" property="activityTitle" />
+		<result column="ACTIVITY_CODE" property="activityCode" />
+		<result column="ACTIVITY_DESC" property="activityDesc" />
+		<result column="LOGO_URL" property="logoUrl" />
+		<result column="PARENT_CATEGORY" property="parentCategory" />
+		<result column="CATEGORY_CODE" property="categoryCode" />
+		<result column="LIMIT_FLAG" property="limitFlag" />
+		<result column="LIMIT_NUMBER" property="limitNumber" />
+		<result column="FEE_FLAG" property="feeFlag" />
+		<result column="FEE_COMMENTS" property="feeComments" />
+		<result column="RECOMMEND_FLAG" property="recommendFlag" />
+		<result column="ACTIVITY_STATE" property="activityState" />
+		<result column="ACTIVITY_TYPE" property="activityType" />
+		<result column="ACTIVITY_ORG" property="activityOrg" />
+		<result column="PROVINCE" property="province" />
+		<result column="CITY" property="city" />
+		<result column="DISTRICT" property="district" />
+		<result column="ADDRESS" property="address" />
+		<result column="GPS_X" property="gpsX" />
+		<result column="GPS_Y" property="gpsY" />
+		<result column="CONTACT" property="contact" />
+		<result column="START_APPLY_TIME" property="startApplyTime" />
+		<result column="END_APPLY_TIME" property="endApplyTime" />
+		<result column="BEGIN_TIME" property="beginTime" />
+		<result column="END_TIME" property="endTime" />
+		<result column="VIEW_QUANTITY" property="viewQuantity" />
+		<result column="CREATOR" property="creator" />
+		<result column="CREATED_TIME" property="createdTime" />
+		<result column="MODIFIER" property="modifier" />
+		<result column="UPDATED_TIME" property="updatedTime" />
+		<result column="STATUS" property="status" />
+		<result column="TIPS" property="tips" />
+		<result column="BUS_INFORMATION" property="busInformation" />
+		<result column="TYPE" property="type" />
+		<result column="LINK_ADDRESS" property="linkAddress" />
+		<result column="ORDERS" property="orders" />
+		<association property="category" column="CATEGORY_CODE" javaType="com.youyisi.admin.domain.category.Category" select="com.youyisi.admin.domain.category.Category.getByCategoryCode"/>
+		<association property="user" column="CREATOR" javaType="com.youyisi.admin.domain.user.User" select="com.youyisi.admin.domain.user.User.getById"/>
+		<association property="applyCount" column="ACTIVITY_ID" javaType="java.lang.Long" select="com.youyisi.admin.domain.activity.activityapply.ActivityApply.getApplyCount"/>
+		<association property="commentCount" column="ACTIVITY_ID" javaType="java.lang.Long" select="com.youyisi.admin.domain.activity.comment.Comment.getCountByActivityId"/>
+		<collection property="activityImages" column="ACTIVITY_ID" ofType="com.youyisi.admin.domain.activity.activityimage.ActivityImage" select="com.youyisi.admin.domain.activity.activityimage.ActivityImage.getByActivityId" />
+	</resultMap>
+	<sql id="commonSelect" >
+			select t.ACTIVITY_ID, t.ACTIVITY_TITLE, t.ACTIVITY_CODE, t.ACTIVITY_DESC, t.LOGO_URL, t.PARENT_CATEGORY, t.CATEGORY_CODE, t.LIMIT_FLAG, t.LIMIT_NUMBER, t.FEE_FLAG, t.FEE_COMMENTS, t.RECOMMEND_FLAG, t.ACTIVITY_STATE, t.ACTIVITY_TYPE, t.ACTIVITY_ORG, t.PROVINCE, t.CITY, t.DISTRICT, t.ADDRESS, t.GPS_X, t.GPS_Y, t.CONTACT, t.START_APPLY_TIME, t.END_APPLY_TIME, t.BEGIN_TIME, t.END_TIME, t.VIEW_QUANTITY, t.CREATOR, t.CREATED_TIME, t.MODIFIER, t.UPDATED_TIME, t.STATUS, t.TIPS, t.BUS_INFORMATION
+			, t.TYPE, t.LINK_ADDRESS, t.ORDERS from sports.T_SPORT_ACTIVITY t
+	</sql>
+	<select id="getById" resultMap="activityResult" parameterType="java.lang.Integer" >
+		<include refid="commonSelect"/>
+		where t.ACTIVITY_ID = #{activityId}
+	</select>
+	<select id="queryPage" resultMap="activityResult">
+		<include refid="commonSelect"/>
+		<where>
+		    1=1 and t.STATUS ='A'
+			<if test="params.activityTitle != null and params.activityTitle != ''">
+				and t.ACTIVITY_TITLE like concat(concat('%',#{params.activityTitle}),'%')
+			</if>
+			<if test="params.parentCategory != null">
+				and t.PARENT_CATEGORY= #{params.parentCategory}
+			</if>
+			<if test="params.beginTime != null">
+				and t.BEGIN_TIME >= #{params.beginTime}
+			</if>
+			<if test="params.endTime != null">
+				<![CDATA[and t.END_TIME <= #{params.endTime}]]>
+			</if>
+			<if test="params.recommendFlag != null">
+				and t.RECOMMEND_FLAG = #{params.recommendFlag}
+			</if>
+			<if test="params.activityOrg != null and params.activityOrg != ''">
+				and t.ACTIVITY_ORG like concat(concat('%',#{params.activityOrg}),'%')
+			</if>
+		</where>
+		order by t.ORDERS desc, t.CREATED_TIME desc
+	</select>
+	<delete id="delete" parameterType="Activity" >
+		 delete from sports.T_SPORT_ACTIVITY
+		where ACTIVITY_ID = #{activityId}
+	</delete>
+	<insert id="save" parameterType="Activity" >
+		insert into sports.T_SPORT_ACTIVITY (ACTIVITY_TITLE,ACTIVITY_CODE,ACTIVITY_DESC,LOGO_URL,PARENT_CATEGORY,CATEGORY_CODE,LIMIT_FLAG,LIMIT_NUMBER,FEE_FLAG,FEE_COMMENTS,RECOMMEND_FLAG,ACTIVITY_STATE,ACTIVITY_TYPE,ACTIVITY_ORG,PROVINCE,CITY,DISTRICT,ADDRESS,GPS_X,GPS_Y,CONTACT,START_APPLY_TIME,END_APPLY_TIME,BEGIN_TIME,END_TIME,VIEW_QUANTITY,CREATOR,CREATED_TIME,MODIFIER,UPDATED_TIME,STATUS,TIPS,BUS_INFORMATION,TYPE,LINK_ADDRESS,ORDERS
+	)
+	 values (#{activityTitle},#{activityCode},#{activityDesc},#{logoUrl},#{parentCategory},#{categoryCode},#{limitFlag},#{limitNumber},#{feeFlag},#{feeComments},#{recommendFlag},#{activityState},#{activityType},#{activityOrg},#{province},#{city},#{district},#{address},#{gpsX},#{gpsY},#{contact},#{startApplyTime},#{endApplyTime},#{beginTime},#{endTime},#{viewQuantity},#{creator},#{createdTime},#{modifier},#{updatedTime},#{status},#{tips},#{busInformation},#{type},#{linkAddress},#{orders}
+	)
+			<selectKey keyProperty="activityId" resultType="Long" statementType="PREPARED">
+				select LAST_INSERT_ID() as value
+			</selectKey>
+	</insert>
+	<update id="update" parameterType="Activity" >
+		update sports.T_SPORT_ACTIVITY set ACTIVITY_ID=#{activityId},ACTIVITY_TITLE=#{activityTitle},ACTIVITY_CODE=#{activityCode},ACTIVITY_DESC=#{activityDesc},LOGO_URL=#{logoUrl},PARENT_CATEGORY=#{parentCategory},CATEGORY_CODE=#{categoryCode},LIMIT_FLAG=#{limitFlag},LIMIT_NUMBER=#{limitNumber},FEE_FLAG=#{feeFlag},FEE_COMMENTS=#{feeComments},RECOMMEND_FLAG=#{recommendFlag},ACTIVITY_STATE=#{activityState},ACTIVITY_TYPE=#{activityType},ACTIVITY_ORG=#{activityOrg},PROVINCE=#{province},CITY=#{city},DISTRICT=#{district},ADDRESS=#{address},GPS_X=#{gpsX},GPS_Y=#{gpsY},CONTACT=#{contact},START_APPLY_TIME=#{startApplyTime},END_APPLY_TIME=#{endApplyTime},BEGIN_TIME=#{beginTime},END_TIME=#{endTime},VIEW_QUANTITY=#{viewQuantity},CREATOR=#{creator},CREATED_TIME=#{createdTime},MODIFIER=#{modifier},UPDATED_TIME=#{updatedTime},STATUS=#{status},TIPS=#{tips},BUS_INFORMATION=#{busInformation},TYPE=#{type},LINK_ADDRESS=#{linkAddress},ORDERS=#{orders}
+		where ACTIVITY_ID = #{activityId}
+	</update>
+	
+	<delete id="deleteApplys" parameterType="Activity">
+		delete from sports.T_SPORT_ACTIVITY_APPLY where ACTIVITY_ID=#{activityId}
+	</delete>
+</mapper>

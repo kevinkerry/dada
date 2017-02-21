@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.club.clubmember.ClubMember" >
+	<resultMap id="clubMemberResult" type="ClubMember" >
+		<result column="CLUB_MEMBER_ID" property="clubMemberId" />
+		<result column="CLUB_ID" property="clubId" />
+		<result column="USER_ID" property="userId" />
+		<result column="RELATION_FLAG" property="relationFlag" />
+		<result column="ROLE_TYPE" property="roleType" />
+		<result column="ACTIVE_INDEX" property="activeIndex" />
+		<result column="JOIN_TIME" property="joinTime" />
+		<result column="STATUS" property="status" />
+		<association property="clubMemberUser" column="USER_ID" javaType="com.youyisi.admin.domain.sportuser.SportUser" select="com.youyisi.admin.domain.sportuser.SportUser.getById"></association>
+	</resultMap>
+	<sql id="commonSelect" >
+		select t.CLUB_MEMBER_ID, t.CLUB_ID, t.USER_ID, t.RELATION_FLAG, t.ROLE_TYPE, t.ACTIVE_INDEX, t.JOIN_TIME, t.STATUS
+		from sports.T_SPORT_CLUB_MEMBER t
+	</sql>
+	<select id="getById" resultMap="clubMemberResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where t.CLUB_MEMBER_ID = #{clubMemberId}
+	</select>
+	<select id="getCountByClubId" resultType="java.lang.Long" parameterType="java.lang.Long" >
+		select count(*) from sports.T_SPORT_CLUB_MEMBER t where t.CLUB_ID = #{clubId}
+	</select>
+	<select id="queryPage" resultMap="clubMemberResult">
+		<include refid="commonSelect"/>
+		<where>
+		    1=1 
+		    <if test="params.clubId != null">
+		        and t.CLUB_ID = #{params.clubId}
+		    </if>
+		    <if test="params.roleType != null">
+		        and t.ROLE_TYPE = #{params.roleType}
+		    </if>
+		    <if test="params.relationFlag != null">
+		        and t.RELATION_FLAG = #{params.relationFlag}
+		    </if>
+		</where>
+		order by t.ACTIVE_INDEX desc, t.JOIN_TIME desc
+	</select>
+	<delete id="delete" parameterType="ClubMember" >
+		delete from sports.T_SPORT_CLUB_MEMBER
+		where CLUB_MEMBER_ID = #{clubMemberId}
+	</delete>
+	<insert id="save" parameterType="ClubMember" >
+		insert into sports.T_SPORT_CLUB_MEMBER (CLUB_MEMBER_ID,CLUB_ID,USER_ID,RELATION_FLAG,ROLE_TYPE,ACTIVE_INDEX,JOIN_TIME,STATUS
+		)
+ 		values (#{clubMemberId},#{clubId},#{userId},#{relationFlag},#{roleType},#{activeIndex},#{joinTime},#{status}
+		)
+		<selectKey keyProperty="clubMemberId" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="ClubMember" >
+		update sports.T_SPORT_CLUB_MEMBER set CLUB_MEMBER_ID=#{clubMemberId},CLUB_ID=#{clubId},USER_ID=#{userId},RELATION_FLAG=#{relationFlag},ROLE_TYPE=#{roleType},ACTIVE_INDEX=#{activeIndex},JOIN_TIME=#{joinTime},STATUS=#{status}
+		where CLUB_MEMBER_ID = #{clubMemberId}
+	</update>
+</mapper>

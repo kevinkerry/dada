@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.goldbean.GoldBeanRecharge" >
+	<resultMap id="goldBeanRechargeResult" type="GoldBeanRecharge" >
+	<id column="id" property="id" />
+		<result column="money" property="money" />
+		<result column="gold_bean" property="goldBean" />
+		<result column="orders" property="orders" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select g.id, g.money, g.gold_bean, g.orders
+		from dada_sports.gold_bean_recharge g
+	</sql>
+	<select id="getById" resultMap="goldBeanRechargeResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where g.id = #{id}
+	</select>
+	<select id="list" resultMap="goldBeanRechargeResult" >
+		<include refid="commonSelect"/>
+		order by  g.orders asc
+	</select>
+	
+	<select id="queryPage" resultMap="goldBeanRechargeResult">
+		<include refid="commonSelect"/>
+		order by g.id asc
+	</select>
+	<delete id="delete" parameterType="GoldBeanRecharge" >
+		delete from dada_sports.gold_bean_recharge
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="GoldBeanRecharge" >
+		insert into dada_sports.gold_bean_recharge (id,money,gold_bean,orders
+		)
+ 		values (#{id},#{money},#{goldBean},#{orders}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="GoldBeanRecharge" >
+		update dada_sports.gold_bean_recharge set money=#{money},gold_bean=#{goldBean},orders=#{orders}
+		where id = #{id}
+</update>
+</mapper>

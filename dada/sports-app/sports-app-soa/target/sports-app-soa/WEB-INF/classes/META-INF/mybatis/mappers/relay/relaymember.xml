@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.relay.RelayMember" >
+	<resultMap id="relayMemberResult" type="RelayMember" >
+	<id column="id" property="id" />
+		<result column="activity_id" property="activityId" />
+		<result column="user_id" property="userId" />
+		<result column="team_id" property="teamId" />
+		<result column="parent_id" property="parentId" />
+		<result column="pay_status" property="payStatus" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="level" property="level" />
+		<result column="usercode" property="usercode" />
+	</resultMap>
+	
+	<resultMap id="relayMemberWithMoreResult" type="RelayMemberWithMore" >
+	<id column="id" property="id" />
+		<result column="activity_id" property="activityId" />
+		<result column="user_id" property="userId" />
+		<result column="team_id" property="teamId" />
+		<result column="parent_id" property="parentId" />
+		<result column="pay_status" property="payStatus" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="level" property="level" />
+		<result column="usercode" property="usercode" />
+		<association property="praise" column="id" select="com.youyisi.sports.domain.relay.RelayMemberFavour.getPraiseCountByRelayMemberId"></association>
+		<association property="cheer" column="id" select="com.youyisi.sports.domain.relay.RelayMemberFavour.getCheerCountByRelayMemberId"></association>
+		<association property="user" column="user_id" select="com.youyisi.sports.domain.user.User.getUserLessInfoById"></association>
+	</resultMap>
+	
+	<resultMap id="relayMemberWithChildrenResult" type="RelayMemberWithChildren" >
+	<id column="id" property="id" />
+		<result column="activity_id" property="activityId" />
+		<result column="user_id" property="userId" />
+		<result column="team_id" property="teamId" />
+		<result column="parent_id" property="parentId" />
+		<result column="pay_status" property="payStatus" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="level" property="level" />
+		<result column="usercode" property="usercode" />
+		<collection property="children" column="id" select="com.youyisi.sports.domain.relay.RelayMember.getByParentId"></collection>
+	</resultMap>
+	
+	<resultMap id="relayMemberWithChildrenAndUserResult" type="RelayMemberWithChildrenAndUser" >
+	<id column="id" property="id" />
+		<result column="activity_id" property="activityId" />
+		<result column="user_id" property="userId" />
+		<result column="team_id" property="teamId" />
+		<result column="parent_id" property="parentId" />
+		<result column="pay_status" property="payStatus" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="level" property="level" />
+		<result column="usercode" property="usercode" />
+		<association property="user" column="user_id" select="com.youyisi.sports.domain.user.User.getUserLessInfoById"></association>
+		<collection property="children" column="id" select="com.youyisi.sports.domain.relay.RelayMember.getRelayMemberWithChildrenAndUserByParentId"></collection>
+	</resultMap>
+	
+	<resultMap id="relayMemberWithParentResult" type="RelayMemberWithParent" >
+	<id column="id" property="id" />
+		<result column="activity_id" property="activityId" />
+		<result column="user_id" property="userId" />
+		<result column="team_id" property="teamId" />
+		<result column="parent_id" property="parentId" />
+		<result column="pay_status" property="payStatus" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="level" property="level" />
+		<result column="usercode" property="usercode" />
+		<association property="parent" column="parent_id" select="com.youyisi.sports.domain.relay.RelayMember.getParents"></association>
+	</resultMap>
+	
+	
+	<sql id="commonSelect" >
+		select r.id, r.activity_id, r.user_id, r.team_id, r.parent_id, r.pay_status, r.status, r.create_time, r.level, r.usercode
+		from dada_sports.relay_member r
+	</sql>
+	<select id="getById" resultMap="relayMemberResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where r.id = #{id}
+	</select>
+	
+	<select id="getParents" resultMap="relayMemberWithParentResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where r.id = #{id} and r.status=1 and r.pay_status=1
+	</select>
+	
+	<select id="getByParentId" resultMap="relayMemberWithChildrenResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where r.parent_id = #{parentId} and r.status=1 and r.pay_status=1
+	</select>
+	<select id="getRelayMemberWithChildrenAndUserByParentId" resultMap="relayMemberWithChildrenAndUserResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where r.parent_id = #{parentId} and r.status=1 and r.pay_status=1
+	</select>
+	
+	<select id="getMyRelayMemberWithMore" resultMap="relayMemberWithMoreResult"  >
+		<include refid="commonSelect"/>
+		where  r.status=1 and r.pay_status=1
+		<if test="userId!=null">
+		and r.user_id = #{userId}
+		</if>
+		<if test="teamId!=null">
+		and r.team_id = #{teamId}
+		</if>
+		<if test="usercode!=null">
+		and r.usercode = #{usercode}
+		</if>
+		<if test="activityId!=null">
+		and r.activity_id = #{activityId}
+		</if>
+		
+	</select>
+	
+	<select id="getByActivityIdAndUserId" resultMap="relayMemberResult" >
+		<include refid="commonSelect"/>
+		where r.user_id = #{userId} and r.activity_id=#{activityId} and r.status=1 and r.pay_status=1 limit 0,1
+	</select>
+	<select id="getByTeamIdAndUserId" resultMap="relayMemberResult" >
+		<include refid="commonSelect"/>
+		where r.user_id = #{userId} and r.team_id=#{teamId} and r.status=1 and r.pay_status=1 limit 0,1
+	</select>
+	
+	
+	<select id="getCountByTeamId" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+		select count(*)
+		from dada_sports.relay_member r
+		where r.team_id = #{teamId} and r.status=1 and r.pay_status=1
+	</select>
+	
+	<select id="getCountByActivityId" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+		select count(*)
+		from dada_sports.relay_member r
+		where r.activity_id = #{activityId} and r.status=1 and r.pay_status=1
+	</select>
+	
+	
+	<select id="queryPage" resultMap="relayMemberResult">
+		<include refid="commonSelect"/>
+		order by r.id asc
+	</select>
+	<select id="queryPageForTeam" resultMap="relayMemberWithMoreResult">
+		<include refid="commonSelect"/>
+		where r.status=1 and r.pay_status=1
+		<if test="params.teamId!=null">
+		and r.team_id=#{params.teamId}
+		</if>
+		order by r.id asc
+	</select>
+	
+	<delete id="delete" parameterType="RelayMember" >
+		delete from dada_sports.relay_member
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="RelayMember" >
+		insert into dada_sports.relay_member (id,activity_id,user_id,team_id,parent_id,pay_status,status,create_time,level,usercode
+		)
+ 		values (#{id},#{activityId},#{userId},#{teamId},#{parentId},#{payStatus},#{status},#{createTime},#{level},#{usercode}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="RelayMember" >
+		update dada_sports.relay_member set activity_id=#{activityId},user_id=#{userId},team_id=#{teamId},parent_id=#{parentId},pay_status=#{payStatus},status=#{status},create_time=#{createTime},level=#{level},usercode=#{usercode}
+		where id = #{id}
+</update>
+</mapper>

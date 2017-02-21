@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.snatch.SnatchWin">
+	<resultMap id="snatchWinResult" type="SnatchWin">
+		<id column="id" property="id" />
+		<result column="activity_num" property="activityNum" />
+		<result column="activity_id" property="activityId" />
+		<result column="user_id" property="userId" />
+		<result column="bonus" property="bonus" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+	</resultMap>
+	<sql id="commonSelect">
+		select s.id, s.activity_num, s.activity_id,
+		s.user_id, s.bonus, s.status, s.create_time
+		from dada_sports.snatch_win s
+	</sql>
+	<select id="getById" resultMap="snatchWinResult" parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where s.id = #{id}
+	</select>
+	<select id="queryPage" resultMap="snatchWinResult">
+		<include refid="commonSelect" />
+		order by s.id asc
+	</select>
+	<delete id="delete" parameterType="SnatchWin">
+		delete from
+		dada_sports.snatch_win
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="SnatchWin">
+		insert into dada_sports.snatch_win
+		(id,activity_num,activity_id,user_id,bonus,status,create_time )
+		values
+		(#{id},#{activityNum},#{activityId},#{userId},#{bonus},#{status},#{createTime}
+		)
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="SnatchWin">
+		update
+		dada_sports.snatch_win set
+		activity_num=#{activityNum},activity_id=#{activityId},user_id=#{userId},bonus=#{bonus},status=#{status},create_time=#{createTime}
+		where id = #{id}
+	</update>
+	
+	
+	<select id="getSnatchWinByActivityIdAndUserId" resultType="java.lang.Double">
+		select SUM(s.bonus) from dada_sports.snatch_win s
+		where s.activity_id = #{activityId}
+		and s.user_id = #{userId}
+	</select>
+</mapper>

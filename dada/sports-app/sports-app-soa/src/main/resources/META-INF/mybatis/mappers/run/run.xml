@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.run.Run" >
+	<resultMap id="runResult" type="Run" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="create_time" property="createTime" />
+		<result column="type" property="type" />
+		<result column="date" property="date" />
+		<result column="distance" property="distance" />
+		<result column="avspeed" property="avspeed" />
+		<result column="total_time" property="totalTime" />
+		<result column="step" property="step" />
+		<result column="real_distance" property="realDistance" />
+		<result column="minspeed" property="minspeed" />
+		<result column="maxspeed" property="maxspeed" />
+		<result column="status" property="status" />
+	</resultMap>
+	
+	<resultMap id="runWithTrackResult" type="RunWithTrack" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="create_time" property="createTime" />
+		<result column="type" property="type" />
+		<result column="date" property="date" />
+		<result column="distance" property="distance" />
+		<result column="avspeed" property="avspeed" />
+		<result column="minspeed" property="minspeed" />
+		<result column="maxspeed" property="maxspeed" />
+		<result column="total_time" property="totalTime" />
+		<result column="real_distance" property="realDistance" />
+		<result column="step" property="step" />
+		<result column="status" property="status" />
+		<collection property="runningTrack" column="id" select="com.youyisi.sports.domain.run.RunningTrack.getByRunId"></collection>
+	</resultMap>
+	<sql id="commonSelect" >
+		select r.id, r.user_id, r.create_time, r.type,r.date,r.distance,r.avspeed,r.total_time,r.step,r.real_distance,r.minspeed,r.maxspeed,r.status
+		from dada_sports.run r
+	</sql>
+	<select id="getById" resultMap="runResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where r.id = #{id}
+	</select>
+	<select id="getDetail" resultMap="runWithTrackResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where r.id = #{id}
+	</select>
+	
+	<select id="getMaxRun" resultMap="runResult" >
+		<include refid="commonSelect"/>
+		where r.user_id = #{userId} and r.date=#{date} and #{avspeed}>r.avspeed and r.type=2 and r.status=0
+		order by r.distance desc
+		limit 0,1
+	</select>
+	
+	
+	<select id="getByUserIdAndDate" resultMap="runResult" >
+		<include refid="commonSelect"/>
+		where r.user_id = #{userId} and r.date=#{date}
+	</select>
+	
+	<select id="queryPage" resultMap="runResult">
+		<include refid="commonSelect"/>
+		order by r.id asc
+	</select>
+	<delete id="delete" parameterType="Run" >
+		delete from dada_sports.run
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="Run" >
+		insert into dada_sports.run (id,user_id,create_time,type,date,distance,avspeed,total_time,step,real_distance,minspeed,maxspeed,status
+		)
+ 		values (#{id},#{userId},#{createTime},#{type},#{date},#{distance},#{avspeed},#{totalTime},#{step},#{realDistance},#{minspeed},#{maxspeed},#{status}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="Run" >
+		update dada_sports.run set user_id=#{userId},create_time=#{createTime},type=#{type},date=#{date},distance=#{distance},avspeed=#{avspeed},total_time=#{totalTime},step=#{step},real_distance=#{realDistance},minspeed=#{minspeed},maxspeed=#{maxspeed},status=#{status}
+		where id = #{id}
+</update>
+</mapper>

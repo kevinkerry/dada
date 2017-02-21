@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.youyisi.admin.domain.user.User">
+
+	<resultMap type="User" id="userMap">
+		<id column="id" property="id" />
+		<result column="username" property="username" />
+		<result column="nickname" property="nickname" />
+		<result column="headPortrait" property="headPortrait" />
+		<result column="password" property="password"/>
+		<result column="createOn" property="createOn"/>
+		<result column="email" property="email"/>
+		<result column="birthday" property="birthday"/>
+		<result column="sex" property="sex"/>
+		<result column="headPortrait" property="headPortrait"/>
+		<collection property="roles" resultMap="com.youyisi.admin.domain.user.Role.roleMap"/>
+		<collection property="auths" column="id" select="getAuthByUserId"/>
+	</resultMap>
+	<sql id="commonSelect">
+		select user.id as id,
+		       user.username as username,
+			   user.nickname as nickname,
+			   user.password as password,
+			   user.createOn as createOn,
+			   user.email as email,
+			   user.birthday as birthday,
+			   user.sex as sex,
+			   user.headPortrait as headPortrait,
+			   role.id as role_id,
+			   role.name as role_name,
+			   role.showName as role_showName,
+			   auth.id as auth_id,
+			   auth.name as auth_name,
+			   auth.permission as auth_permission
+		from sports_admin.user user
+		left join sports_admin.user_role userRole on user.id=userRole.user_id
+		left join sports_admin.role role on role.id=userRole.role_id
+		left join sports_admin.role_auth roleAuth on role.id=roleAuth.role_id
+		left join sports_admin.auth auth on auth.id=roleAuth.auth_id
+	</sql>
+	<resultMap type="User" id="lazyUserMap">
+		<id column="id" property="id" />
+		<result column="username" property="username" />
+		<result column="nickname" property="nickname" />
+		<result column="password" property="password"/>
+		<result column="createOn" property="createOn"/>
+		<result column="email" property="email"/>
+		<result column="birthday" property="birthday"/>
+		<result column="sex" property="sex"/>
+		<result column="headPortrait" property="headPortrait" />
+	</resultMap>
+	
+	
+	<sql id="lazySelect">
+		select user.id as id,
+		       user.username as username,
+		       user.nickname as nickname,
+			   user.password as password,
+			   user.createOn as createOn,
+			   user.email as email,
+			   user.birthday as birthday,
+			   user.headPortrait as headPortrait,
+			   user.sex as sex
+		from sports_admin.user user
+	</sql>
+	
+	<sql id="lazySelectWithoutPassword">
+		select user.id as id,
+		       user.username as username,
+		       user.nickname as nickname,
+			   user.createOn as createOn,
+			   user.email as email,
+			   user.birthday as birthday,
+			   user.headPortrait as headPortrait,
+			   user.sex as sex
+		from sports_admin.user user
+	</sql>
+	
+	<sql id="selectAuth">
+		select auth.id as auth_id,
+			   auth.name as auth_name,
+			   auth.permission as auth_permission
+		from sports_admin.auth auth
+		left join sports_admin.user_auth userAuth on auth.id=userAuth.auth_id
+	</sql>
+	
+	<select id="getByUsername" resultMap="userMap" >
+		<include refid="commonSelect"/>
+		where user.username=#{username}
+	</select>
+	
+	<select id="count" resultType="long" >
+		select count(user.id) from sports_admin.user user
+		where user.username=#{username}
+	</select>
+	
+	<select id="getById" parameterType="Integer" resultMap="userMap">
+		<include refid="commonSelect"/>
+		where user.id=#{id}
+	</select>
+	
+	<select id="getByUserId" parameterType="Integer" resultMap="lazyUserMap">
+		<include refid="lazySelectWithoutPassword"/>
+		where user.id=#{userId}
+	</select>
+	
+	<select id="getAuthByUserId"  resultMap="com.youyisi.admin.domain.user.Auth.authMap">
+		<include refid="selectAuth"/>
+		where userAuth.user_id=#{id}
+	</select>
+	
+	<select id="getSuperAdmin" resultMap="userMap" >
+		<include refid="commonSelect"/>
+		where role.name='admin'
+	</select>
+	
+	<insert id="save" parameterType="User">
+		insert into sports_admin.user(username,nickname,password,createOn,email,birthday,sex,headPortrait) 
+			        values (#{username},#{nickname},#{password},#{createOn},#{email},#{birthday},#{sex},#{headPortrait})
+		<selectKey keyProperty="id" resultType="Integer" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<insert id="saveRoles" parameterType="User">
+		insert into sports_admin.user_role(user_id,role_id) values
+		<foreach item="role" collection="roles" open="" separator="," close="">
+			(#{id},#{role.id})
+		</foreach>
+	</insert>
+	<insert id="saveAuths" parameterType="User">
+		insert into sports_admin.user_auth(user_id,auth_id) values
+		<foreach item="auth" collection="auths" open="" separator="," close="">
+			(#{id},#{auth.id})
+		</foreach>
+	</insert>
+	
+	<update id="update" parameterType="User">
+		update sports_admin.user user set user.username=#{username},user.nickname=#{nickname},user.password=#{password},user.createOn=#{createOn},user.email=#{email},user.birthday=#{birthday}
+		,user.headPortrait=#{headPortrait},user.sex=#{sex}
+		where user.id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="User">
+		delete from sports_admin.user where id=#{id}
+	</delete>
+	
+	<delete id="deleteRoles" parameterType="User">
+		delete from sports_admin.user_role where user_id=#{id}
+	</delete>
+	
+	<delete id="deleteAuths" parameterType="User">
+		delete from sports_admin.user_auth where user_id=#{id}
+	</delete>
+	
+	<select id="queryPage" resultMap="lazyUserMap">
+		<include refid="lazySelect"/>
+		<where>
+			1=1
+			<if test="params.username != null and params.username != ''">
+				and user.username like concat(concat('%',#{params.username}),'%')
+			</if>
+			<if test="params.nickname != null and params.nickname != ''">
+				and user.nickname like concat(concat('%',#{params.nickname}),'%')
+			</if>
+			<if test="params.sex != null">
+				and user.sex = #{params.sex}
+			</if>
+		</where>
+	</select>
+
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.soa.infrastructure.persist.activity.ActivityApplyMapper">
+	<resultMap id="BaseResultMap" type="ActivityApply">
+		<id column="APPLY_ID" property="applyId" jdbcType="BIGINT" />
+		<result column="ACTIVITY_ID" property="activityId" jdbcType="BIGINT" />
+		<result column="USER_ID" property="userId" jdbcType="BIGINT" />
+		<result column="APPLY_DESC" property="applyDesc" jdbcType="VARCHAR" />
+		<result column="APPLY_TIME" property="applyTime" jdbcType="TIMESTAMP" />
+		<result column="AUDIT_STATUS" property="auditStatus" jdbcType="INTEGER" />
+		<result column="AUDIT_COMMENTS" property="auditComments"
+			jdbcType="VARCHAR" />
+		<result column="AUDIT_TIME" property="auditTime" jdbcType="TIMESTAMP" />
+		<result column="AUDITOR" property="auditor" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from T_SPORT_ACTIVITY_APPLY
+		where APPLY_ID = #{applyId,jdbcType=BIGINT}
+	</delete>
+	
+	<insert id="insert" parameterType="ActivityApply">
+		insert into T_SPORT_ACTIVITY_APPLY (APPLY_ID, ACTIVITY_ID, USER_ID,
+		APPLY_DESC, APPLY_TIME, AUDIT_STATUS,
+		AUDIT_COMMENTS, AUDIT_TIME, AUDITOR
+		)
+		values (#{applyId,jdbcType=BIGINT}, #{activityId,jdbcType=BIGINT},
+		#{userId,jdbcType=BIGINT},
+		#{applyDesc,jdbcType=VARCHAR}, #{applyTime,jdbcType=TIMESTAMP}, #{auditStatus,jdbcType=INTEGER},
+		#{auditComments,jdbcType=VARCHAR}, #{auditTime,jdbcType=TIMESTAMP},
+		#{auditor,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="updateByPrimaryKey" parameterType="ActivityApply">
+		update T_SPORT_ACTIVITY_APPLY
+		set ACTIVITY_ID = #{activityId,jdbcType=BIGINT},
+		USER_ID = #{userId,jdbcType=BIGINT},
+		APPLY_DESC = #{applyDesc,jdbcType=VARCHAR},
+		APPLY_TIME = #{applyTime,jdbcType=TIMESTAMP},
+		AUDIT_STATUS = #{auditStatus,jdbcType=INTEGER},
+		AUDIT_COMMENTS = #{auditComments,jdbcType=VARCHAR},
+		AUDIT_TIME = #{auditTime,jdbcType=TIMESTAMP},
+		AUDITOR = #{auditor,jdbcType=VARCHAR}
+		where APPLY_ID = #{applyId,jdbcType=BIGINT}
+	</update>
+	
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select APPLY_ID, ACTIVITY_ID, USER_ID, APPLY_DESC, APPLY_TIME, AUDIT_STATUS,
+		AUDIT_COMMENTS,
+		AUDIT_TIME, AUDITOR
+		from T_SPORT_ACTIVITY_APPLY
+		where APPLY_ID = #{applyId,jdbcType=BIGINT}
+	</select>
+	
+	<select id="getApplyCount" resultType="java.lang.Long"
+		parameterType="java.lang.Long">
+		select count(*)
+		from T_SPORT_ACTIVITY_APPLY
+		where ACTIVITY_ID = #{activityId,jdbcType=BIGINT} and AUDIT_STATUS=2
+	</select>
+	
+	<select id="selectAll" resultMap="BaseResultMap">
+		select APPLY_ID, ACTIVITY_ID, USER_ID, APPLY_DESC, APPLY_TIME, AUDIT_STATUS,
+		AUDIT_COMMENTS,
+		AUDIT_TIME, AUDITOR
+		from T_SPORT_ACTIVITY_APPLY
+	</select>
+</mapper>

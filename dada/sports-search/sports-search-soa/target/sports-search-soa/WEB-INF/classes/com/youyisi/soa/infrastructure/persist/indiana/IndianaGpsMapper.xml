@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.soa.infrastructure.persist.indiana.IndianaGpsMapper">
+	<resultMap id="IndianaGpsMap" type="IndianaGps">
+		<id column="INDIANA_GPS_ID" property="indianaGpsId" jdbcType="BIGINT" />
+		<result column="USER_ID" property="userId" jdbcType="BIGINT" />
+		<result column="INDIANA_ID" property="indianaId" jdbcType="BIGINT" />
+		<result column="GPS_X" property="gpsX" jdbcType="VARCHAR" />
+		<result column="GPS_Y" property="gpsY" jdbcType="VARCHAR" />
+		<result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+		<result column="DISTANCE" property="distance" jdbcType="VARCHAR" />
+		<result column="AVSPEED" property="avspeed" jdbcType="VARCHAR" />
+		<result column="TYPE" property="type" jdbcType="INTEGER" />
+	</resultMap>
+	<resultMap id="IndianaRankMemberMap" type="IndianaRank">
+		<id column="SUM" property="sum" jdbcType="BIGINT" />
+		<result column="USER_ID" property="userId" jdbcType="BIGINT" />
+		<association property="member" column="USER_ID" select="com.youyisi.soa.infrastructure.persist.member.MemberMapper.selectByUserId"></association>
+	</resultMap>
+	
+	<resultMap id="IndianaDataMap" type="IndianaData">
+		<result column="maxDistance" property="maxDistance" jdbcType="DOUBLE" />
+		<result column="maxTime" property="maxTime" jdbcType="DOUBLE" />
+		<result column="maxSpeed" property="maxSpeed" jdbcType="DOUBLE" />
+		<result column="maxPaces" property="maxPaces" jdbcType="DOUBLE" />
+		<result column="sumDistance" property="sumDistance" jdbcType="DOUBLE" />
+		<result column="sumTime" property="sumTime" jdbcType="DOUBLE" />
+	</resultMap>
+	<resultMap id="IndianaGpsDetailrMap" type="IndianaGpsDetail">
+		<id column="maxAvspeed" property="maxAvspeed" />
+		<result column="minAvspeed" property="minAvspeed" />
+	</resultMap>
+	
+	<resultMap id="MemberAroundMap" type="MemberAround">
+		<id column="MEMBER_ID" property="memberId" jdbcType="BIGINT" />
+		<result column="MEMBER_CODE" property="memberCode" jdbcType="VARCHAR" />
+		<result column="USER_ID" property="userId" jdbcType="BIGINT" />
+		<result column="USER_CODE" property="userCode" jdbcType="VARCHAR" />
+		<result column="MEMBER_NAME" property="memberName" jdbcType="VARCHAR" />
+		<result column="MEMBER_ALIAS" property="memberAlias" jdbcType="VARCHAR" />
+		<result column="SEX" property="sex" jdbcType="CHAR" />
+		<result column="MEMBER_LOGO" property="memberLogo" jdbcType="VARCHAR" />
+		<result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+		<result column="MODIFIER" property="modifier" jdbcType="BIGINT" />
+		<result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+		<result column="GPS_X" property="gpsX" jdbcType="VARCHAR" />
+		<result column="GPS_Y" property="gpsY" jdbcType="VARCHAR" />
+		<result column="geoDistance" property="geoDistance" />
+	</resultMap>
+	
+	<select id="queryAroundPage" resultMap="MemberAroundMap">
+		SELECT * FROM
+(SELECT *,(ACOS(SIN((#{lat}* 3.1415) /
+		180 ) *
+		SIN((gps.GPS_X * 3.1415) / 180 )+COS((#{lat} * 3.1415) / 180 )
+		*
+		COS((gps.GPS_X * 3.1415) / 180 )*COS((#{lon}* 3.1415) / 180 -
+		(gps.GPS_Y * 3.1415) / 180 ))*6380000) AS geoDistance  FROM T_SPORT_INDIANA_GPS gps WHERE 
+    1=1
+    AND gps.type = 0
+	and
+		gps.GPS_X &lt;&gt; 0
+		and gps.USER_ID!=#{userId}
+		AND gps.GPS_Y &gt;
+		#{around[1]}
+		AND gps.GPS_Y &lt;
+		#{around[3]}
+		AND gps.GPS_X &gt;
+		#{around[0]}
+		AND gps.GPS_X &lt;
+		#{around[2]}
+and gps.CREATEd_TIME > date_sub(curdate(),interval 2 day)
+GROUP BY gps.user_id order by geoDistance desc limit ${offset},${pageSize}) gpsuser 
+LEFT JOIN T_SPORT_MEMBER m ON gpsuser.user_id=m.user_id order by gpsuser.geoDistance
+	</select>
+	
+	<select id="getAroundCount" resultType="java.lang.Long">
+		SELECT count(*) FROM
+(SELECT *,(ACOS(SIN((#{lat}* 3.1415) /
+		180 ) *
+		SIN((gps.GPS_X * 3.1415) / 180 )+COS((#{lat} * 3.1415) / 180 )
+		*
+		COS((gps.GPS_X * 3.1415) / 180 )*COS((#{lon}* 3.1415) / 180 -
+		(gps.GPS_Y * 3.1415) / 180 ))*6380000) AS geoDistance  FROM T_SPORT_INDIANA_GPS gps WHERE 
+    1=1
+    AND gps.type = 0
+	and
+		gps.GPS_X &lt;&gt; 0
+		and gps.USER_ID!=#{userId}
+		AND gps.GPS_Y &gt;
+		#{around[1]}
+		AND gps.GPS_Y &lt;
+		#{around[3]}
+		AND gps.GPS_X &gt;
+		#{around[0]}
+		AND gps.GPS_X &lt;
+		#{around[2]}
+and gps.CREATEd_TIME > date_sub(curdate(),interval 2 day)
+GROUP BY gps.user_id) gpsuser 
+LEFT JOIN T_SPORT_MEMBER m ON gpsuser.user_id=m.user_id
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from T_SPORT_INDIANA_GPS
+		where INDIANA_GPS_ID = #{indianaGpsId,jdbcType=BIGINT}
+	</delete>
+	
+	<delete id="deleteByIndianaId" parameterType="java.lang.Long">
+		delete from T_SPORT_INDIANA_GPS
+		where INDIANA_ID = #{indianaId,jdbcType=BIGINT}
+	</delete>
+	
+	<delete id="cleanGPS" parameterType="java.util.Map">
+		delete from T_SPORT_INDIANA_GPS
+		where INDIANA_ID = #{indianaId,jdbcType=BIGINT} and USER_ID = #{userId,jdbcType=BIGINT} and TYPE=#{type}
+	</delete>
+	
+	<insert id="insert" parameterType="IndianaGps" useGeneratedKeys="true"
+		keyProperty="indianaGpsId">
+		insert into T_SPORT_INDIANA_GPS (USER_ID, INDIANA_ID,
+		GPS_X, GPS_Y,CREATED_TIME,DISTANCE,AVSPEED,TYPE)
+		values (#{userId,jdbcType=BIGINT}, #{indianaId,jdbcType=BIGINT},
+		#{gpsX,jdbcType=VARCHAR}, #{gpsY,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP},#{distance,jdbcType=VARCHAR},#{avspeed,jdbcType=VARCHAR},#{type})
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="IndianaGps">
+		update T_SPORT_INDIANA_GPS
+		set USER_ID = #{userId,jdbcType=BIGINT},
+		INDIANA_ID = #{indianaId,jdbcType=BIGINT},
+		GPS_X = #{gpsX,jdbcType=VARCHAR},
+		GPS_Y = #{gpsY,jdbcType=VARCHAR},
+		DISTANCE = #{distance,jdbcType=VARCHAR},
+		AVSPEED = #{avspeed,jdbcType=VARCHAR},
+		CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+		TYPE=#{type}
+		where INDIANA_GPS_ID = #{indianaGpsId,jdbcType=BIGINT}
+	</update>
+	<select id="selectByPrimaryKey" resultMap="IndianaGpsMap"
+		parameterType="java.lang.Long">
+		select INDIANA_GPS_ID, USER_ID, INDIANA_ID, GPS_X, GPS_Y,CREATED_TIME,DISTANCE,AVSPEED,TYPE
+		from T_SPORT_INDIANA_GPS
+		where INDIANA_GPS_ID = #{indianaGpsId,jdbcType=BIGINT}
+	</select>
+	<select id="selectByIndianaMember" resultMap="IndianaGpsMap">
+		select INDIANA_GPS_ID, USER_ID, INDIANA_ID, GPS_X, GPS_Y,CREATED_TIME,DISTANCE,AVSPEED,TYPE
+		from T_SPORT_INDIANA_GPS
+		where INDIANA_ID = #{indianaId,jdbcType=BIGINT} and USER_ID = #{userId,jdbcType=BIGINT} and TYPE=#{type} order by cast(`DISTANCE` AS DECIMAL(30,20)) desc limit 0,1
+	</select>
+	<select id="selectAll" resultMap="IndianaGpsMap">
+		select INDIANA_GPS_ID, USER_ID, INDIANA_ID, GPS_X, GPS_Y,CREATED_TIME,DISTANCE,AVSPEED,TYPE
+		from T_SPORT_INDIANA_GPS
+	</select>
+	
+	<select id="selectMaxMinSpeed" parameterType="java.util.Map" resultMap="IndianaGpsDetailrMap">
+		select max(cast(`AVSPEED` AS DECIMAL(30,20))) maxAvspeed,min(cast(`AVSPEED` AS DECIMAL(30,20))) minAvspeed
+		from T_SPORT_INDIANA_GPS where AVSPEED!='0.0'
+		<include refid="query" />
+	</select>
+	
+	
+	<select id="queryPage" resultMap="IndianaGpsMap"
+		parameterType="java.util.Map">
+		select INDIANA_GPS_ID, USER_ID, INDIANA_ID, GPS_X, GPS_Y,CREATED_TIME,DISTANCE,AVSPEED,TYPE
+		from T_SPORT_INDIANA_GPS t
+		where 1=1
+		<include refid="query" />
+		<if test="pageSize!=0">
+			limit ${offset},${pageSize}
+		</if>
+	</select>
+	
+	
+	<select id="myHistory" resultMap="IndianaGpsMap"
+		parameterType="java.util.Map">
+	select * from (select * from T_SPORT_INDIANA_GPS WHERE USER_ID=#{userId} and type=#{type} ORDER BY cast(`DISTANCE` AS DECIMAL(30,20)) DESC ) t GROUP BY INDIANA_ID ORDER BY CREATED_TIME DESC
+		<if test="pageSize!=0">
+			limit ${offset},${pageSize}
+		</if>
+
+	</select>
+	
+	
+	<select id="rankList" resultMap="IndianaRankMemberMap"
+		parameterType="java.lang.Long">
+        SELECT *,SUM(DISTANCE) sum from (select * from (select * from T_SPORT_INDIANA_GPS   WHERE USER_ID IN  <foreach collection="list" item="userId" index="index"
+            open="(" close=")" separator=",">
+            #{userId}
+        </foreach>  ORDER BY cast(`DISTANCE` AS DECIMAL(30,20)) DESC ) t GROUP BY USER_ID,INDIANA_ID,TYPE) I GROUP BY USER_ID ORDER BY SUM(DISTANCE) DESC
+	</select>
+	
+	<select id="myData" resultMap="IndianaDataMap"	parameterType="java.lang.Long">
+       select SUM(cast(`distance` AS DECIMAL(30,20))) sumDistance,SUM(distance/avspeed) sumTime,MAX(cast(`distance` AS DECIMAL(30,20))) maxDistance,MAX(cast(`AVSPEED` AS DECIMAL(30,20))) maxSpeed,MAX(distance/avspeed) maxTime from (select * from (select * from T_SPORT_INDIANA_GPS WHERE USER_ID=#{userId} ORDER BY cast(`DISTANCE` AS DECIMAL(30,20)) DESC ) t GROUP BY INDIANA_ID,TYPE) i
+	</select>
+	
+	<select id="selectLastOne" resultMap="IndianaGpsMap" parameterType="java.util.HashMap">
+select * from T_SPORT_INDIANA_GPS WHERE USER_ID=#{userId} and INDIANA_ID =#{indianaId} and type=1 and DISTANCE=(select MAX(cast(`distance` AS DECIMAL(30,20))) from T_SPORT_INDIANA_GPS WHERE USER_ID=#{userId} and INDIANA_ID =#{indianaId} and type=1) limit 0,1
+	</select>
+	
+
+	<select id="getCount" parameterType="java.util.Map" resultType="java.lang.Long">
+		select count(1) from T_SPORT_INDIANA_GPS t
+		where 1=1
+		<include refid="query" />
+	</select>
+
+	<sql id="query">
+	   <if test="userId != null">
+			and USER_ID=#{userId}
+		</if>
+		<if test="indianaId != null">
+			 and INDIANA_ID=#{indianaId}
+		</if>
+		<if test="type != null">
+			and TYPE=#{type}
+		</if>
+		order by 
+		<if test="sort == null">
+			cast(`DISTANCE` AS DECIMAL(30,20)) asc
+		</if>
+		<if test="sort != null">
+			cast(`AVSPEED` AS DECIMAL(30,20)) asc
+		</if>
+	</sql>
+</mapper>

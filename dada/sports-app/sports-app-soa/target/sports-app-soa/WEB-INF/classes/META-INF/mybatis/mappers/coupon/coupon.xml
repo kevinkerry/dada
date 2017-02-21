@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.coupon.Coupon" >
+	<resultMap id="couponResult" type="Coupon" >
+	<id column="id" property="id" />
+		<result column="activity_id" property="activityId" />
+		<result column="annual_yield" property="annualYield" />
+		<result column="bonus" property="bonus" />
+		<result column="type" property="type" />
+		<result column="expiry_day" property="expiryDay" />
+		<result column="distance" property="distance" />
+		<result column="commission" property="commission" />
+		<result column="commission_rate" property="commissionRate" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select c.id, c.activity_id, c.annual_yield, c.bonus, c.type, c.expiry_day, c.distance, c.commission, c.commission_rate
+		from dada_sports.coupon c
+	</sql>
+	<select id="getById" resultMap="couponResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where c.id = #{id}
+	</select>
+	
+	<select id="getByActivityIdAndType" resultMap="couponResult" >
+		<include refid="commonSelect"/>
+		where 1=1
+		<if test="activityId!=null">
+		and c.activity_id = #{activityId}
+		</if>
+		<if test="type!=null">
+		 and c.type=#{type}
+		</if>
+		<if test="bonus!=null">
+		 and c.bonus=#{bonus}
+		</if>
+		
+	</select>
+	
+	
+	<select id="getListByActivityId" resultMap="couponResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where c.activity_id = #{activityId} order by c.type asc
+	</select>
+	
+	<select id="queryPage" resultMap="couponResult">
+		<include refid="commonSelect"/>
+		order by c.id asc
+	</select>
+	<delete id="delete" parameterType="Coupon" >
+		delete from dada_sports.coupon
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="Coupon" >
+		insert into dada_sports.coupon (id,activity_id,annual_yield,bonus,type,expiry_day,distance,commission,commission_rate
+		)
+ 		values (#{id},#{activityId},#{annualYield},#{bonus},#{type},#{expiryDay},#{distance},#{commission},#{commissionRate}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="Coupon" >
+		update dada_sports.coupon set activity_id=#{activityId},annual_yield=#{annualYield},bonus=#{bonus},type=#{type},expiry_day=#{expiryDay},distance=#{distance},commission=#{commission},commission_rate=#{commissionRate}
+		where id = #{id}
+</update>
+</mapper>

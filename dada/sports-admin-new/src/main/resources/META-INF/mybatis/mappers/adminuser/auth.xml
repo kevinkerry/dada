@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.youyisi.admin.domain.adminuser.Auth">
+	
+	<resultMap type="Auth" id="authMap">
+		<id column="auth_id" property="id"/>
+		<result column="auth_name" property="name"/>
+		<result column="auth_permission" property="permission"/>
+	</resultMap>
+	
+	<sql id="commonSelect">
+		select auth.id as auth_id,
+			   auth.name as auth_name,
+			   auth.permission as auth_permission
+		from sports_admin.auth auth
+	</sql>
+	
+	<insert id="save" parameterType="Auth">
+		insert into sports_admin.auth(name,permission) values (#{name},#{permission})
+		<selectKey keyProperty="id" resultType="Integer" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	
+	<select id="getById" parameterType="Integer" resultMap="authMap">
+		<include refid="commonSelect"/>
+		where auth.id=#{id}
+	</select>
+	
+	<delete id="delete" parameterType="Auth">
+		delete from sports_admin.auth where id=#{id}
+	</delete>
+	
+	<update id="update" parameterType="Auth">
+		update sports_admin.auth auth set auth.name=#{name},auth.permission=#{permission}
+		where auth.id=#{id}
+	</update>
+	
+	<select id="query" resultMap="authMap">
+		<include refid="commonSelect"/>
+		<where>
+			<if test="name != null">
+				auth.name=#{name}
+			</if>
+			<if test="permission != null">
+				and auth.permission=#{permission}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryPage" resultMap="authMap">
+		<include refid="commonSelect"/>
+		<where>
+			<if test="params.name != null and params.name != ''">
+				auth.name like concat(concat('%',#{params.name}),'%')
+			</if>
+		</where>
+	</select>
+
+	<select id="count" resultType="long" >
+		select count(auth.id) from sports_admin.auth auth
+		where auth.name=#{name}
+	</select>
+</mapper>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.soa.infrastructure.persist.topic.TopicMapper">
+	<resultMap id="BaseResultMap" type="Topic">
+		<id column="TOPIC_ID" property="topicId" jdbcType="BIGINT" />
+	    <result column="TOPIC_CONTENT" property="topicContent" jdbcType="VARCHAR" />
+	    <result column="TOPIC_TITLE" property="topicTitle" jdbcType="VARCHAR" />
+	    <result column="PARENT_CATEGORY" property="parentCategory" jdbcType="VARCHAR" />
+	    <result column="CITY" property="city" jdbcType="VARCHAR" />
+	    <result column="GPS_X" property="gpsX" jdbcType="VARCHAR" />
+	    <result column="GPS_Y" property="gpsY" jdbcType="VARCHAR" />
+	    <result column="LOCATION" property="locations" jdbcType="VARCHAR" />
+	    <result column="FOCUS_WEIGHT" property="focusWeight" jdbcType="INTEGER" />
+	    <result column="CREATOR" property="creator" jdbcType="BIGINT" />
+	    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+	    <result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+	    <result column="STATUS" property="status" jdbcType="INTEGER" />
+	    <result column="DEPOSIT" property="deposit" jdbcType="VARCHAR" />
+	    <result column="WANT_SEX" property="wantSex" jdbcType="INTEGER" />
+	    <result column="TYPE" property="type" jdbcType="INTEGER" />
+	    <result column="LIMIT_NUMBER" property="limitNumber" jdbcType="INTEGER" />
+	    <result column="BEGIN_TIME" property="beginTime" jdbcType="TIMESTAMP" />
+	    <result column="VIEW_QUANTITY" property="viewQuantity" jdbcType="INTEGER" />
+	    <result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+	    
+		<!-- <collection property="topicImages" column="TOPIC_ID"
+			select="com.youyisi.soa.infrastructure.persist.topic.TopicImagesMapper.selectByTopicId"></collection> -->
+	</resultMap>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		T_SPORT_TOPIC
+		where TOPIC_ID = #{topicId,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="Topic" useGeneratedKeys="true"
+		keyProperty="topicId">
+		insert into T_SPORT_TOPIC ( TOPIC_CONTENT, TOPIC_TITLE, 
+      PARENT_CATEGORY, CITY, GPS_X, 
+      GPS_Y, LOCATION, FOCUS_WEIGHT, 
+      CREATOR, CREATED_TIME, UPDATED_TIME, 
+      STATUS, DEPOSIT, WANT_SEX, 
+      LIMIT_NUMBER, BEGIN_TIME, VIEW_QUANTITY, 
+      END_TIME,TYPE)
+    values ( #{topicContent,jdbcType=VARCHAR}, #{topicTitle,jdbcType=VARCHAR}, 
+      #{parentCategory,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{gpsX,jdbcType=VARCHAR}, 
+      #{gpsY,jdbcType=VARCHAR}, #{locations,jdbcType=VARCHAR}, #{focusWeight,jdbcType=INTEGER}, 
+      #{creator,jdbcType=BIGINT}, #{createdTime,jdbcType=TIMESTAMP}, #{updatedTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=INTEGER}, #{deposit,jdbcType=VARCHAR}, #{wantSex,jdbcType=INTEGER}, 
+      #{limitNumber,jdbcType=INTEGER}, #{beginTime,jdbcType=TIMESTAMP}, #{viewQuantity,jdbcType=INTEGER}, 
+      #{endTime,jdbcType=TIMESTAMP},#{type})
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="Topic">
+		update T_SPORT_TOPIC
+    set TOPIC_CONTENT = #{topicContent,jdbcType=VARCHAR},
+      TOPIC_TITLE = #{topicTitle,jdbcType=VARCHAR},
+      PARENT_CATEGORY = #{parentCategory,jdbcType=VARCHAR},
+      CITY = #{city,jdbcType=VARCHAR},
+      GPS_X = #{gpsX,jdbcType=VARCHAR},
+      GPS_Y = #{gpsY,jdbcType=VARCHAR},
+      LOCATION = #{locations,jdbcType=VARCHAR},
+      FOCUS_WEIGHT = #{focusWeight,jdbcType=INTEGER},
+      CREATOR = #{creator,jdbcType=BIGINT},
+      CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+      STATUS = #{status,jdbcType=INTEGER},
+      DEPOSIT = #{deposit,jdbcType=VARCHAR},
+      WANT_SEX = #{wantSex,jdbcType=INTEGER},
+      LIMIT_NUMBER = #{limitNumber,jdbcType=INTEGER},
+      BEGIN_TIME = #{beginTime,jdbcType=TIMESTAMP},
+      VIEW_QUANTITY = #{viewQuantity,jdbcType=INTEGER},
+      END_TIME = #{endTime,jdbcType=TIMESTAMP},TYPE=#{type}
+    where TOPIC_ID = #{topicId,jdbcType=BIGINT}
+	</update>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select TOPIC_ID, TOPIC_CONTENT, TOPIC_TITLE, PARENT_CATEGORY, CITY, GPS_X, GPS_Y, 
+    LOCATION, FOCUS_WEIGHT, CREATOR, CREATED_TIME, UPDATED_TIME, STATUS, DEPOSIT, WANT_SEX, 
+    LIMIT_NUMBER, BEGIN_TIME, VIEW_QUANTITY, END_TIME,TYPE
+    from T_SPORT_TOPIC
+    where TOPIC_ID = #{topicId,jdbcType=BIGINT}
+	</select>
+	<select id="selectAll" resultMap="BaseResultMap">
+		select TOPIC_ID, TOPIC_CONTENT, TOPIC_TITLE, PARENT_CATEGORY, CITY, GPS_X, GPS_Y, 
+    LOCATION, FOCUS_WEIGHT, CREATOR, CREATED_TIME, UPDATED_TIME, STATUS, DEPOSIT, WANT_SEX, 
+    LIMIT_NUMBER, BEGIN_TIME, VIEW_QUANTITY, END_TIME,TYPE
+    from T_SPORT_TOPIC
+	</select>
+
+	<select id="queryPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select TOPIC_ID, TOPIC_CONTENT, TOPIC_TITLE, PARENT_CATEGORY, CITY, GPS_X, GPS_Y, 
+    LOCATION, FOCUS_WEIGHT, CREATOR, CREATED_TIME, UPDATED_TIME, STATUS, DEPOSIT, WANT_SEX, 
+    LIMIT_NUMBER, BEGIN_TIME, VIEW_QUANTITY, END_TIME,TYPE
+    from T_SPORT_TOPIC t
+		where
+		1=1
+		<include refid="query" />
+		limit ${offset},${pageSize}
+	</select>
+
+	<select id="getCount" parameterType="java.util.Map" resultType="java.lang.Long">
+		select count(1) from T_SPORT_TOPIC t
+		where 1=1
+		<include refid="query" />
+	</select>
+
+	<sql id="query">
+
+	</sql>
+</mapper>

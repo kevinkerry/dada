@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.wallet.WalletDetail">
+	<resultMap id="walletDetailResult" type="WalletDetail">
+		<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="type" property="type" />
+		<result column="money" property="money" />
+		<result column="create_time" property="createTime" />
+		<result column="date" property="date" />
+		<result column="result" property="result" />
+
+        <association column="user_id" property="totalAsset" select="com.youyisi.admin.domain.wallet.Wallet.getTotalAssetByUserId" />
+	</resultMap>
+	<sql id="commonSelect">
+		select w.id, w.user_id, w.type, w.money,
+		w.create_time, w.date,w.result
+		from dada_sports.wallet_detail w
+	</sql>
+	<select id="getById" resultMap="walletDetailResult"
+		parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where w.id = #{id}
+	</select>
+	<select id="queryPage" resultMap="walletDetailResult">
+		<include refid="commonSelect" />
+		where 1=1
+		<if test="params.type!=null">
+			and w.type=#{params.type}
+		</if>
+		<if test="params.userId!=null">
+			and w.user_id=#{params.userId}
+		</if>
+
+		<if test="params.date!=null">
+			and w.date=#{params.date}
+		</if>
+		order by w.id asc
+	</select>
+	
+	<select id="haveSettlement" resultType="java.lang.Integer">
+		select count(*)
+		from dada_sports.wallet_detail w where w.date=#{date} and w.user_id=#{userId} and (w.type=7 or w.type=3)
+	</select>
+	
+	
+	<select id="queryPageByUserId" resultMap="walletDetailResult">
+		<include refid="commonSelect" />
+		where 1=1
+		<if test="params.type!=null">
+			and w.type=#{params.type}
+		</if>
+		<if test="params.userId!=null">
+			and w.user_id=#{params.userId}
+		</if>
+		<if test="params.date!=null">
+			and w.date=#{params.date}
+		</if>
+		order by w.create_time desc
+	</select>
+	
+	<delete id="delete" parameterType="WalletDetail">
+		delete from
+		dada_sports.wallet_detail
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="WalletDetail">
+		insert into dada_sports.wallet_detail
+		(id,user_id,type,money,create_time,date,result )
+		values (#{id},#{userId},#{type},#{money},#{createTime},#{date},#{result} )
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="WalletDetail">
+		update
+		dada_sports.wallet_detail set
+		user_id=#{userId},type=#{type},money=#{money},create_time=#{createTime},date=#{date},result=#{result}
+		where id = #{id}
+	</update>
+	
+	<select id="countWallet"  resultType="java.lang.Double">
+		select 
+			<if test="result == 1">
+				count(*) 
+			</if>
+			<if test="result == 2">
+				sum(w.money) 
+			</if>
+			<if test="result == null">
+				sum(w.money) 
+			</if>
+		from dada_sports.wallet_detail w 
+		<if test="clientType != null">
+		   LEFT JOIN dada_sports.user u ON w.user_id = u.id
+		</if>
+		where 1=1
+			<if test="walletType != null">
+				and w.type = #{walletType}
+			</if>
+		 	<if test="clientType != null">
+		 	    and u.client_type = #{clientType}
+		 	</if>
+		 	<if test="beginTime != null">
+			 	and (w.create_time <![CDATA[>=]]> #{beginTime}
+			 	and w.create_time <![CDATA[<=]]> #{endTime})
+		    </if>
+	</select>
+	
+	<select id="getThighCount" resultType="java.lang.Double">
+		select sum(w.money) from dada_sports.wallet_detail w
+		where w.user_id = #{userId} and  w.date=#{date} and w.type=5
+	</select>
+	
+	<select id="getHugThighCommissionSum" resultType="java.lang.Double" parameterType="java.lang.Long">
+		select sum(w.money) from dada_sports.wallet_detail w
+		where w.date=#{date} and w.type=6
+	</select>
+	
+	
+	<select id="query" resultMap="walletDetailResult" resultType="WalletDetail">
+		<include refid="commonSelect" />
+		where 1=1
+		<if test="type!=null">
+			and w.type=#{type}
+		</if>
+		<if test="userId!=null">
+			and w.user_id=#{userId}
+		</if>
+		<if test="date!=null">
+			and w.date=#{date}
+		</if>
+		order by w.id asc
+	</select>
+	
+	<select id="sumWalletByDateAndType" resultType="java.lang.Double">
+		select sum(w.money) from dada_sports.wallet_detail w
+		where 1=1
+		<if test="date != null">
+			and w.date = #{date}
+		</if>
+		<if test="type != null">
+			and w.type = #{type}
+		</if>
+	</select>
+	
+	<select id="sumWalletByUserId" resultType="java.lang.Double">
+		select sum(w.money) from dada_sports.wallet_detail w
+		where 1=1
+		<if test="userId != null">
+			and w.user_id = #{userId}
+		</if>
+		<if test="type != null">
+			and w.type = #{type}
+		</if>
+	</select>
+	
+	
+	<select id="sumWallet" resultType="java.lang.Double">
+		select w.money from dada_sports.wallet_detail w
+		where 1=1
+		<if test="userId != null ">
+		  and w.user_id = #{userId}
+		</if>
+		<if test="date != null">
+			and w.date = #{date}
+		</if>
+		<if test="type != null">
+			and w.type = #{type}
+		</if>
+	</select>
+	
+	
+	<select id="getWithdrawBalance" resultType="java.lang.Double">
+		select w.result from dada_sports.wallet_detail w
+		where 1=1
+		<if test="userId != null ">
+		  and w.user_id = #{userId}
+		</if>
+		<if test="date != null">
+			and w.date = #{date}
+		</if>
+		<if test="money != null">
+			and w.money = #{money}
+		</if>
+		<if test="createTime != null">
+			and w.create_time <![CDATA[>=]]> #{createTime}
+		</if>
+		 and w.type = 2
+		 LIMIT 0,1
+	</select>
+</mapper>

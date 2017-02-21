@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.goldbean.GoldBeanDetail" >
+	<resultMap id="goldBeanDetailResult" type="GoldBeanDetail" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="type" property="type" />
+		<result column="category" property="category" />
+		<result column="gold_bean" property="goldBean" />
+		<result column="date" property="date" />
+		<result column="result" property="result" />
+		<result column="create_time" property="createTime" />
+		<result column="note" property="note" />
+		<result column="product_id" property="productId" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select g.id, g.user_id, g.type, g.category, g.gold_bean, g.date, g.result, g.create_time, g.note, g.product_id
+		from dada_sports.gold_bean_detail g
+	</sql>
+	<select id="getById" resultMap="goldBeanDetailResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where g.id = #{id}
+	</select>
+	<select id="queryPage" resultMap="goldBeanDetailResult">
+		<include refid="commonSelect"/>
+		where 1=1
+		<if test="params.userId!=null">
+		and g.user_id = #{params.userId}
+		</if>
+		order by g.create_time desc
+	</select>
+	<delete id="delete" parameterType="GoldBeanDetail" >
+		delete from dada_sports.gold_bean_detail
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="GoldBeanDetail" >
+		insert into dada_sports.gold_bean_detail (id,user_id,type,category,gold_bean,date,result,create_time,note,product_id
+		)
+ 		values (#{id},#{userId},#{type},#{category},#{goldBean},#{date},#{result},#{createTime},#{note},#{productId}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="GoldBeanDetail" >
+		update dada_sports.gold_bean_detail set user_id=#{userId},type=#{type},category=#{category},gold_bean=#{goldBean},date=#{date},result=#{result},create_time=#{createTime},note=#{note},product_id=#{productId}
+		where id = #{id}
+</update>
+</mapper>

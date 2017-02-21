@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="sports-app-soa">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <dependent-module archiveName="sports-app-remote-1.0.1-RELEASE.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/sports-app-remote/sports-app-remote">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="sports-lang-1.0.0-RELEASE.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/sports-lang/sports-lang">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="sports-oss-comm-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/sports-oss-comm/sports-oss-comm">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="sports-sms-post-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/sports-sms-post/sports-sms-post">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="sports-mybatis-1.0.7-RELEASE.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/sports-mybatis/sports-mybatis">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="sports-app-soa"/>
+        <property name="java-output-path" value="/sports-app-soa/target/classes"/>
+    </wb-module>
+</project-modules>

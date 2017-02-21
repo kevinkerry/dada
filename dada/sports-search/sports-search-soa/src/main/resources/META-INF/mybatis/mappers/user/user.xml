@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.user.User" >
+	<resultMap id="userResult" type="User" >
+	<id column="id" property="id" />
+		<result column="username" property="username" />
+		<result column="password" property="password" />
+		<result column="nickname" property="nickname" />
+		<result column="head_portrait" property="headPortrait" />
+		<result column="client_type" property="clientType" />
+		<result column="client_id" property="clientId" />
+		<result column="register_time" property="registerTime" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="status" property="status" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select u.id, u.username, u.password, u.nickname, u.head_portrait, u.client_type, u.client_id, u.register_time, u.create_time, u.update_time, u.status
+		from dada_sports.user u
+	</sql>
+	<select id="getById" resultMap="userResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where u.id = #{id}
+	</select>
+	<select id="queryPage" resultMap="userResult">
+		<include refid="commonSelect"/>
+		order by u.id asc
+	</select>
+	<delete id="delete" parameterType="User" >
+		delete from dada_sports.user
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="User" >
+		insert into dada_sports.user (id,username,password,nickname,head_portrait,client_type,client_id,register_time,create_time,update_time,status
+		)
+ 		values (#{id},#{username},#{password},#{nickname},#{headPortrait},#{clientType},#{clientId},#{registerTime},#{createTime},#{updateTime},#{status}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="User" >
+		update dada_sports.user set username=#{username},password=#{password},nickname=#{nickname},head_portrait=#{headPortrait},client_type=#{clientType},client_id=#{clientId},register_time=#{registerTime},create_time=#{createTime},update_time=#{updateTime},status=#{status}
+		where id = #{id}
+</update>
+</mapper>

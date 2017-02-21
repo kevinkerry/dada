@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.lottery.LotteryWinBase">
+	<resultMap id="lotteryWinBaseResult" type="LotteryWinBase">
+		<id column="id" property="id" />
+		<result column="lottery_base_id" property="lotteryBaseId" />
+		<result column="level" property="level" />
+		<result column="gold_bean" property="goldBean" />
+	</resultMap>
+	<sql id="commonSelect">
+		select l.id, l.lottery_base_id, l.level,
+		l.gold_bean
+		from dada_sports.lottery_win_base l
+	</sql>
+	<select id="getById" resultMap="lotteryWinBaseResult"
+		parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where l.id = #{id}
+	</select>
+	<select id="queryPage" resultMap="lotteryWinBaseResult">
+		<include refid="commonSelect" />
+		order by l.id asc
+	</select>
+	<delete id="delete" parameterType="LotteryWinBase">
+		delete from
+		dada_sports.lottery_win_base
+		where id = #{id}
+	</delete>
+	
+	<delete id="deleteByLotteryBaseId" parameterType="java.lang.Long">
+		delete from
+		dada_sports.lottery_win_base
+		where lottery_base_id = #{lotteryBaseId}
+	</delete>
+	
+	<insert id="save" parameterType="LotteryWinBase">
+		insert into dada_sports.lottery_win_base
+		(id,lottery_base_id,level,gold_bean )
+		values (#{id},#{lotteryBaseId},#{level},#{goldBean} )
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="LotteryWinBase">
+		update
+		dada_sports.lottery_win_base set
+		lottery_base_id=#{lotteryBaseId},level=#{level},gold_bean=#{goldBean}
+		where id = #{id}
+	</update>
+	
+	<select id="getLotteryWinBaseList" resultMap="lotteryWinBaseResult">
+		<include refid="commonSelect" />
+		where l.lottery_base_id = #{lotteryBaseId}
+	</select>
+</mapper>

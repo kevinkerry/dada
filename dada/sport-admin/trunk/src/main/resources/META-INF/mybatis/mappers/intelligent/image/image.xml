@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.intelligent.image.Image" >
+	<resultMap id="imageResult" type="Image" >
+	<id column="id" property="id" />
+	<result column="userId" property="userId" />
+	<result column="imageUrl" property="imageUrl" />
+	</resultMap>
+<sql id="commonSelect" >
+		select * 
+		from website.image u
+</sql>
+<select id="getById" resultMap="imageResult" parameterType="java.lang.Long" >
+	<include refid="commonSelect"/>
+	where u.id = #{id}
+</select>
+
+<select id="getByUserId" parameterType="java.lang.Long" resultMap="imageResult">
+		<include refid="commonSelect"/>
+		where u.userId=#{id}
+	</select>
+<select id="queryPage" resultMap="imageResult">
+	 <include refid="commonSelect"/>
+	order by u.id asc
+</select>
+<delete id="delete" parameterType="Image" >
+	 delete from website.image
+	where id = #{id}
+</delete>
+<insert id="save" parameterType="Image" >
+	insert into website.image (id,userId,imageUrl
+)
+ values (#{id},#{userId},#{imageUrl}
+)
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+</insert>
+<update id="update" parameterType="Image" >
+	update website.image set userId=#{userId},imageUrl=#{imageUrl}
+	where id = #{id}
+</update>
+</mapper>

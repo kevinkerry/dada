@@ -1,0 +1,79 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+     http://www.springframework.org/schema/beans 
+     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+     http://www.springframework.org/schema/tx 
+     http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+     http://www.springframework.org/schema/aop 
+     http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+     http://www.springframework.org/schema/context 
+     http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+	default-lazy-init="true">
+
+	<bean id="userTask" class="com.youyisi.admin.interfaces.task.UserTask" />
+	
+	
+	<bean id="userTaskJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="userTask" />
+		<property name="targetMethod" value="autoResultsRemind" />
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	
+	<bean id="userTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="userTaskJob" />
+		<property name="cronExpression" value="00 00 22 * * ?" />
+	</bean>
+	
+	
+	<!-- 彩票开始   -->
+	<bean id="lotteryBaseTask" class="com.youyisi.admin.interfaces.task.LotteryBaseTask" />
+	
+	
+	<bean id="lotteryBaseTaskJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="lotteryBaseTask" />
+		<property name="targetMethod" value="lottery" />
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	
+	<bean id="lotteryBaseTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="lotteryBaseTaskJob" />
+		<property name="cronExpression" value="0 0 1 * * ?" />
+	</bean>
+	<!-- 彩票结束   0 0 0 * * ? *-->
+	
+	<!-- 到期推送 开始   -->
+	<bean id="expiryTask" class="com.youyisi.admin.interfaces.task.ExpiryTask" />
+	
+	<bean id="expiryTaskJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="expiryTask" />
+		<property name="targetMethod" value="expiry" />
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	<bean id="expiryTaskTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="expiryTaskJob" />
+		<property name="cronExpression" value="0 0 20 * * ?" />
+	</bean>
+	<!-- 到期推送 结束    0 0/1 * * * ? -->
+	
+	
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+			    <ref bean="userTaskTrigger" />
+			    <ref bean="lotteryBaseTaskTrigger" />
+			    <ref bean="expiryTaskTaskTrigger" />
+			  <!--  <ref bean="speedDatingTaskTrigger" /> -->
+			</list>
+		</property>
+	</bean>
+	
+	
+</beans>

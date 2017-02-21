@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.member.Member" >
+	<resultMap id="memberResult" type="Member" >
+		<result column="MEMBER_ID" property="memberId" />
+		<result column="MEMBER_CODE" property="memberCode" />
+		<result column="USER_ID" property="userId" />
+		<result column="USER_CODE" property="userCode" />
+		<result column="MEMBER_NAME" property="memberName" />
+		<result column="MEMBER_ALIAS" property="memberAlias" />
+		<result column="SEX" property="sex" />
+		<result column="BIRTHDAY" property="birthday" />
+		<result column="MEMBER_LOGO" property="memberLogo" />
+		<result column="BACKDROP_IMG" property="backdropImg" />
+		<result column="CITY" property="city" />
+		<result column="MOBILE" property="mobile" />
+		<result column="EMAIL" property="email" />
+		<result column="MEMBER_STATE" property="memberState" />
+		<result column="MEMBER_LEVEL" property="memberLevel" />
+		<result column="CONSTELLATION" property="constellation" />
+		<result column="MARITAL_STATUS" property="maritalStatus" />
+		<result column="HOMETOWN" property="hometown" />
+		<result column="OCCUPATION" property="occupation" />
+		<result column="LIVING_SCOPE" property="livingScope" />
+		<result column="MEMBER_DESC" property="memberDesc" />
+		<result column="SCHOOL" property="school" />
+		<result column="WORKUNIT" property="workunit" />
+		<result column="PROFESSION" property="profession" />
+		<result column="DEGREE" property="degree" />
+		<result column="SPORT_CATEGORY01" property="sportCategory01" />
+		<result column="SPORT_CATEGORY02" property="sportCategory02" />
+		<result column="SPORT_CATEGORY03" property="sportCategory03" />
+		<result column="SPORT_CATEGORY04" property="sportCategory04" />
+		<result column="SPORT_CATEGORY05" property="sportCategory05" />
+		<result column="RECOMMENDED_CODE" property="recommendedCode" />
+		<result column="WECHAT" property="wechat" />
+		<result column="COMMENTS" property="comments" />
+		<result column="CREATED_TIME" property="createdTime" />
+		<result column="MODIFIER" property="modifier" />
+		<result column="UPDATED_TIME" property="updatedTime" />
+		<result column="RECOMMEND_ORDER" property="recommendOrder" />
+		<result column="RECOMMEND_FLAG" property="recommendFlag" />
+		<result column="MEMBER_HEIGHT" property="memberHeight" />
+		<result column="MEMBER_WEIGHT" property="memberWeight" />
+		<association property="recommendedMember" column="RECOMMENDED_CODE" javaType="com.youyisi.admin.domain.member.Member" select="com.youyisi.admin.domain.member.Member.getByMemberCode"></association>
+		<collection property="memberImages" column="MEMBER_ID" ofType="com.youyisi.admin.domain.member.memberimage.MemberImage" select="com.youyisi.admin.domain.member.memberimage.MemberImage.getByMemberId" />
+	</resultMap>
+<sql id="commonSelect" >
+		select t.MEMBER_ID, t.MEMBER_CODE, t.USER_ID, t.USER_CODE, t.MEMBER_NAME, t.MEMBER_ALIAS, t.SEX, t.BIRTHDAY, t.MEMBER_LOGO, t.BACKDROP_IMG, t.CITY, t.MOBILE, t.EMAIL, t.MEMBER_STATE, t.MEMBER_LEVEL, t.CONSTELLATION, t.MARITAL_STATUS, t.HOMETOWN, t.OCCUPATION, t.LIVING_SCOPE, t.MEMBER_DESC, t.SCHOOL, t.WORKUNIT, t.PROFESSION, t.DEGREE, t.SPORT_CATEGORY01, t.SPORT_CATEGORY02, t.SPORT_CATEGORY03, t.SPORT_CATEGORY04, t.SPORT_CATEGORY05, t.RECOMMENDED_CODE, t.WECHAT, t.COMMENTS, t.CREATED_TIME, t.MODIFIER, t.UPDATED_TIME,
+		t.RECOMMEND_ORDER, t.RECOMMEND_FLAG, t.MEMBER_HEIGHT, t.MEMBER_WEIGHT from sports.T_SPORT_MEMBER t
+</sql>
+<select id="getById" resultMap="memberResult" parameterType="java.lang.Integer" >
+	<include refid="commonSelect"/>
+	where t.MEMBER_ID = #{memberId}
+</select>
+<select id="getByMemberCode" resultMap="memberResult" parameterType="java.lang.String" >
+	<include refid="commonSelect"/>
+	where t.MEMBER_CODE = #{memberCode}
+</select>
+<select id="getByUserId" resultMap="memberResult" parameterType="java.lang.Integer" >
+	<include refid="commonSelect"/>
+	where t.USER_ID = #{userId}
+</select>
+<select id="queryPage" resultMap="memberResult">
+	 <include refid="commonSelect"/>
+	 <where>
+	    1=1
+		<if test="params.memberName != null and params.memberName != ''">
+			and t.MEMBER_NAME like concat(concat('%',#{params.memberName}),'%')
+		</if>
+		<if test="params.memberAlias != null and params.memberAlias != ''">
+			and t.MEMBER_ALIAS like concat(concat('%',#{params.memberAlias}),'%')
+		</if>
+		<if test="params.city != null and params.city != ''">
+			and t.CITY like concat(concat('%',#{params.city}),'%')
+		</if>
+		<if test="params.sex != null">
+			and t.SEX= #{params.sex}
+		</if>
+		<if test="params.recommendFlag != null">
+			and t.RECOMMEND_FLAG = #{params.recommendFlag}
+		</if>
+	</where>
+	order by t.RECOMMEND_ORDER desc, t.MEMBER_LEVEL desc
+</select>
+<delete id="delete" parameterType="Member" >
+	 delete from sports.T_SPORT_MEMBER
+	where MEMBER_ID = #{memberId}
+</delete>
+<insert id="save" parameterType="Member" >
+	insert into sports.T_SPORT_MEMBER (MEMBER_CODE,USER_ID,USER_CODE,MEMBER_NAME,MEMBER_ALIAS,SEX,BIRTHDAY,MEMBER_LOGO,BACKDROP_IMG,CITY,MOBILE,EMAIL,MEMBER_STATE,MEMBER_LEVEL,CONSTELLATION,MARITAL_STATUS,HOMETOWN,OCCUPATION,LIVING_SCOPE,MEMBER_DESC,SCHOOL,WORKUNIT,PROFESSION,DEGREE,SPORT_CATEGORY01,SPORT_CATEGORY02,SPORT_CATEGORY03,SPORT_CATEGORY04,SPORT_CATEGORY05,RECOMMENDED_CODE,WECHAT,COMMENTS,CREATED_TIME,MODIFIER,UPDATED_TIME,RECOMMEND_ORDER,RECOMMEND_FLAG,MEMBER_HEIGHT,MEMBER_WEIGHT
+)
+ values (#{memberCode},#{userId},#{userCode},#{memberName},#{memberAlias},#{sex},#{birthday},#{memberLogo},#{backdropImg},#{city},#{mobile},#{email},#{memberState},#{memberLevel},#{constellation},#{maritalStatus},#{hometown},#{occupation},#{livingScope},#{memberDesc},#{school},#{workunit},#{profession},#{degree},#{sportCategory01},#{sportCategory02},#{sportCategory03},#{sportCategory04},#{sportCategory05},#{recommendedCode},#{wechat},#{comments},#{createdTime},#{modifier},#{updatedTime},#{recommendOrder},#{recommendFlag},#{memberHeight},#{memberWeight}
+)
+		<selectKey keyProperty="memberId" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+</insert>
+<update id="update" parameterType="Member" >
+	update sports.T_SPORT_MEMBER set MEMBER_ID=#{memberId},MEMBER_CODE=#{memberCode},USER_ID=#{userId},USER_CODE=#{userCode},
+	MEMBER_NAME=#{memberName},MEMBER_ALIAS=#{memberAlias},SEX=#{sex},BIRTHDAY=#{birthday},MEMBER_LOGO=#{memberLogo},
+	BACKDROP_IMG=#{backdropImg},CITY=#{city},MOBILE=#{mobile},EMAIL=#{email},MEMBER_STATE=#{memberState},MEMBER_LEVEL=#{memberLevel},
+	CONSTELLATION=#{constellation},MARITAL_STATUS=#{maritalStatus},HOMETOWN=#{hometown},OCCUPATION=#{occupation},
+	LIVING_SCOPE=#{livingScope},MEMBER_DESC=#{memberDesc},SCHOOL=#{school},WORKUNIT=#{workunit},PROFESSION=#{profession},
+	DEGREE=#{degree},SPORT_CATEGORY01=#{sportCategory01},SPORT_CATEGORY02=#{sportCategory02},SPORT_CATEGORY03=#{sportCategory03},
+	SPORT_CATEGORY04=#{sportCategory04},SPORT_CATEGORY05=#{sportCategory05},RECOMMENDED_CODE=#{recommendedCode},WECHAT=#{wechat},
+	COMMENTS=#{comments},CREATED_TIME=#{createdTime},MODIFIER=#{modifier},UPDATED_TIME=#{updatedTime},RECOMMEND_ORDER=#{recommendOrder},RECOMMEND_FLAG=#{recommendFlag},
+	 MEMBER_HEIGHT=#{memberHeight},MEMBER_WEIGHT=#{memberWeight}
+	where MEMBER_ID = #{memberId}
+</update>
+</mapper>

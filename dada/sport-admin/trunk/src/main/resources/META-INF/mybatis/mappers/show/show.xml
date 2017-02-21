@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.show.Show" >
+	<resultMap id="showResult" type="Show" >
+		<result column="SHOW_ID" property="showId" />
+		<result column="SHOW_DESC" property="showDesc" />
+		<result column="PARENT_CATEGORY" property="parentCategory" />
+		<result column="CATEGORY_CODE" property="categoryCode" />
+		<result column="CITY" property="city" />
+		<result column="GPS_X" property="gpsX" />
+		<result column="GPS_Y" property="gpsY" />
+		<result column="LOCATION" property="location" />
+		<result column="RECOMMEND_FLAG" property="recommendFlag" />
+		<result column="VIEW_QUANTITY" property="viewQuantity" />
+		<result column="FOCUS_WEIGHT" property="focusWeight" />
+		<result column="CREATOR" property="creator" />
+		<result column="CREATED_TIME" property="createdTime" />
+		<result column="MODIFIER" property="modifier" />
+		<result column="UPDATED_TIME" property="updatedTime" />
+		<result column="STATUS" property="status" />
+		<association property="member" column="CREATOR" javaType="com.youyisi.admin.domain.member.Member" select="com.youyisi.admin.domain.member.Member.getByUserId"></association>
+		<association property="category" column="CATEGORY_CODE" javaType="com.youyisi.admin.domain.category.Category" select="com.youyisi.admin.domain.category.Category.getByCategoryCode"/>
+		<association property="showUser" column="CREATOR" javaType="com.youyisi.admin.domain.sportuser.SportUser" select="com.youyisi.admin.domain.sportuser.SportUser.getById"></association>
+		<association property="commentCount" column="SHOW_ID" javaType="java.lang.Long" select="com.youyisi.admin.domain.show.showcomment.ShowComment.getCountByShowId"/>
+		<collection property="showImages" column="SHOW_ID" ofType="com.youyisi.admin.domain.show.showimage.ShowImage" select="com.youyisi.admin.domain.show.showimage.ShowImage.getByShowId" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select t.SHOW_ID, t.SHOW_DESC, t.PARENT_CATEGORY, t.CATEGORY_CODE, t.CITY, t.GPS_X, t.GPS_Y, t.LOCATION, t.RECOMMEND_FLAG, t.VIEW_QUANTITY, t.FOCUS_WEIGHT, t.CREATOR, t.CREATED_TIME, t.MODIFIER, t.UPDATED_TIME, t.STATUS
+		from sports.T_SPORT_SHOW t
+	</sql>
+	<select id="getById" resultMap="showResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where t.SHOW_ID = #{showId}
+	</select>
+	<select id="queryPage" resultMap="showResult">
+		<include refid="commonSelect"/>
+		<where>
+		    1=1
+			<if test="params.parentCategory != null and params.parentCategory != ''">
+				and t.PARENT_CATEGORY= #{params.parentCategory}
+			</if>
+			<if test="params.recommendFlag != null">
+				and t.RECOMMEND_FLAG = #{params.recommendFlag}
+			</if>
+			<if test="params.member != null and params.member.memberAlias != null and params.member.memberAlias != ''">
+				and t.CREATOR in (select m.USER_ID from sports.T_SPORT_MEMBER m where m.MEMBER_ALIAS like concat(concat('%',#{params.member.memberAlias}),'%')) 
+			</if>
+		</where>
+		order by t.FOCUS_WEIGHT desc , t.CREATED_TIME desc
+	</select>
+	<delete id="delete" parameterType="Show" >
+		delete from sports.T_SPORT_SHOW
+		where SHOW_ID = #{showId}
+	</delete>
+	<insert id="save" parameterType="Show" >
+		insert into sports.T_SPORT_SHOW (SHOW_ID,SHOW_DESC,PARENT_CATEGORY,CATEGORY_CODE,CITY,GPS_X,GPS_Y,LOCATION,RECOMMEND_FLAG,VIEW_QUANTITY,FOCUS_WEIGHT,CREATOR,CREATED_TIME,MODIFIER,UPDATED_TIME,STATUS
+		)
+ 		values (#{showId},#{showDesc},#{parentCategory},#{categoryCode},#{city},#{gpsX},#{gpsY},#{location},#{recommendFlag},#{viewQuantity},#{focusWeight},#{creator},#{createdTime},#{modifier},#{updatedTime},#{status}
+		)
+		<selectKey keyProperty="showId" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="Show" >
+		update sports.T_SPORT_SHOW set SHOW_ID=#{showId},SHOW_DESC=#{showDesc},PARENT_CATEGORY=#{parentCategory},CATEGORY_CODE=#{categoryCode},CITY=#{city},GPS_X=#{gpsX},GPS_Y=#{gpsY},LOCATION=#{location},RECOMMEND_FLAG=#{recommendFlag},VIEW_QUANTITY=#{viewQuantity},FOCUS_WEIGHT=#{focusWeight},CREATOR=#{creator},CREATED_TIME=#{createdTime},MODIFIER=#{modifier},UPDATED_TIME=#{updatedTime},STATUS=#{status}
+		where SHOW_ID = #{showId}
+	</update>
+</mapper>

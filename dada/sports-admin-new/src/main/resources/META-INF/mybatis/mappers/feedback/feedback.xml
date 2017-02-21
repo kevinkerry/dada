@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.feedback.Feedback" >
+	<resultMap id="feedbackResult" type="Feedback" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="content" property="content" />
+		<result column="contact" property="contact" />
+		<result column="create_time" property="createTime" />
+		<result column="status" property="status" />
+		
+		<association property="user" column="user_id" select="com.youyisi.admin.domain.user.User.getById"/>
+	</resultMap>
+	<sql id="commonSelect" >
+		select f.id, f.user_id, f.content, f.contact, f.create_time, f.status
+		from dada_sports.feedback f
+	</sql>
+	<select id="getById" resultMap="feedbackResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where f.id = #{id}
+	</select>
+	<select id="queryPage" resultMap="feedbackResult">
+		<include refid="commonSelect"/>
+		order by f.id asc
+	</select>
+	<delete id="delete" parameterType="Feedback" >
+		delete from dada_sports.feedback
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="Feedback" >
+		insert into dada_sports.feedback (id,user_id,content,contact,create_time,status
+		)
+ 		values (#{id},#{userId},#{content},#{contact},#{createTime},#{status}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="Feedback" >
+		update dada_sports.feedback set user_id=#{userId},content=#{content},contact=#{contact},create_time=#{createTime},status=#{status}
+		where id = #{id}
+</update>
+
+  <select id="queryPageFeedback" resultMap="feedbackResult">
+		<include refid="commonSelect"/>
+		<if test="params.condition != null">
+			LEFT JOIN dada_sports.user u ON f.user_id = u.id
+		</if>
+		where 1=1
+		<if test="params.status != null">
+			and f.status = #{params.status}
+		</if>
+		<if test="params.condition != null">
+		    and (u.id LIKE CONCAT(CONCAT('%',#{params.condition}),'%') or 
+		  	   u.username LIKE CONCAT(CONCAT('%',#{params.condition}),'%') or
+		  	   u.nickname LIKE CONCAT(CONCAT('%',#{params.condition}),'%'))
+		</if>
+		order by f.create_time desc
+	</select>
+</mapper>

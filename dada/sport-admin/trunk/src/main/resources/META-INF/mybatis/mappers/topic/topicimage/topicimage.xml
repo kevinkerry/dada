@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.topic.topicimage.TopicImage" >
+	<resultMap id="topicImageResult" type="TopicImage" >
+		<result column="IMG_ID" property="imgId" />
+		<result column="TOPIC_ID" property="topicId" />
+		<result column="IMG_URL" property="imgUrl" />
+		<result column="IMG_ORDER" property="imgOrder" />
+		<result column="CREATOR" property="creator" />
+		<result column="CREATED_TIME" property="createdTime" />
+		<result column="MODIFIER" property="modifier" />
+		<result column="UPDATED_TIME" property="updatedTime" />
+		<result column="STATUS" property="status" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select t.IMG_ID, t.TOPIC_ID, t.IMG_URL, t.IMG_ORDER, t.CREATOR, t.CREATED_TIME, t.MODIFIER, t.UPDATED_TIME, t.STATUS
+		from sports.T_SPORT_TOPIC_IMAGES t
+	</sql>
+	<select id="getById" resultMap="topicImageResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where t.IMG_ID = #{topicId}
+	</select>
+	<select id="getByTopicId" resultMap="topicImageResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where t.TOPIC_ID = #{imgId}
+	</select>
+	<select id="queryPage" resultMap="topicImageResult">
+		<include refid="commonSelect"/>
+		order by t.IMG_ID asc
+	</select>
+	<delete id="delete" parameterType="TopicImage" >
+		delete from sports.T_SPORT_TOPIC_IMAGES
+		where IMG_ID = #{imgId}
+	</delete>
+	<insert id="save" parameterType="TopicImage" >
+		insert into sports.T_SPORT_TOPIC_IMAGES (IMG_ID,TOPIC_ID,IMG_URL,IMG_ORDER,CREATOR,CREATED_TIME,MODIFIER,UPDATED_TIME,STATUS
+		)
+ 		values (#{imgId},#{topicId},#{imgUrl},#{imgOrder},#{creator},#{createdTime},#{modifier},#{updatedTime},#{status}
+		)
+		<selectKey keyProperty="imgId" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="TopicImage" >
+		update sports.T_SPORT_TOPIC_IMAGES set IMG_ID=#{imgId},TOPIC_ID=#{topicId},IMG_URL=#{imgUrl},IMG_ORDER=#{imgOrder},CREATOR=#{creator},CREATED_TIME=#{createdTime},MODIFIER=#{modifier},UPDATED_TIME=#{updatedTime},STATUS=#{status}
+		where IMG_ID = #{imgId}
+	</update>
+</mapper>

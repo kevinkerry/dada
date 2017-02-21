@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.youyisi.soa.infrastructure.persist.answer.AnswerUserMapper">
+	<resultMap id="AnswerUserMap" type="AnswerUser">
+		<id column="USER_ANSWER_ID" property="userAnswerId" jdbcType="BIGINT" />
+		<result column="USER_ID" property="userId" jdbcType="BIGINT" />
+		<result column="ANSWER_ID" property="answerId" jdbcType="BIGINT" />
+		<result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from T_SPORT_ANSWER_USER
+		where USER_ANSWER_ID = #{userAnswerId,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="AnswerUser" useGeneratedKeys="true" keyProperty="userAnswerId">
+		insert into T_SPORT_ANSWER_USER ( USER_ID, ANSWER_ID,
+		CREATED_TIME)
+		values ( #{userId,jdbcType=BIGINT},
+		#{answerId,jdbcType=BIGINT},
+		#{createdTime,jdbcType=TIMESTAMP})
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="AnswerUser">
+		update T_SPORT_ANSWER_USER
+		set USER_ID = #{userId,jdbcType=BIGINT},
+		ANSWER_ID = #{answerId,jdbcType=BIGINT},
+		CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP}
+		where USER_ANSWER_ID = #{userAnswerId,jdbcType=BIGINT}
+	</update>
+	<select id="selectByPrimaryKey" resultMap="AnswerUserMap"
+		parameterType="java.lang.Long">
+		select USER_ANSWER_ID, USER_ID, ANSWER_ID, CREATED_TIME
+		from T_SPORT_ANSWER_USER
+		where USER_ANSWER_ID = #{userAnswerId,jdbcType=BIGINT}
+	</select>
+	<select id="selectAll" resultMap="AnswerUserMap">
+		select USER_ANSWER_ID, USER_ID, ANSWER_ID, CREATED_TIME
+		from T_SPORT_ANSWER_USER
+	</select>
+	
+	<select id="queryPage" resultMap="AnswerUserMap"
+		parameterType="java.util.Map">
+		select USER_ANSWER_ID, USER_ID, ANSWER_ID, CREATED_TIME
+		from T_SPORT_ANSWER_USER t
+		where 1=1
+		<include refid="query" />
+		<if test="pageSize!=0">
+			limit ${offset},${pageSize}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="java.util.Map" resultType="java.lang.Long">
+		select count(1) from T_SPORT_ANSWER_USER t
+		where 1=1
+		<include refid="query" />
+	</select>
+
+	<sql id="query">
+		<if test="answerId != null">
+			and t.ANSWER_ID=#{answerId}
+		</if>
+	</sql>
+</mapper>

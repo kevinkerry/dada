@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.sportsvenues.sportvenueimage.SportVenueImage" >
+	<resultMap id="sportVenueImageResult" type="SportVenueImage" >
+		<result column="IMG_ID" property="imgId" />
+		<result column="VENUE_ID" property="venueId" />
+		<result column="IMG_URL" property="imgUrl" />
+		<result column="IMG_ORDER" property="imgOrder" />
+		<result column="CREATOR" property="creator" />
+		<result column="CREATED_TIME" property="createdTime" />
+		<result column="STATUS" property="status" />
+	</resultMap>
+	<sql id="commonSelect" >
+			select t.IMG_ID, t.VENUE_ID, t.IMG_URL, t.IMG_ORDER, t.CREATOR, t.CREATED_TIME, t.STATUS
+			from sports.T_SPORT_VENUE_IMAGES t
+	</sql>
+	<select id="getByVenueId" resultMap="sportVenueImageResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where t.VENUE_ID = #{venueId}
+	</select>
+	<select id="getById" resultMap="sportVenueImageResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where t.IMG_ID = #{imgId}
+	</select>
+	<select id="queryPage" resultMap="sportVenueImageResult">
+		 <include refid="commonSelect"/>
+		order by t.IMG_ID asc
+	</select>
+	<delete id="delete" parameterType="SportVenueImage" >
+		 delete from sports.T_SPORT_VENUE_IMAGES
+		where IMG_ID = #{imgId}
+	</delete>
+	<insert id="save" parameterType="SportVenueImage" >
+		insert into sports.T_SPORT_VENUE_IMAGES (VENUE_ID,IMG_URL,IMG_ORDER,CREATOR,CREATED_TIME,STATUS
+	)
+	 values (#{venueId},#{imgUrl},#{imgOrder},#{creator},#{createdTime},#{status}
+	)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+				select LAST_INSERT_ID() as value
+			</selectKey>
+	</insert>
+	<update id="update" parameterType="SportVenueImage" >
+		update sports.T_SPORT_VENUE_IMAGES set IMG_ID=#{imgId},VENUE_ID=#{venueId},IMG_URL=#{imgUrl},IMG_ORDER=#{imgOrder},CREATOR=#{creator},CREATED_TIME=#{createdTime},STATUS=#{status}
+		where IMG_ID = #{imgId}
+	</update>
+</mapper>

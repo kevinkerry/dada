@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.youyisi.soa.infrastructure.persist.topic.TopicApplyMapper">
+	<resultMap id="TopicApplyMap" type="TopicApply">
+		<id column="TOPIC_APPLY_ID" property="topicApplyId" jdbcType="BIGINT" />
+		<result column="TOPIC_ID" property="topicId" jdbcType="BIGINT" />
+		<result column="USER_ID" property="userId" jdbcType="BIGINT" />
+		<result column="AUDIT_STATUS" property="auditStatus" jdbcType="INTEGER" />
+		<result column="APPLY_TIME" property="applyTime" jdbcType="TIMESTAMP" />
+		<result column="AUDIT_TIME" property="auditTime" jdbcType="TIMESTAMP" />
+		<result column="PAY" property="pay" jdbcType="INTEGER" />
+	</resultMap>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from T_SPORT_TOPIC_APPLY
+		where TOPIC_APPLY_ID = #{topicApplyId,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="TopicApply" useGeneratedKeys="true" keyProperty="topicApplyId">
+		insert into T_SPORT_TOPIC_APPLY (TOPIC_ID, USER_ID,
+		AUDIT_STATUS, APPLY_TIME, AUDIT_TIME,PAY
+		)
+		values ( #{topicId,jdbcType=BIGINT},
+		#{userId,jdbcType=BIGINT},
+		#{auditStatus,jdbcType=INTEGER}, #{applyTime,jdbcType=TIMESTAMP}, #{auditTime,jdbcType=TIMESTAMP},
+		#{pay,jdbcType=INTEGER}
+		)
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="TopicApply">
+		update T_SPORT_TOPIC_APPLY
+		set TOPIC_ID = #{topicId,jdbcType=BIGINT},
+		USER_ID = #{userId,jdbcType=BIGINT},
+		AUDIT_STATUS = #{auditStatus,jdbcType=INTEGER},
+		APPLY_TIME = #{applyTime,jdbcType=TIMESTAMP},
+		AUDIT_TIME = #{auditTime,jdbcType=TIMESTAMP},
+		PAY = #{pay,jdbcType=INTEGER}
+		where TOPIC_APPLY_ID = #{topicApplyId,jdbcType=BIGINT}
+	</update>
+	<select id="selectByPrimaryKey" resultMap="TopicApplyMap"
+		parameterType="java.lang.Long">
+		select TOPIC_APPLY_ID, TOPIC_ID, USER_ID, AUDIT_STATUS, APPLY_TIME,
+		AUDIT_TIME,PAY
+		from T_SPORT_TOPIC_APPLY
+		where TOPIC_APPLY_ID = #{topicApplyId,jdbcType=BIGINT}
+	</select>
+	<select id="selectAll" resultMap="TopicApplyMap">
+		select TOPIC_APPLY_ID, TOPIC_ID, USER_ID, AUDIT_STATUS, APPLY_TIME,
+		AUDIT_TIME,PAY
+		from T_SPORT_TOPIC_APPLY
+	</select>
+	
+	<select id="queryPage" resultMap="TopicApplyMap" parameterType="java.util.Map">
+		select TOPIC_APPLY_ID, TOPIC_ID, USER_ID, AUDIT_STATUS, APPLY_TIME,
+		AUDIT_TIME,PAY
+		from T_SPORT_TOPIC_APPLY t
+		where
+		1=1
+		<include refid="query" />
+		<if test="pageSize!=0">
+			limit ${offset},${pageSize}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="java.util.Map" resultType="java.lang.Long">
+		select count(1) from T_SPORT_TOPIC_APPLY t
+		where 1=1
+		<include refid="query" />
+	</select>
+
+	<sql id="query">
+		<if test="topicId != null">
+			and t.TOPIC_ID=#{topicId}
+		</if>
+		<if test="userId != null">
+			and t.USER_ID=#{userId}
+		</if>
+	</sql>
+	
+	<select id="getTopicApplyByTopicId" resultMap="TopicApplyMap" parameterType="java.lang.Long">
+		select TOPIC_APPLY_ID, TOPIC_ID, USER_ID, AUDIT_STATUS, APPLY_TIME,
+		AUDIT_TIME,PAY
+		from T_SPORT_TOPIC_APPLY
+		where TOPIC_ID = #{topicId}
+	</select>
+</mapper>

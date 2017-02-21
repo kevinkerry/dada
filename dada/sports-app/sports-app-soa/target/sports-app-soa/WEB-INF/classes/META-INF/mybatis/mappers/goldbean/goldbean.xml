@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.goldbean.GoldBean" >
+	<resultMap id="goldBeanResult" type="GoldBean" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="gold_bean" property="goldBean" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select g.id, g.user_id, g.gold_bean
+		from dada_sports.gold_bean g
+	</sql>
+	<select id="getById" resultMap="goldBeanResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where g.id = #{id}
+	</select>
+	<select id="getByUserId" resultMap="goldBeanResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where g.user_id = #{userId}
+	</select>
+	
+	<select id="queryPage" resultMap="goldBeanResult">
+		<include refid="commonSelect"/>
+		order by g.id asc
+	</select>
+	<delete id="delete" parameterType="GoldBean" >
+		delete from dada_sports.gold_bean
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="GoldBean" >
+		insert into dada_sports.gold_bean (id,user_id,gold_bean
+		)
+ 		values (#{id},#{userId},#{goldBean}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="GoldBean" >
+		update dada_sports.gold_bean set user_id=#{userId},gold_bean=#{goldBean}
+		where id = #{id}
+</update>
+</mapper>

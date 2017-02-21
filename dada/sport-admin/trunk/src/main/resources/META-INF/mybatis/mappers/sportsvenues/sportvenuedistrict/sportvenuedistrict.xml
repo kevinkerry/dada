@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.sportsvenues.sportvenuedistrict.SportVenueDistrict" >
+	<resultMap id="sportVenueDistrictResult" type="SportVenueDistrict" >
+		<result column="DISTRICT_ID" property="districtId" />
+		<result column="VENUE_ID" property="venueId" />
+		<result column="DISTRICT_CODE" property="districtCode" />
+		<result column="CHILD_VENUE_ID" property="childVenueId" />
+		<result column="LIMIT_NUMBER" property="limitNumber" />
+		<result column="AREA" property="area" />
+		<result column="LIGHTS" property="lights" />
+		<result column="HEIGHT" property="height" />
+		<result column="MATERIAL" property="material" />
+		<result column="DISTRICT_STATUS" property="districtStatus" />
+		<result column="CREATOR" property="creator" />
+		<result column="CREATED_TIME" property="createdTime" />
+		<result column="MODIFIER" property="modifier" />
+		<result column="UPDATED_TIME" property="updatedTime" />
+		<result column="STATUS" property="status" />
+		<association property="sportsVenuesChild" column="CHILD_VENUE_ID" javaType="com.youyisi.admin.domain.sportsvenues.sportsvenueschild.SportsVenuesChild" select="com.youyisi.admin.domain.sportsvenues.sportsvenueschild.SportsVenuesChild.getById"></association>
+	</resultMap>
+	<sql id="commonSelect" >
+			select t.DISTRICT_ID, t.VENUE_ID,t.DISTRICT_CODE, t.CHILD_VENUE_ID, t.LIMIT_NUMBER, t.AREA, t.LIGHTS, t.HEIGHT, t.MATERIAL, t.DISTRICT_STATUS, t.CREATOR, t.CREATED_TIME, t.MODIFIER, t.UPDATED_TIME, t.STATUS
+			from sports.T_SPORT_VENUE_DISTRICT t
+	</sql>
+	<select id="getById" resultMap="sportVenueDistrictResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where t.DISTRICT_ID = #{districtId}
+	</select>
+	<select id="getCountByChildVenueId" resultType="Long" parameterType="java.lang.Long" >
+		select count(*) from sports.T_SPORT_VENUE_DISTRICT t where t.CHILD_VENUE_ID = #{childVenueId}
+	</select>
+	<select id="queryPage" resultMap="sportVenueDistrictResult">
+		 <include refid="commonSelect"/>
+		 <where>
+		    1=1
+			<if test="params.venueId != null">
+				and t.VENUE_ID= #{params.venueId}
+			</if>
+			<if test="params.childVenueId != null">
+				and t.CHILD_VENUE_ID= #{params.childVenueId}
+			</if>
+		</where>
+		<if test="params.venueId != null">
+			group by t.CHILD_VENUE_ID
+		</if>
+		order by t.DISTRICT_ID asc
+	</select>
+	<select id="count" resultType="long" >
+		select count(t.DISTRICT_ID) from sports.T_SPORT_VENUE_DISTRICT t
+		where t.DISTRICT_CODE=#{districtCode} and t.CHILD_VENUE_ID = #{childVenueId}
+	</select>
+	<delete id="delete" parameterType="SportVenueDistrict" >
+		 delete from sports.T_SPORT_VENUE_DISTRICT
+		where DISTRICT_ID = #{districtId}
+	</delete>
+	<insert id="save" parameterType="SportVenueDistrict" >
+		insert into sports.T_SPORT_VENUE_DISTRICT (VENUE_ID,DISTRICT_CODE,CHILD_VENUE_ID,LIMIT_NUMBER,AREA,LIGHTS,HEIGHT,MATERIAL,DISTRICT_STATUS,CREATOR,CREATED_TIME,MODIFIER,UPDATED_TIME,STATUS
+	)
+	 values (#{venueId},#{districtCode},#{childVenueId},#{limitNumber},#{area},#{lights},#{height},#{material},#{districtStatus},#{creator},#{createdTime},#{modifier},#{updatedTime},#{status}
+	)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+				select LAST_INSERT_ID() as value
+			</selectKey>
+	</insert>
+	<update id="update" parameterType="SportVenueDistrict" >
+		update sports.T_SPORT_VENUE_DISTRICT set DISTRICT_ID=#{districtId},VENUE_ID=#{venueId},DISTRICT_CODE=#{districtCode},CHILD_VENUE_ID=#{childVenueId},LIMIT_NUMBER=#{limitNumber},AREA=#{area},LIGHTS=#{lights},HEIGHT=#{height},MATERIAL=#{material},DISTRICT_STATUS=#{districtStatus},CREATOR=#{creator},CREATED_TIME=#{createdTime},MODIFIER=#{modifier},UPDATED_TIME=#{updatedTime},STATUS=#{status}
+		where DISTRICT_ID = #{districtId}
+	</update>
+</mapper>

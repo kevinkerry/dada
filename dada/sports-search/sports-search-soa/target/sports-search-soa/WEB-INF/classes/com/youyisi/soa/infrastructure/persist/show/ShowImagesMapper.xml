@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.soa.infrastructure.persist.show.ShowImagesMapper" >
+  <resultMap id="BaseResultMap" type="ShowImages" >
+    <id column="IMG_ID" property="imgId" jdbcType="BIGINT" />
+    <result column="SHOW_ID" property="showId" jdbcType="BIGINT" />
+    <result column="IMG_URL" property="imgUrl" jdbcType="VARCHAR" />
+    <result column="IMG_ORDER" property="imgOrder" jdbcType="INTEGER" />
+    <result column="CREATOR" property="creator" jdbcType="BIGINT" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="MODIFIER" property="modifier" jdbcType="BIGINT" />
+    <result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="CHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from T_SPORT_SHOW_IMAGES
+    where IMG_ID = #{imgId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="ShowImages" >
+    insert into T_SPORT_SHOW_IMAGES (IMG_ID, SHOW_ID, IMG_URL, 
+      IMG_ORDER, CREATOR, CREATED_TIME, 
+      MODIFIER, UPDATED_TIME, STATUS
+      )
+    values (#{imgId,jdbcType=BIGINT}, #{showId,jdbcType=BIGINT}, #{imgUrl,jdbcType=VARCHAR}, 
+      #{imgOrder,jdbcType=INTEGER}, #{creator,jdbcType=BIGINT}, #{createdTime,jdbcType=TIMESTAMP}, 
+      #{modifier,jdbcType=BIGINT}, #{updatedTime,jdbcType=TIMESTAMP}, #{status,jdbcType=CHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="ShowImages" >
+    update T_SPORT_SHOW_IMAGES
+    set SHOW_ID = #{showId,jdbcType=BIGINT},
+      IMG_URL = #{imgUrl,jdbcType=VARCHAR},
+      IMG_ORDER = #{imgOrder,jdbcType=INTEGER},
+      CREATOR = #{creator,jdbcType=BIGINT},
+      CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      MODIFIER = #{modifier,jdbcType=BIGINT},
+      UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+      STATUS = #{status,jdbcType=CHAR}
+    where IMG_ID = #{imgId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select IMG_ID, SHOW_ID, IMG_URL, IMG_ORDER, CREATOR, CREATED_TIME, MODIFIER, UPDATED_TIME, 
+    STATUS
+    from T_SPORT_SHOW_IMAGES
+    where IMG_ID = #{imgId,jdbcType=BIGINT}
+  </select>
+  
+  <select id="getByShowId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select IMG_ID, SHOW_ID, IMG_URL, IMG_ORDER, CREATOR, CREATED_TIME, MODIFIER, UPDATED_TIME, 
+    STATUS
+    from T_SPORT_SHOW_IMAGES
+    where SHOW_ID = #{showId,jdbcType=BIGINT}
+  </select>
+  
+  
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select IMG_ID, SHOW_ID, IMG_URL, IMG_ORDER, CREATOR, CREATED_TIME, MODIFIER, UPDATED_TIME, 
+    STATUS
+    from T_SPORT_SHOW_IMAGES
+  </select>
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.invitefriendactivity.InviteFriendActivity" >
+	<resultMap id="inviteFriendActivityResult" type="InviteFriendActivity" >
+	<id column="id" property="id" />
+		<result column="activity_id" property="activityId" />
+		<result column="rule" property="rule" />
+		<result column="message" property="message" />
+		<result column="cron_expression" property="cronExpression" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select i.id, i.activity_id, i.rule, i.message, i.cron_expression, i.create_time, i.update_time
+		from dada_sports.invite_friend_activity i
+	</sql>
+	<select id="getById" resultMap="inviteFriendActivityResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where i.id = #{id}
+	</select>
+	
+	<select id="getByActivityId" resultMap="inviteFriendActivityResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where i.activity_id = #{activityId}
+	</select>
+	
+	<select id="queryPage" resultMap="inviteFriendActivityResult">
+		<include refid="commonSelect"/>
+		order by i.id asc
+	</select>
+	<delete id="delete" parameterType="InviteFriendActivity" >
+		delete from dada_sports.invite_friend_activity
+		where id = #{id}
+	</delete>
+	
+	<delete id="delByActivityId" parameterType="java.lang.Long" >
+		delete from dada_sports.invite_friend_activity
+		where activity_id = #{activityId}
+	</delete>
+	
+	<insert id="save" parameterType="InviteFriendActivity" >
+		insert into dada_sports.invite_friend_activity (id,activity_id,rule,message,cron_expression,create_time,update_time
+		)
+ 		values (#{id},#{activityId},#{rule},#{message},#{cronExpression},#{createTime},#{updateTime}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="InviteFriendActivity" >
+		update dada_sports.invite_friend_activity set activity_id=#{activityId},rule=#{rule},message=#{message},cron_expression=#{cronExpression},create_time=#{createTime},update_time=#{updateTime}
+		where id = #{id}
+</update>
+</mapper>

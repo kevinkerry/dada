@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.soa.infrastructure.persist.activity.ActivityMapper" >
+  <resultMap id="ActivityMap" type="Activity" >
+    <id column="ACTIVITY_ID" property="activityId" jdbcType="BIGINT" />
+    <result column="ACTIVITY_TITLE" property="activityTitle" jdbcType="VARCHAR" />
+    <result column="ACTIVITY_CODE" property="activityCode" jdbcType="VARCHAR" />
+    <result column="ACTIVITY_DESC" property="activityDesc" jdbcType="VARCHAR" />
+    <result column="PARENT_CATEGORY" property="parentCategory" jdbcType="VARCHAR" />
+    <result column="CATEGORY_CODE" property="categoryCode" jdbcType="VARCHAR" />
+    <result column="LIMIT_FLAG" property="limitFlag" jdbcType="INTEGER" />
+    <result column="LIMIT_NUMBER" property="limitNumber" jdbcType="INTEGER" />
+    <result column="FEE_FLAG" property="feeFlag" jdbcType="INTEGER" />
+    <result column="FEE_COMMENTS" property="feeComments" jdbcType="VARCHAR" />
+    <result column="RECOMMEND_FLAG" property="recommendFlag" jdbcType="INTEGER" />
+    <result column="ACTIVITY_STATE" property="activityState" jdbcType="INTEGER" />
+    <result column="ACTIVITY_TYPE" property="activityType" jdbcType="INTEGER" />
+    <result column="ACTIVITY_ORG" property="activityOrg" jdbcType="VARCHAR" />
+    <result column="CITY" property="city" jdbcType="VARCHAR" />
+    <result column="DISTRICT" property="district" jdbcType="VARCHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="GPS_X" property="gpsX" jdbcType="VARCHAR" />
+    <result column="GPS_Y" property="gpsY" jdbcType="VARCHAR" />
+    <result column="CONTACT" property="contact" jdbcType="VARCHAR" />
+    <result column="BEGIN_TIME" property="beginTime" jdbcType="TIMESTAMP" />
+    <result column="END_TIME" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="VIEW_QUANTITY" property="viewQuantity" jdbcType="INTEGER" />
+    <result column="CREATOR" property="creator" jdbcType="BIGINT" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="MODIFIER" property="modifier" jdbcType="BIGINT" />
+    <result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="CHAR" />
+    <result column="TYPE" property="type" />
+    <result column="ORDERS" property="orders" />
+		<result column="LINK_ADDRESS" property="linkAddress" />
+  </resultMap>
+ <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		T_SPORT_ACTIVITY
+		where ACTIVITY_ID = #{activityId,jdbcType=BIGINT}
+	</delete>
+
+	<insert id="insert" parameterType="Activity" useGeneratedKeys="true"
+		keyProperty="activityId">
+		insert into T_SPORT_ACTIVITY ( ACTIVITY_TITLE,
+		ACTIVITY_CODE,
+		ACTIVITY_DESC, LOGO_URL, PARENT_CATEGORY,
+		CATEGORY_CODE,
+		LIMIT_FLAG, LIMIT_NUMBER,
+		FEE_FLAG, FEE_COMMENTS, RECOMMEND_FLAG,
+		ACTIVITY_STATE, ACTIVITY_TYPE, ACTIVITY_ORG,
+		PROVINCE,CITY, DISTRICT, ADDRESS,
+		GPS_X, GPS_Y, CONTACT,
+		START_APPLY_TIME, END_APPLY_TIME, BEGIN_TIME,
+		END_TIME, VIEW_QUANTITY, CREATOR,
+		CREATED_TIME, MODIFIER, UPDATED_TIME,
+		STATUS,TIPS, BUS_INFORMATION,LINK_ADDRESS,TYPE,ORDERS)
+		values
+		(#{activityTitle,jdbcType=VARCHAR},
+		#{activityCode,jdbcType=VARCHAR},
+		#{activityDesc,jdbcType=VARCHAR},
+		#{logoUrl,jdbcType=VARCHAR},
+		#{parentCategory,jdbcType=VARCHAR},
+		#{categoryCode,jdbcType=VARCHAR},
+		#{limitFlag,jdbcType=INTEGER},
+		#{limitNumber,jdbcType=INTEGER},
+		#{feeFlag,jdbcType=INTEGER},
+		#{feeComments,jdbcType=VARCHAR},
+		#{recommendFlag,jdbcType=INTEGER},
+		#{activityState,jdbcType=INTEGER},
+		#{activityType,jdbcType=INTEGER},
+		#{activityOrg,jdbcType=VARCHAR},
+		#{province,jdbcType=VARCHAR},
+		#{city,jdbcType=VARCHAR},
+		#{district,jdbcType=VARCHAR},
+		#{address,jdbcType=VARCHAR},
+		#{gpsX,jdbcType=VARCHAR},
+		#{gpsY,jdbcType=VARCHAR},
+		#{contact,jdbcType=VARCHAR},
+		#{startApplyTime,jdbcType=TIMESTAMP},
+		#{endApplyTime,jdbcType=TIMESTAMP}, #{beginTime,jdbcType=TIMESTAMP},
+		#{endTime,jdbcType=TIMESTAMP}, #{viewQuantity,jdbcType=INTEGER},
+		#{creator,jdbcType=BIGINT},
+		#{createdTime,jdbcType=TIMESTAMP},
+		#{modifier,jdbcType=BIGINT}, #{updatedTime,jdbcType=TIMESTAMP},
+		#{status,jdbcType=CHAR}, #{tips,jdbcType=VARCHAR},
+		#{busInformation,jdbcType=VARCHAR},#{linkAddress},#{type},#{orders})
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="Activity">
+		update
+		T_SPORT_ACTIVITY
+		set ACTIVITY_TITLE =
+		#{activityTitle,jdbcType=VARCHAR},
+		ACTIVITY_CODE =
+		#{activityCode,jdbcType=VARCHAR},
+		ACTIVITY_DESC =
+		#{activityDesc,jdbcType=VARCHAR},
+		LOGO_URL =
+		#{logoUrl,jdbcType=VARCHAR},
+		PARENT_CATEGORY =
+		#{parentCategory,jdbcType=VARCHAR},
+		CATEGORY_CODE =
+		#{categoryCode,jdbcType=VARCHAR},
+		LIMIT_FLAG =
+		#{limitFlag,jdbcType=INTEGER},
+		LIMIT_NUMBER =
+		#{limitNumber,jdbcType=INTEGER},
+		FEE_FLAG =
+		#{feeFlag,jdbcType=INTEGER},
+		FEE_COMMENTS =
+		#{feeComments,jdbcType=VARCHAR},
+		RECOMMEND_FLAG =
+		#{recommendFlag,jdbcType=INTEGER},
+		ACTIVITY_STATE =
+		#{activityState,jdbcType=INTEGER},
+		ACTIVITY_TYPE =
+		#{activityType,jdbcType=INTEGER},
+		ACTIVITY_ORG =
+		#{activityOrg,jdbcType=VARCHAR},
+		PROVINCE = #{province,jdbcType=VARCHAR},
+		CITY = #{city,jdbcType=VARCHAR},
+		DISTRICT = #{district,jdbcType=VARCHAR},
+		ADDRESS =
+		#{address,jdbcType=VARCHAR},
+		GPS_X = #{gpsX,jdbcType=VARCHAR},
+		GPS_Y =
+		#{gpsY,jdbcType=VARCHAR},
+		CONTACT = #{contact,jdbcType=VARCHAR},
+		START_APPLY_TIME = #{startApplyTime,jdbcType=TIMESTAMP},
+		END_APPLY_TIME = #{endApplyTime,jdbcType=TIMESTAMP},
+		BEGIN_TIME =
+		#{beginTime,jdbcType=TIMESTAMP},
+		END_TIME =
+		#{endTime,jdbcType=TIMESTAMP},
+		VIEW_QUANTITY =
+		#{viewQuantity,jdbcType=INTEGER},
+		CREATOR = #{creator,jdbcType=BIGINT},
+		CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+		MODIFIER =
+		#{modifier,jdbcType=BIGINT},
+		UPDATED_TIME =
+		#{updatedTime,jdbcType=TIMESTAMP},
+		STATUS = #{status,jdbcType=CHAR},
+		TIPS = #{tips,jdbcType=VARCHAR},
+		BUS_INFORMATION =
+		#{busInformation,jdbcType=VARCHAR},
+		LINK_ADDRESS=#{linkAddress},TYPE=#{type},ORDERS=#{orders}
+		where ACTIVITY_ID =
+		#{activityId,jdbcType=BIGINT}
+	</update>
+
+	<select id="selectByPrimaryKey" resultMap="ActivityMap"
+		parameterType="java.lang.Long">
+		select ACTIVITY_ID, ACTIVITY_TITLE, ACTIVITY_CODE,
+		ACTIVITY_DESC, LOGO_URL, PARENT_CATEGORY,
+		CATEGORY_CODE, LIMIT_FLAG,
+		LIMIT_NUMBER, FEE_FLAG, FEE_COMMENTS, RECOMMEND_FLAG,
+		ACTIVITY_STATE,
+		ACTIVITY_TYPE, ACTIVITY_ORG,PROVINCE, CITY, DISTRICT, ADDRESS,
+		GPS_X, GPS_Y,
+		CONTACT, START_APPLY_TIME, END_APPLY_TIME, BEGIN_TIME, END_TIME,
+		VIEW_QUANTITY, CREATOR,
+		CREATED_TIME, MODIFIER, UPDATED_TIME, STATUS,
+		TIPS, BUS_INFORMATION,LINK_ADDRESS,TYPE,ORDERS
+		from
+		T_SPORT_ACTIVITY
+		where ACTIVITY_ID =
+		#{activityId,jdbcType=BIGINT}
+	</select>
+
+	<select id="selectAll" resultMap="ActivityMap">
+		select ACTIVITY_ID,
+		ACTIVITY_TITLE, ACTIVITY_CODE, ACTIVITY_DESC, LOGO_URL,
+		PARENT_CATEGORY,
+		CATEGORY_CODE, LIMIT_FLAG, LIMIT_NUMBER, FEE_FLAG,
+		FEE_COMMENTS, RECOMMEND_FLAG,
+		ACTIVITY_STATE, ACTIVITY_TYPE,
+		ACTIVITY_ORG,PROVINCE, CITY, DISTRICT, ADDRESS,
+		GPS_X, GPS_Y,
+		CONTACT,
+		START_APPLY_TIME, END_APPLY_TIME, BEGIN_TIME, END_TIME,
+		VIEW_QUANTITY,
+		CREATOR,
+		CREATED_TIME, MODIFIER, UPDATED_TIME, STATUS, TIPS,
+		BUS_INFORMATION,LINK_ADDRESS,TYPE,ORDERS
+		from
+		T_SPORT_ACTIVITY
+	</select>
+</mapper>

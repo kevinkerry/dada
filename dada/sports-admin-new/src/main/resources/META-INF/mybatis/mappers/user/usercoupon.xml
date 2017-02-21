@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.user.UserCoupon">
+	<resultMap id="userCouponResult" type="UserCoupon">
+		<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="coupon_id" property="couponId" />
+		<result column="update_time" property="updateTime" />
+		<result column="create_time" property="createTime" />
+		<result column="expiry_time" property="expiryTime" />
+		<result column="status" property="status" />
+		<result column="date" property="date" />
+		
+		<association property="coupon" column="coupon_id" select="com.youyisi.admin.domain.coupon.Coupon.getById" />
+		<association property="nickname" column="user_id" select="com.youyisi.admin.domain.user.User.getByNickName" />
+	</resultMap>
+	<sql id="commonSelect">
+		select u.id, u.user_id, u.coupon_id,
+		u.update_time, u.create_time, u.expiry_time, u.status, u.date,u.category
+		from
+		dada_sports.user_coupon u
+	</sql>
+	<select id="getById" resultMap="userCouponResult" parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where u.id = #{id}
+	</select>
+	
+	<select id="queryPage" resultMap="userCouponResult">
+		<include refid="commonSelect" />
+		LEFT JOIN  dada_sports.coupon c ON  u.coupon_id=c.id 
+		WHERE 1=1
+		<if test="params.activityId">
+		  and c.activity_id=#{params.activityId}
+		</if>
+		
+		<if test="params.type != null">
+			<if test="params.type == 1">
+				and u.expiry_time <![CDATA[<]]> #{params.expiryTime}
+			</if>
+			<if test="params.type == 2">
+				and (u.status = 1 or u.status = -1)
+			</if>
+		</if>
+		
+		order by
+		<if test="params.field !=null">
+		   ${params.field} ${params.sort}
+		</if>
+		<if test="params.field ==null">
+		  u.create_time desc
+		</if>
+	</select>
+
+	<select id="getUsing" resultMap="userCouponResult">
+		<include refid="commonSelect" />
+		where u.user_id=#{userId} and u.date=#{date} limit 0,1
+	</select>
+
+	<delete id="delete" parameterType="UserCoupon">
+		delete from
+		dada_sports.user_coupon
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="UserCoupon">
+		insert into dada_sports.user_coupon
+		(id,user_id,coupon_id,update_time,create_time,expiry_time,status,date,category
+		)
+		values
+		(#{id},#{userId},#{couponId},#{updateTime},#{createTime},#{expiryTime},#{status},#{date},#{category}
+		)
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="UserCoupon">
+		update
+		dada_sports.user_coupon set
+		user_id=#{userId},coupon_id=#{couponId},update_time=#{updateTime},create_time=#{createTime},expiry_time=#{expiryTime},status=#{status},date=#{date},category=#{category}
+		where id = #{id}
+	</update>
+	
+	<select id="countUserCoupon" resultType="java.lang.Integer">
+		select count(*) from dada_sports.user_coupon t LEFT JOIN dada_sports.user u ON t.user_id=u.id where 1=1
+				AND u.client_type = #{clientType}
+			 	AND (t.create_time <![CDATA[>=]]> #{beginTime}
+			 	AND t.create_time <![CDATA[<=]]> #{endTime})
+	</select>
+	
+	<select id="countUserCouponByCouponId" resultType="java.lang.Integer">
+		select count(*) from dada_sports.user_coupon u
+		where u.coupon_id = #{couponId}
+		<if test="status != null">
+			and u.status = #{status}
+		</if>
+	</select>
+	
+	
+	<select id="countUserCouponByActivityId" resultType="java.lang.Integer">
+		select count(*) from dada_sports.user_coupon u LEFT JOIN dada_sports.coupon c ON  u.coupon_id=c.id
+		where c.activity_id = #{activityId}
+		<if test="status == 1">
+			and (u.status = 1 or u.status = -1)
+		</if>
+		<if test="status == 0">
+			and  u.status = 0
+		</if>
+	</select>
+	
+	<select id="getUserCouponByUserIdAndCouponId" resultMap="userCouponResult">
+		<include refid="commonSelect" />
+		where u.user_id=#{userId} and u.coupon_id = #{couponId} 
+	</select>
+	
+	
+	<select id="getLotteryUserCoupon" resultMap="userCouponResult">
+		<include refid="commonSelect" />
+		LEFT JOIN  dada_sports.coupon c ON  u.coupon_id=c.id 
+		where u.user_id=#{userId} and c.activity_id=#{activityId} and c.type=14 AND u.category=6 LIMIT 0,1
+	</select>
+</mapper>

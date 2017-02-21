@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.soa.infrastructure.persist.club.ClubMapper" >
+  <resultMap id="BaseResultMap" type="Club" >
+    <id column="CLUB_ID" property="clubId" jdbcType="BIGINT" />
+    <result column="CLUB_NAME" property="clubName" jdbcType="VARCHAR" />
+    <result column="CLUB_CODE" property="clubCode" jdbcType="VARCHAR" />
+    <result column="PARENT_CATEGORY" property="parentCategory" jdbcType="VARCHAR" />
+    <result column="CATEGORY_CODE" property="categoryCode" jdbcType="VARCHAR" />
+    <result column="CLUB_DESC" property="clubDesc" jdbcType="VARCHAR" />
+    <result column="CLUB_LOGO" property="clubLogo" jdbcType="VARCHAR" />
+    <result column="CLUB_OWNER" property="clubOwner" jdbcType="INTEGER" />
+    <result column="CITY" property="city" jdbcType="VARCHAR" />
+    <result column="FEE_FLAG" property="feeFlag" jdbcType="INTEGER" />
+    <result column="FEE_COMMENTS" property="feeComments" jdbcType="VARCHAR" />
+    <result column="RECOMMEND_FLAG" property="recommendFlag" jdbcType="INTEGER" />
+    <result column="DISTRICT" property="district" jdbcType="VARCHAR" />
+    <result column="GPS_X" property="gpsX" jdbcType="VARCHAR" />
+    <result column="GPS_Y" property="gpsY" jdbcType="VARCHAR" />
+    <result column="CLUB_LEVEL" property="clubLevel" jdbcType="INTEGER" />
+    <result column="ACTIVE_INDEX" property="activeIndex" jdbcType="INTEGER" />
+    <result column="CREATOR" property="creator" jdbcType="BIGINT" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="MODIFIER" property="modifier" jdbcType="BIGINT" />
+    <result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="CHAR" />
+    <result column="RECOMMEND_ORDER" property="recommendOrder"></result>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from T_SPORT_CLUB
+    where CLUB_ID = #{clubId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="Club" >
+    insert into T_SPORT_CLUB (CLUB_ID, CLUB_NAME, CLUB_CODE, 
+      PARENT_CATEGORY, CATEGORY_CODE, CLUB_DESC, 
+      CLUB_LOGO, CLUB_OWNER, CITY, 
+      FEE_FLAG, FEE_COMMENTS, RECOMMEND_FLAG, 
+      DISTRICT, GPS_X, GPS_Y, 
+      CLUB_LEVEL, ACTIVE_INDEX, CREATOR, 
+      CREATED_TIME, MODIFIER, UPDATED_TIME, 
+      STATUS,RECOMMEND_ORDER)
+    values (#{clubId,jdbcType=BIGINT}, #{clubName,jdbcType=VARCHAR}, #{clubCode,jdbcType=VARCHAR}, 
+      #{parentCategory,jdbcType=VARCHAR}, #{categoryCode,jdbcType=VARCHAR}, #{clubDesc,jdbcType=VARCHAR}, 
+      #{clubLogo,jdbcType=VARCHAR}, #{clubOwner,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR}, 
+      #{feeFlag,jdbcType=INTEGER}, #{feeComments,jdbcType=VARCHAR}, #{recommendFlag,jdbcType=INTEGER}, 
+      #{district,jdbcType=VARCHAR}, #{gpsX,jdbcType=VARCHAR}, #{gpsY,jdbcType=VARCHAR}, 
+      #{clubLevel,jdbcType=INTEGER}, #{activeIndex,jdbcType=INTEGER}, #{creator,jdbcType=BIGINT}, 
+      #{createdTime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=BIGINT}, #{updatedTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=CHAR},#{recommendOrder,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="Club" >
+    update T_SPORT_CLUB
+    set CLUB_NAME = #{clubName,jdbcType=VARCHAR},
+      CLUB_CODE = #{clubCode,jdbcType=VARCHAR},
+      PARENT_CATEGORY = #{parentCategory,jdbcType=VARCHAR},
+      CATEGORY_CODE = #{categoryCode,jdbcType=VARCHAR},
+      CLUB_DESC = #{clubDesc,jdbcType=VARCHAR},
+      CLUB_LOGO = #{clubLogo,jdbcType=VARCHAR},
+      CLUB_OWNER = #{clubOwner,jdbcType=INTEGER},
+      CITY = #{city,jdbcType=VARCHAR},
+      FEE_FLAG = #{feeFlag,jdbcType=INTEGER},
+      FEE_COMMENTS = #{feeComments,jdbcType=VARCHAR},
+      RECOMMEND_FLAG = #{recommendFlag,jdbcType=INTEGER},
+      DISTRICT = #{district,jdbcType=VARCHAR},
+      GPS_X = #{gpsX,jdbcType=VARCHAR},
+      GPS_Y = #{gpsY,jdbcType=VARCHAR},
+      CLUB_LEVEL = #{clubLevel,jdbcType=INTEGER},
+      ACTIVE_INDEX = #{activeIndex,jdbcType=INTEGER},
+      CREATOR = #{creator,jdbcType=BIGINT},
+      CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      MODIFIER = #{modifier,jdbcType=BIGINT},
+      UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+      STATUS = #{status,jdbcType=CHAR},RECOMMEND_ORDER = #{recommendOrder,jdbcType=INTEGER}
+    where CLUB_ID = #{clubId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select CLUB_ID, CLUB_NAME, CLUB_CODE, PARENT_CATEGORY, CATEGORY_CODE, CLUB_DESC, 
+    CLUB_LOGO, CLUB_OWNER, CITY, FEE_FLAG, FEE_COMMENTS, RECOMMEND_FLAG, DISTRICT, GPS_X, 
+    GPS_Y, CLUB_LEVEL, ACTIVE_INDEX, CREATOR, CREATED_TIME, MODIFIER, UPDATED_TIME, STATUS,RECOMMEND_ORDER
+    from T_SPORT_CLUB
+    where CLUB_ID = #{clubId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select CLUB_ID, CLUB_NAME, CLUB_CODE, PARENT_CATEGORY, CATEGORY_CODE, CLUB_DESC, 
+    CLUB_LOGO, CLUB_OWNER, CITY, FEE_FLAG, FEE_COMMENTS, RECOMMEND_FLAG, DISTRICT, GPS_X, 
+    GPS_Y, CLUB_LEVEL, ACTIVE_INDEX, CREATOR, CREATED_TIME, MODIFIER, UPDATED_TIME, STATUS,RECOMMEND_ORDER
+    from T_SPORT_CLUB
+  </select>
+</mapper>

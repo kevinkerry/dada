@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.version.AppVersion" >
+	<resultMap id="appVersionResult" type="AppVersion" >
+	<id column="id" property="id" />
+		<result column="channel" property="channel" />
+		<result column="version_code" property="versionCode" />
+		<result column="is_force_update" property="isForceUpdate" />
+		<result column="app_url" property="appUrl" />
+		<result column="version_name" property="versionName" />
+		<result column="app_size" property="appSize" />
+		<result column="change_log" property="changeLog" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select a.id, a.channel, a.version_code, a.is_force_update, a.app_url, a.version_name, a.app_size, a.change_log
+		from dada_sports.app_version a
+	</sql>
+	<select id="getById" resultMap="appVersionResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where a.id = #{id}
+	</select>
+	<select id="getByChannel" resultMap="appVersionResult" parameterType="java.lang.String" >
+		<include refid="commonSelect"/>
+		where a.channel = #{channel}
+	</select>
+	
+	<select id="queryPage" resultMap="appVersionResult">
+		<include refid="commonSelect"/>
+		order by a.id asc
+	</select>
+	<delete id="delete" parameterType="AppVersion" >
+		delete from dada_sports.app_version
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="AppVersion" >
+		insert into dada_sports.app_version (id,channel,version_code,is_force_update,app_url,version_name,app_size,change_log
+		)
+ 		values (#{id},#{channel},#{versionCode},#{isForceUpdate},#{appUrl},#{versionName},#{appSize},#{changeLog}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="AppVersion" >
+		update dada_sports.app_version set channel=#{channel},version_code=#{versionCode},is_force_update=#{isForceUpdate},app_url=#{appUrl},version_name=#{versionName},app_size=#{appSize},change_log=#{changeLog}
+		where id = #{id}
+</update>
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.soa.infrastructure.persist.sso.IpBlacklistMapper" >
+  <resultMap id="BaseResultMap" type="IpBlacklist" >
+    <id column="FORBID_IP" property="forbidIp" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from T_SSO_IP_BLACKLIST
+    where FORBID_IP = #{forbidIp,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="IpBlacklist" >
+    insert into T_SSO_IP_BLACKLIST (FORBID_IP)
+    values (#{forbidIp,jdbcType=VARCHAR})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select FORBID_IP
+    from T_SSO_IP_BLACKLIST
+  </select>
+</mapper>

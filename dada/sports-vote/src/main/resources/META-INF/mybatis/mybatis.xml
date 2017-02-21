@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<!-- <typeAlias type="com.concom.index.domain.materialfac.MaterialFac" alias="MaterialFac" />
+		<typeAlias type="com.concom.index.domain.materialref.MaterialRef" alias="MaterialRef" />
+		<typeAlias type="com.concom.index.domain.govtitle.GovTitle" alias="GovTitle" />
+		<typeAlias type="com.concom.index.domain.materialgov.MaterialGov" alias="MaterialGov" />
+		<typeAlias type="com.concom.index.domain.shop.Shop" alias="Shop" />
+		<typeAlias type="com.concom.index.domain.epdemand.EpDemand" alias="EpDemand" />
+		<typeAlias type="com.concom.index.domain.archives.Archives" alias="Archives" />
+		<typeAlias type="com.concom.index.domain.projectex.ProjectEx" alias="ProjectEx" />
+		<typeAlias type="com.concom.index.domain.enlist.Enlist" alias="Enlist" />
+		<typeAlias type="com.concom.index.domain.yunzhi.topic.Topic" alias="Topic"/> -->
+		<typeAlias type="com.youyisi.lang.Page" alias="Page"/>
+		<package name="com.youyisi.vote.domain"/>
+	</typeAliases>
+	<plugins>
+		<plugin interceptor="com.youyisi.mybatis.PagePlugin">
+			<property name="SQL_REGULAR" value=".*?queryPage.*?"/>
+			<property name="DIALECT" value="com.youyisi.mybatis.dialect.impl.MySQLDialect"/>
+		</plugin>
+	</plugins>
+</configuration>

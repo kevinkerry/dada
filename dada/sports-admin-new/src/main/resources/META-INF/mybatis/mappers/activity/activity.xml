@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.activity.Activity">
+	<resultMap id="activityResult" type="Activity">
+		<id column="id" property="id" />
+		<result column="title" property="title" />
+		<result column="cover" property="cover" />
+		<result column="hot" property="hot" />
+		<result column="type" property="type" />
+		<result column="begin_time" property="beginTime" />
+		<result column="end_time" property="endTime" />
+		<result column="date" property="date" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		
+		<association column="id" property="hugThighActivity" select="com.youyisi.admin.domain.hugthigh.HugThighActivity.getByActivityId" />
+		<association column="id" property="inviteFriendActivity" select="com.youyisi.admin.domain.invitefriendactivity.InviteFriendActivity.getByActivityId" />
+		<association column="id" property="relayRaceActivity" select="com.youyisi.admin.domain.relay.RelayRaceActivity.getByActivityId" />
+		<association column="id" property="snatchActivity" select="com.youyisi.admin.domain.snatch.SnatchActivity.getByActivityId" />
+		
+		<collection column="id" property="couponsList" select="com.youyisi.admin.domain.coupon.Coupon.getByActivityId" />
+	</resultMap>
+	<sql id="commonSelect">
+		select a.id, a.title, a.cover, a.hot,
+		a.type, a.begin_time, a.end_time, a.date, a.status, a.create_time,
+		a.update_time
+		from dada_sports.activity a
+	</sql>
+	<select id="getById" resultMap="activityResult" parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where a.id = #{id}
+	</select>
+	<select id="queryPage" resultMap="activityResult">
+		<include refid="commonSelect" />
+		order by a.date desc
+	</select>
+	<delete id="delete" parameterType="Activity">
+		delete from
+		dada_sports.activity
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="Activity">
+		insert into dada_sports.activity
+		(id,title,cover,hot,type,begin_time,end_time,date,status,create_time,update_time
+		)
+		values
+		(#{id},#{title},#{cover},#{hot},#{type},#{beginTime},#{endTime},#{date},#{status},#{createTime},#{updateTime}
+		)
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="Activity">
+		update
+		dada_sports.activity set
+		title=#{title},cover=#{cover},hot=#{hot},type=#{type},begin_time=#{beginTime},end_time=#{endTime},date=#{date},status=#{status},create_time=#{createTime},update_time=#{updateTime}
+		where id = #{id}
+	</update>
+	
+	<select id="validateDate" resultType="java.lang.Integer">
+		select COUNT(a.id) from dada_sports.activity a where
+		a.type = #{type} and a.date = #{date}
+	</select>
+	
+	
+	<select id="validateActivity" resultMap="activityResult">
+		<include refid="commonSelect" />
+		where 
+		 a.type = #{type}
+		 and a.date <![CDATA[>]]> #{date}
+		 ORDER BY a.date ASC LIMIT 0,1
+	</select>
+	
+	<select id="getCorrelationActivityName" resultMap="activityResult" parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		 LEFT JOIN dada_sports.relay_race_activity r ON a.id = r.activity_id
+		 LEFT JOIN dada_sports.snatch_activity sa on sa.activity_id = a.id
+		 WHERE r.activity_medal = #{medalId} OR r.league_medal = #{medalId} OR r.team_leader_medal = #{medalId}
+		 	or sa.activity_medal = #{medalId} or sa.win_medal = #{medalId}
+	</select>
+	
+</mapper>

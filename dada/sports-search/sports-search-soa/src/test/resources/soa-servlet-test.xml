@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:util="http://www.springframework.org/schema/util"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd    
+           http://www.springframework.org/schema/context     
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+           http://www.springframework.org/schema/util 
+           http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+        <context:annotation-config/>
+        <context:component-scan base-package="com.youyisi.soa"/>
+        <import resource="classpath:/META-INF/spring/application-root.xml"/>
+        <!-- open servicing setting -->
+        <bean name="/activity" class="org.springframework.remoting.caucho.HessianServiceExporter">
+                <property name="service" ref="activityService"/>
+                <property name="serviceInterface" value="com.youyisi.soa.remote.activity.ActivityServiceRemote"/>
+        </bean>
+        <bean name="/club" class="org.springframework.remoting.caucho.HessianServiceExporter">
+                <property name="service" ref="clubService"/>
+                <property name="serviceInterface" value="com.youyisi.soa.remote.club.ClubServiceRemote"/>
+        </bean>
+         <bean name="/member" class="org.springframework.remoting.caucho.HessianServiceExporter">
+                <property name="service" ref="memberService"/>
+                <property name="serviceInterface" value="com.youyisi.soa.remote.member.MemberServiceRemote"/>
+        </bean>
+         <bean name="/show" class="org.springframework.remoting.caucho.HessianServiceExporter">
+                <property name="service" ref="showService"/>
+                <property name="serviceInterface" value="com.youyisi.soa.remote.show.ShowServiceRemote"/>
+        </bean>
+         <bean name="/topic" class="org.springframework.remoting.caucho.HessianServiceExporter">
+                <property name="service" ref="topicService"/>
+                <property name="serviceInterface" value="com.youyisi.soa.remote.topic.TopicServiceRemote"/>
+        </bean>
+        
+         <bean name="/venues" class="org.springframework.remoting.caucho.HessianServiceExporter">
+                <property name="service" ref="venuesService"/>
+                <property name="serviceInterface" value="com.youyisi.soa.remote.venues.VenuesServiceRemote"/>
+        </bean>
+        
+        
+</beans>

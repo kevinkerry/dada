@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.alipay.Alipay" >
+	<resultMap id="alipayResult" type="Alipay" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="alipay" property="alipay" />
+		<result column="real_name" property="realName" />
+		<result column="create_time" property="createTime" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select a.id, a.user_id, a.alipay, a.real_name, a.create_time
+		from dada_sports.alipay a
+	</sql>
+	<select id="getById" resultMap="alipayResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where a.id = #{id}
+	</select>
+	<select id="getByUserId" resultMap="alipayResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where a.user_id = #{userId}
+	</select>
+	<select id="queryPage" resultMap="alipayResult">
+		<include refid="commonSelect"/>
+		order by a.id asc
+	</select>
+	<delete id="delete" parameterType="Alipay" >
+		delete from dada_sports.alipay
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="Alipay" >
+		insert into dada_sports.alipay (id,user_id,alipay,real_name,create_time
+		)
+ 		values (#{id},#{userId},#{alipay},#{realName},#{createTime}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="Alipay" >
+		update dada_sports.alipay set user_id=#{userId},alipay=#{alipay},real_name=#{realName},create_time=#{createTime}
+		where id = #{id}
+</update>
+</mapper>

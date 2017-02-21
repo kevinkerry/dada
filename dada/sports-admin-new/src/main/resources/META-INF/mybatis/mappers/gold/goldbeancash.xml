@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.gold.GoldBeanCash" >
+	<resultMap id="goldBeanCashResult" type="GoldBeanCash" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="date" property="date" />
+		<result column="gold_bean" property="goldBean" />
+		<result column="status" property="status" />
+		<result column="annual_yield" property="annualYield" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select g.id, g.user_id, g.date, g.gold_bean, g.status, g.annual_yield
+		from dada_sports.gold_bean_cash g
+	</sql>
+	<select id="getById" resultMap="goldBeanCashResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where g.id = #{id}
+	</select>
+	<select id="queryPage" resultMap="goldBeanCashResult">
+		<include refid="commonSelect"/>
+		order by g.id asc
+	</select>
+	<delete id="delete" parameterType="GoldBeanCash" >
+		delete from dada_sports.gold_bean_cash
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="GoldBeanCash" >
+		insert into dada_sports.gold_bean_cash (id,user_id,date,gold_bean,status,annual_yield
+		)
+ 		values (#{id},#{userId},#{date},#{goldBean},#{status},#{annualYield}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="GoldBeanCash" >
+		update dada_sports.gold_bean_cash set user_id=#{userId},date=#{date},gold_bean=#{goldBean},status=#{status},annual_yield=#{annualYield}
+		where id = #{id}
+</update>
+</mapper>

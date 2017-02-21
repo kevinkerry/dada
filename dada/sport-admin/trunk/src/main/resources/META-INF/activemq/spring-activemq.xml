@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>  
+  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans    
+         http://www.springframework.org/schema/beans/spring-beans-2.5.xsd    
+         http://www.springframework.org/schema/context    
+         http://www.springframework.org/schema/context/spring-context-2.5.xsd">  
+  
+    <!-- 配置JMS连接工厂 -->  
+    <bean id="myConnectionFactory"  
+        class="org.springframework.jms.connection.CachingConnectionFactory">  
+        <!-- Session缓存数量 -->  
+        <property name="sessionCacheSize" value="10" />  
+        <property name="targetConnectionFactory">  
+            <bean class="org.apache.activemq.ActiveMQConnectionFactory">  
+                <!-- MQ地址 -->  
+                <property name="brokerURL" value="tcp://10.1.80.200:61616" />  
+                 <!-- 是否异步发送 -->  
+                <property name="useAsyncSend" value="true" />  
+            </bean>  
+        </property>  
+    </bean>  
+      
+    <bean id="defaultDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg index="0" value="DaDa.Queue.Activity"/>
+    </bean>
+  
+    <!-- 配置JMS模版 -->  
+    <bean id="myJmsTemplate" class="org.springframework.jms.core.JmsTemplate">  
+        <property name="connectionFactory" ref="myConnectionFactory" />  
+        <property name="defaultDestination" ref="defaultDestination" />   
+    </bean>  
+</beans> 

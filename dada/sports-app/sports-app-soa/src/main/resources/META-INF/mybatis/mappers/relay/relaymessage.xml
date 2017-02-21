@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.relay.RelayMessage" >
+	<resultMap id="relayMessageResult" type="RelayMessage" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="team_id" property="teamId" />
+		<result column="message" property="message" />
+		<result column="create_time" property="createTime" />
+		<association property="user" column="user_id" select="com.youyisi.sports.domain.user.User.getUserLessInfoById"></association>
+	</resultMap>
+	
+	<resultMap id="userLessInfoResult" type="UserLessInfo">
+		<id column="id" property="id" />
+		<result column="nickname" property="nickname" />
+		<result column="head_portrait" property="headPortrait" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select r.id, r.user_id, r.team_id, r.message, r.create_time
+		from dada_sports.relay_message r
+	</sql>
+	<select id="getById" resultMap="relayMessageResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where r.id = #{id}
+	</select>
+	<select id="newUser" resultMap="userLessInfoResult" parameterType="java.lang.Long" >
+		select  u.nickname, u.head_portrait
+		from dada_sports.relay_message r
+		left join dada_sports.user u on r.user_id=u.id
+		where r.team_id = #{teamId} group by r.user_id order by r.create_time desc limit 0,5
+	</select>
+	
+	<select id="totalCount" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+		select count(*)
+		from dada_sports.relay_message r
+		where r.team_id = #{teamId}
+	</select>
+	<select id="newMessage" resultMap="relayMessageResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where r.team_id = #{teamId} order by r.create_time desc limit 0,1
+	</select>
+	
+	
+	<select id="queryPage" resultMap="relayMessageResult">
+		<include refid="commonSelect"/>
+		where 1=1
+		<if test="params.teamId!=null">
+		and r.team_id=#{params.teamId}
+		</if>
+		order by r.create_time desc
+	</select>
+	<delete id="delete" parameterType="RelayMessage" >
+		delete from dada_sports.relay_message
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="RelayMessage" >
+		insert into dada_sports.relay_message (id,user_id,team_id,message,create_time
+		)
+ 		values (#{id},#{userId},#{teamId},#{message},#{createTime}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="RelayMessage" >
+		update dada_sports.relay_message set user_id=#{userId},team_id=#{teamId},message=#{message},create_time=#{createTime}
+		where id = #{id}
+</update>
+</mapper>

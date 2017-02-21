@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.topic.topiccomment.TopicComment" >
+	<resultMap id="topicCommentResult" type="TopicComment" >
+		<result column="COMMENTS_ID" property="commentsId" />
+		<result column="TOPIC_ID" property="topicId" />
+		<result column="COMMENT_TYPE" property="commentType" />
+		<result column="COMMENTS" property="comments" />
+		<result column="PARENT_COMMENTS_ID" property="parentCommentsId" />
+		<result column="CREATOR" property="creator" />
+		<result column="CREATED_TIME" property="createdTime" />
+		<result column="MODIFIER" property="modifier" />
+		<result column="UPDATED_TIME" property="updatedTime" />
+		<result column="STATUS" property="status" />
+		<association property="commentUser" column="CREATOR" javaType="com.youyisi.admin.domain.sportuser.SportUser" select="com.youyisi.admin.domain.sportuser.SportUser.getById"></association>
+	</resultMap>
+	<sql id="commonSelect" >
+		select t.COMMENTS_ID, t.TOPIC_ID, t.COMMENT_TYPE, t.COMMENTS, t.PARENT_COMMENTS_ID, t.CREATOR, t.CREATED_TIME, t.MODIFIER, t.UPDATED_TIME, t.STATUS
+		from sports.T_SPORT_TOPIC_COMMENTS t
+	</sql>
+	<select id="getById" resultMap="topicCommentResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where t.COMMENTS_ID = #{commentsId}
+	</select>
+	<select id="getCountByTopicId" resultType="java.lang.Long" parameterType="java.lang.Long" >
+		select count(*) from sports.T_SPORT_TOPIC_COMMENTS t where t.TOPIC_ID = #{topicId} and t.STATUS = 'A' and t.COMMENT_TYPE = 1
+	</select>
+	<select id="queryPage" resultMap="topicCommentResult">
+		<include refid="commonSelect"/>
+		<where>
+		    1=1 and t.STATUS = 'A' and t.COMMENT_TYPE = 1
+		    <if test="params.topicId != null">
+		        and t.TOPIC_ID = #{params.topicId}
+		    </if>
+		</where>
+		order by t.COMMENTS_ID asc
+	</select>
+	<delete id="delete" parameterType="TopicComment" >
+		delete from sports.T_SPORT_TOPIC_COMMENTS
+		where COMMENTS_ID = #{commentsId}
+	</delete>
+	<insert id="save" parameterType="TopicComment" >
+		insert into sports.T_SPORT_TOPIC_COMMENTS (COMMENTS_ID,TOPIC_ID,COMMENT_TYPE,COMMENTS,PARENT_COMMENTS_ID,CREATOR,CREATED_TIME,MODIFIER,UPDATED_TIME,STATUS
+		)
+ 		values (#{commentsId},#{topicId},#{commentType},#{comments},#{parentCommentsId},#{creator},#{createdTime},#{modifier},#{updatedTime},#{status}
+		)
+		<selectKey keyProperty="commentsId" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="TopicComment" >
+		update sports.T_SPORT_TOPIC_COMMENTS set COMMENTS_ID=#{commentsId},TOPIC_ID=#{topicId},COMMENT_TYPE=#{commentType},COMMENTS=#{comments},PARENT_COMMENTS_ID=#{parentCommentsId},CREATOR=#{creator},CREATED_TIME=#{createdTime},MODIFIER=#{modifier},UPDATED_TIME=#{updatedTime},STATUS=#{status}
+		where COMMENTS_ID = #{commentsId}
+	</update>
+</mapper>

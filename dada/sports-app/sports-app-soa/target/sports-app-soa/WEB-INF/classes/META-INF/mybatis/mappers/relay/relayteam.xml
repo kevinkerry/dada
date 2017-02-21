@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.relay.RelayTeam" >
+	<resultMap id="relayTeamResult" type="RelayTeam" >
+	<id column="id" property="id" />
+		<result column="activity_id" property="activityId" />
+		<result column="name" property="name" />
+		<result column="logo" property="logo" />
+		<result column="user_id" property="userId" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+	</resultMap>
+	
+	<resultMap id="relayTeamWithMoreResult" type="RelayTeamWithMore" >
+	<id column="id" property="id" />
+		<result column="activity_id" property="activityId" />
+		<result column="name" property="name" />
+		<result column="logo" property="logo" />
+		<result column="user_id" property="userId" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		 <association property="memberCount" column="id" select="com.youyisi.sports.domain.relay.RelayMember.getCountByTeamId"></association>
+	</resultMap>
+	
+	<sql id="commonSelect" >
+		select r.id, r.activity_id, r.name, r.logo, r.user_id, r.status, r.create_time, r.update_time
+		from dada_sports.relay_team r
+	</sql>
+	<select id="getById" resultMap="relayTeamResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where r.id = #{id}
+	</select>
+	
+	<select id="getByActivityIdAndUserId" resultMap="relayTeamResult" >
+		<include refid="commonSelect"/>
+		where r.user_id = #{userId} and r.activity_id=#{activityId} and r.status=1
+	</select>
+	
+	<select id="getList" resultMap="relayTeamWithMoreResult" parameterType="java.lang.Long">
+		<include refid="commonSelect"/>
+		where  r.activity_id=#{activityId} and r.status=1
+	</select>
+	
+	<select id="getCountByActivityId" resultType="java.lang.Integer" parameterType="java.lang.Long">
+		select count(*)
+		from dada_sports.relay_team r
+		where  r.activity_id=#{activityId} and r.status=1
+	</select>
+	
+	<select id="queryPage" resultMap="relayTeamResult">
+		<include refid="commonSelect"/>
+		order by r.id asc
+	</select>
+	<delete id="delete" parameterType="RelayTeam" >
+		delete from dada_sports.relay_team
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="RelayTeam" >
+		insert into dada_sports.relay_team (id,activity_id,name,logo,user_id,status,create_time,update_time
+		)
+ 		values (#{id},#{activityId},#{name},#{logo},#{userId},#{status},#{createTime},#{updateTime}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="RelayTeam" >
+		update dada_sports.relay_team set activity_id=#{activityId},name=#{name},logo=#{logo},user_id=#{userId},status=#{status},create_time=#{createTime},update_time=#{updateTime}
+		where id = #{id}
+</update>
+</mapper>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+        
+ <generatorConfiguration>
+	<classPathEntry
+		location="D:\Repository\mysql\mysql-connector-java\5.1.8\mysql-connector-java-5.1.8.jar" />
+
+	<context id="mybatistool" targetRuntime="MyBatis3Simple"
+		defaultModelType="flat">
+
+		<commentGenerator>
+			<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+			<property name="suppressAllComments" value="true" />
+			<!-- 是否生成注释代时间戳 -->
+			<property name="suppressDate" value="true" />
+		</commentGenerator>
+
+		<!-- 数据库连接的信息：驱动类、连接地址、用户名、密码 -->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://10.1.80.200:3306/sports" userId="root"
+			password="root" />
+
+		<javaTypeResolver>
+			<!-- 可以配置的属性为forceBigDecimals，该属性可以控制是否强制DECIMAL和NUMERIC类型的字段转换为Java类型的java.math.BigDecimal,默认值为false，一般不需要配置。 -->
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<!-- 生成实体类地址 -->
+		<javaModelGenerator targetPackage="com.youyisi.sports.test.model"
+			targetProject="src\test\java">
+			<!-- enableSubPackages:是否让schema作为包的后缀 -->
+			<property name="enableSubPackages" value="false" />
+			<!-- 从数据库返回的值被清理前后的空格 -->
+			<property name="trimStrings" value="false" />
+		</javaModelGenerator>
+
+		<!-- 生成mapxml文件 -->
+		 <sqlMapGenerator targetPackage="com.youyisi.sports.test.dao"
+			targetProject="src\test\java">
+			<property name="enableSubPackages" value="false" />
+		</sqlMapGenerator>
+
+		<!-- 生成mapxml对应client，也就是接口dao -->
+	 	<javaClientGenerator type="XMLMAPPER"
+			targetPackage="com.youyisi.sports.test.dao" targetProject="src\test\java">
+			<property name="enableSubPackages" value="false" />
+		</javaClientGenerator> 
+
+		<!-- tableName:用于自动生成代码的数据库表；domainObjectName:对应于数据库表的javaBean类名 -->
+		
+		
+		<table tableName="T_SPORT_GIFT" domainObjectName="Gift">
+		</table>
+		<!--<table tableName="T_SPORT_GIFT_TYPE" domainObjectName="GiftType">
+		</table>
+		<table tableName="T_SPORT_INDIANA" domainObjectName="Indiana">
+		</table>
+		<table tableName="T_SPORT_INDIANA_GPS" domainObjectName="IndianaGps">
+		</table>
+		<table tableName="T_SPORT_INDIANA_MEMBER" domainObjectName="IndianaMember">
+		</table>
+		<table tableName="T_SPORT_INDIANA_DETAIL" domainObjectName="IndianaDetail">
+		</table>
+		
+		<table tableName="T_SPORT_USER_LEVEL" domainObjectName="UserLevel">
+		</table>
+		
+		<table tableName="T_SPORT_MEMBER_PHOTO" domainObjectName="MemberPhoto">
+		</table>
+		
+		<table tableName="T_SPORT_MEMBER_DYNAMIC" domainObjectName="MemberDynamic">
+		</table>
+		
+		<table tableName="T_SPORT_INTEGRAL_DETAILS" domainObjectName="IntegralDetails">
+		</table>
+		<table tableName="T_SPORT_INTGRAL_ITERM" domainObjectName="IntegralIterm">
+		</table>
+		<table tableName="T_SPORT_USER_LEVEL" domainObjectName="UserLevel">
+		</table>
+		<table tableName="T_SPORT_VENUE_DISTRICT" domainObjectName="VenueDistrict">
+		</table>
+		<table tableName="T_SPORT_VENUE_SCHEDULE" domainObjectName="VenueSchedule">
+		</table>
+		
+		<table tableName="user" domainObjectName="WebsiteUser">
+		</table>
+		
+		<table tableName="sportsItems" domainObjectName="WebsiteSportsItems">
+		</table>
+		
+		<table tableName="image" domainObjectName="WebsiteImage">
+		</table>
+		
+		<table tableName="T_SPORT_CLUB" domainObjectName="Club">
+		</table>
+		<table tableName="T_SPORT_ACTIVITY" domainObjectName="Activity">
+		</table>-->
+	<!--	<table tableName="T_SPORT_CLUB" domainObjectName="Club">
+		</table>
+	    <table tableName="T_SPORT_CLUB_MEMBER" domainObjectName="ClubMember">
+		</table>
+		 <table tableName="T_APP_VERSION" domainObjectName="AppVersion">
+		</table>
+		<table tableName="T_SPORT_ACTIVITY_APPLY" domainObjectName="ActivityApply">
+		</table>
+		<table tableName="T_SPORT_ACTIVITY_COMMENTS" domainObjectName="ActivityComments">
+		</table>
+		<table tableName="T_SPORT_ACTIVITY_IMAGES" domainObjectName="ActivityImages">
+		</table>
+		<table tableName="T_SPORT_BULLETIN" domainObjectName="Bulletin">
+		</table>
+		<table tableName="T_SPORT_CATEGORY" domainObjectName="Category">
+		</table>
+
+		<table tableName="T_SPORT_FRIENDS" domainObjectName="Friends">
+		</table>
+		<table tableName="T_SPORT_FRIENDS_GROUP" domainObjectName="FriendsGroup">
+		</table>
+		<table tableName="T_SPORT_HISTORY" domainObjectName="History">
+		</table>
+	    
+		
+		<table tableName="T_SPORT_AREA" domainObjectName="Area">
+		</table>
+		<table tableName="T_SPORT_FAVORITES" domainObjectName="Favorites">
+		</table>
+		<table tableName="T_SPORT_INTEREST" domainObjectName="Interest">
+		</table>
+		<table tableName="T_FRIEND_SHOW" domainObjectName="FriendShow">
+		</table>
+		<table tableName="T_FRIEND_SHOW_COMMENTS" domainObjectName="FriendShowComments">
+		</table>
+		<table tableName="T_FRIEND_SHOW_IMAGES" domainObjectName="FriendShowImages">
+		</table>
+		 <table tableName="T_SPORT_SHOW" domainObjectName="Show">
+		</table>
+		<table tableName="T_SPORT_SHOW_COMMENTS" domainObjectName="ShowComments">
+		</table>
+		<table tableName="T_SPORT_SHOW_IMAGES" domainObjectName="ShowImages">
+		</table>
+		<table tableName="T_SPORT_TOPIC" domainObjectName="Topic">
+		</table>
+		<table tableName="T_SPORT_TOPIC_COMMENTS" domainObjectName="TopicComments">
+		</table>
+		<table tableName="T_SPORT_TOPIC_IMAGES" domainObjectName="TopicImages">
+		</table>
+		<table tableName="T_SPORT_TRACE" domainObjectName="Trace">
+		</table>
+		<table tableName="T_SPORT_USER" domainObjectName="User">
+		</table>
+		<table tableName="T_SPORT_USER_GPS" domainObjectName="UserGPS">
+		</table>
+		<table tableName="T_SPORT_VENUE_CHILD" domainObjectName="VenueChild">
+		</table>
+		<table tableName="T_SPORT_VENUE_ORDER" domainObjectName="VenueOrder">
+		</table>
+		<table tableName="T_SPORT_VENUE_ORDER_ITEM" domainObjectName="VenueOrderItem">
+		</table>
+		<table tableName="T_SPORT_VENUE_SCHEDULE" domainObjectName="VenueSchedule">
+		</table>
+		<table tableName="T_SPORT_VENUES" domainObjectName="Venues">
+		</table>
+		
+		<table tableName="T_SSO_ONLINE_STATUS" domainObjectName="OnlineStatus">
+		</table>
+		<table tableName="T_SSO_TRACE" domainObjectName="SSOTrsce">
+		</table> 
+		
+		<table tableName="T_SSO_IP_BLACKLIST" domainObjectName="IpBlacklist">
+		</table>-->
+
+	</context>
+</generatorConfiguration> 

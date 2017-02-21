@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.thigh.Thigh" >
+	<resultMap id="thighResult" type="Thigh" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="activity_id" property="activityId" />
+		<result column="type" property="type" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="date" property="date" />
+	</resultMap>
+	
+	<resultMap id="thighMoreInfoResult" type="ThighMoreInfo" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="activity_id" property="activityId" />
+		<result column="type" property="type" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="date" property="date" />
+		<association property="user" column="user_id" select="com.youyisi.sports.domain.user.User.getUserLessInfoById"></association>
+		<association property="coupon" column="{activityId=activity_id,type=type}" select="com.youyisi.sports.domain.coupon.Coupon.getByActivityIdAndType"></association>
+	</resultMap>
+	
+	<resultMap id="myThighResult" type="MyThigh" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="activity_id" property="activityId" />
+		<result column="type" property="type" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="date" property="date" />
+		<association property="hugThighCount" column="id" select="com.youyisi.sports.domain.thigh.HugThigh.getCountByThighId"></association>
+		<association property="hugThighMoney" column="{date=date,userId=user_id}" select="com.youyisi.sports.domain.wallet.WalletDetail.getSumThighByDate"></association>
+	</resultMap>
+	
+	
+	<resultMap id="thighRankResult" type="ThighRank" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="activity_id" property="activityId" />
+		<result column="type" property="type" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="date" property="date" />
+		<association property="user" column="user_id" select="com.youyisi.sports.domain.user.User.getUserLessInfoById"></association>
+		<association property="hugThighCount" column="id" select="com.youyisi.sports.domain.thigh.HugThigh.getCountByThighId"></association>
+		<association property="hugThighMoney" column="{date=date,userId=user_id}" select="com.youyisi.sports.domain.wallet.WalletDetail.getSumThighByDate"></association>
+	</resultMap>
+	
+	
+	<sql id="commonSelect" >
+		select t.id, t.user_id, t.activity_id, t.type, t.status, t.create_time, t.date
+		from dada_sports.thigh t
+	</sql>
+	<select id="getById" resultMap="thighResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where t.id = #{id}
+	</select>
+	<select id="getByActivityIdAndUserId" resultMap="thighResult">
+		<include refid="commonSelect"/>
+		where t.activity_id = #{activityId} 
+		<if test="userId!=null">
+		and t.user_id=#{userId}
+		</if>
+		<if test="status!=null">
+		and t.status=#{status}
+		</if>
+		<if test="createTime!=null">
+		and ((t.create_time>#{createTime} and t.status=0) or t.status=1)
+		</if>
+	</select>
+	
+	<select id="thighCount" resultType="java.lang.Long">
+		select count(*)
+		from dada_sports.thigh t
+		where t.activity_id = #{activityId}
+		<if test="createTime!=null">
+		and ((t.create_time>#{createTime} and t.status=0) or t.status=1)
+		</if>
+	</select>
+	
+	<select id="getListThighRank" resultMap="thighRankResult">
+	<include refid="commonSelect"/>
+	where t.activity_id = #{params.activityId} and t.status=#{params.status}
+	order by t.create_time asc
+	
+	</select>
+	
+	<select id="getList" resultMap="thighMoreInfoResult">
+	<include refid="commonSelect"/>
+	where t.activity_id = #{activityId} and t.status=1
+	order by t.create_time asc
+	</select>
+	
+	<select id="queryPage" resultMap="thighResult">
+		<include refid="commonSelect"/>
+		order by t.id asc
+	</select>
+	<select id="queryPageMyThigh" resultMap="myThighResult">
+		<include refid="commonSelect"/>
+		where 1=1
+		<if test="params.status!=null">
+		and t.status=#{params.status}
+		</if>
+		<if test="params.userId!=null">
+		and t.user_id=#{params.userId}
+		</if>
+		order by t.create_time desc
+	</select>
+	
+	<delete id="delete" parameterType="Thigh" >
+		delete from dada_sports.thigh
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="Thigh" >
+		insert into dada_sports.thigh (id,user_id,activity_id,type,status,create_time,date
+		)
+ 		values (#{id},#{userId},#{activityId},#{type},#{status},#{createTime},#{date}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="Thigh" >
+		update dada_sports.thigh set user_id=#{userId},activity_id=#{activityId},type=#{type},status=#{status},create_time=#{createTime},date=#{date}
+		where id = #{id}
+</update>
+</mapper>

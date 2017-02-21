@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.lottery.LotteryWin" >
+	<resultMap id="lotteryWinResult" type="LotteryWin" >
+	<id column="id" property="id" />
+		<result column="lottery_id" property="lotteryId" />
+		<result column="level" property="level" />
+		<result column="gold_bean" property="goldBean" />
+	</resultMap>
+	
+	
+	<resultMap id="lotteryWinMoreResult" type="LotteryWinMore" >
+	<id column="id" property="id" />
+		<result column="lottery_id" property="lotteryId" />
+		<result column="level" property="level" />
+		<result column="gold_bean" property="goldBean" />
+		<association property="winCount" column="id" select="com.youyisi.sports.domain.lottery.UserLotteryWin.getCountByLotteryWinId"></association>
+	</resultMap>
+	
+	<sql id="commonSelect" >
+		select l.id, l.lottery_id, l.level, l.gold_bean
+		from dada_sports.lottery_win l
+	</sql>
+	<select id="getById" resultMap="lotteryWinResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where l.id = #{id}
+	</select>
+	
+	<select id="getLotteryWinMoreByLotteryId" resultMap="lotteryWinMoreResult" parameterType="java.lang.Long" >
+		select l.id, l.lottery_id, l.level, l.gold_bean
+		from  dada_sports.lottery_win l
+		left join dada_sports.user_lottery_win u on l.id= u.lottery_win_id
+		where l.lottery_id=#{lotteryId} group by l.id
+		order by l.level asc
+	</select>
+	
+	<select id="queryPage" resultMap="lotteryWinResult">
+		<include refid="commonSelect"/>
+		order by l.id asc
+	</select>
+	<delete id="delete" parameterType="LotteryWin" >
+		delete from dada_sports.lottery_win
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="LotteryWin" >
+		insert into dada_sports.lottery_win (id,lottery_id,level,gold_bean
+		)
+ 		values (#{id},#{lotteryId},#{level},#{goldBean}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="LotteryWin" >
+		update dada_sports.lottery_win set lottery_id=#{lotteryId},level=#{level},gold_bean=#{goldBean}
+		where id = #{id}
+</update>
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.soa.infrastructure.persist.show.ShowCommentsMapper" >
+  <resultMap id="BaseResultMap" type="ShowComments" >
+    <id column="COMMENTS_ID" property="commentsId" jdbcType="BIGINT" />
+    <result column="SHOW_ID" property="showId" jdbcType="BIGINT" />
+    <result column="COMMENT_TYPE" property="commentType" jdbcType="INTEGER" />
+    <result column="COMMENTS" property="comments" jdbcType="VARCHAR" />
+    <result column="PARENT_COMMENTS_ID" property="parentCommentsId" jdbcType="BIGINT" />
+    <result column="CREATOR" property="creator" jdbcType="BIGINT" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="MODIFIER" property="modifier" jdbcType="BIGINT" />
+    <result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="CHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from T_SPORT_SHOW_COMMENTS
+    where COMMENTS_ID = #{commentsId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="ShowComments" >
+    insert into T_SPORT_SHOW_COMMENTS (COMMENTS_ID, SHOW_ID, COMMENT_TYPE, 
+      COMMENTS, PARENT_COMMENTS_ID, CREATOR, 
+      CREATED_TIME, MODIFIER, UPDATED_TIME, 
+      STATUS)
+    values (#{commentsId,jdbcType=BIGINT}, #{showId,jdbcType=BIGINT}, #{commentType,jdbcType=INTEGER}, 
+      #{comments,jdbcType=VARCHAR}, #{parentCommentsId,jdbcType=BIGINT}, #{creator,jdbcType=BIGINT}, 
+      #{createdTime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=BIGINT}, #{updatedTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=CHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="ShowComments" >
+    update T_SPORT_SHOW_COMMENTS
+    set SHOW_ID = #{showId,jdbcType=BIGINT},
+      COMMENT_TYPE = #{commentType,jdbcType=INTEGER},
+      COMMENTS = #{comments,jdbcType=VARCHAR},
+      PARENT_COMMENTS_ID = #{parentCommentsId,jdbcType=BIGINT},
+      CREATOR = #{creator,jdbcType=BIGINT},
+      CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      MODIFIER = #{modifier,jdbcType=BIGINT},
+      UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+      STATUS = #{status,jdbcType=CHAR}
+    where COMMENTS_ID = #{commentsId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select COMMENTS_ID, SHOW_ID, COMMENT_TYPE, COMMENTS, PARENT_COMMENTS_ID, CREATOR, 
+    CREATED_TIME, MODIFIER, UPDATED_TIME, STATUS
+    from T_SPORT_SHOW_COMMENTS
+    where COMMENTS_ID = #{commentsId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select COMMENTS_ID, SHOW_ID, COMMENT_TYPE, COMMENTS, PARENT_COMMENTS_ID, CREATOR, 
+    CREATED_TIME, MODIFIER, UPDATED_TIME, STATUS
+    from T_SPORT_SHOW_COMMENTS
+  </select>
+</mapper>

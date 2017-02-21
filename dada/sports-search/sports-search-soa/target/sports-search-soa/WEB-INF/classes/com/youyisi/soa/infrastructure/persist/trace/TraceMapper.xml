@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.soa.infrastructure.persist.trace.TraceMapper" >
+  <resultMap id="BaseResultMap" type="Trace" >
+    <id column="TRACE_ID" property="traceId" jdbcType="BIGINT" />
+    <result column="SPORT_ID" property="sportId" jdbcType="BIGINT" />
+    <result column="USER_ID" property="userId" jdbcType="BIGINT" />
+    <result column="GPS_X" property="gpsX" jdbcType="DOUBLE" />
+    <result column="GPS_Y" property="gpsY" jdbcType="DOUBLE" />
+    <result column="GPS_Z" property="gpsZ" jdbcType="DOUBLE" />
+    <result column="COORDINATION_TYPE" property="coordinationType" jdbcType="INTEGER" />
+    <result column="TRACE_TIME" property="traceTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from T_SPORT_TRACE
+    where TRACE_ID = #{traceId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="Trace" >
+    insert into T_SPORT_TRACE (TRACE_ID, SPORT_ID, USER_ID, 
+      GPS_X, GPS_Y, GPS_Z, COORDINATION_TYPE, 
+      TRACE_TIME)
+    values (#{traceId,jdbcType=BIGINT}, #{sportId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, 
+      #{gpsX,jdbcType=DOUBLE}, #{gpsY,jdbcType=DOUBLE}, #{gpsZ,jdbcType=DOUBLE}, #{coordinationType,jdbcType=INTEGER}, 
+      #{traceTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="Trace" >
+    update T_SPORT_TRACE
+    set SPORT_ID = #{sportId,jdbcType=BIGINT},
+      USER_ID = #{userId,jdbcType=BIGINT},
+      GPS_X = #{gpsX,jdbcType=DOUBLE},
+      GPS_Y = #{gpsY,jdbcType=DOUBLE},
+      GPS_Z = #{gpsZ,jdbcType=DOUBLE},
+      COORDINATION_TYPE = #{coordinationType,jdbcType=INTEGER},
+      TRACE_TIME = #{traceTime,jdbcType=TIMESTAMP}
+    where TRACE_ID = #{traceId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select TRACE_ID, SPORT_ID, USER_ID, GPS_X, GPS_Y, GPS_Z, COORDINATION_TYPE, TRACE_TIME
+    from T_SPORT_TRACE
+    where TRACE_ID = #{traceId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select TRACE_ID, SPORT_ID, USER_ID, GPS_X, GPS_Y, GPS_Z, COORDINATION_TYPE, TRACE_TIME
+    from T_SPORT_TRACE
+  </select>
+</mapper>

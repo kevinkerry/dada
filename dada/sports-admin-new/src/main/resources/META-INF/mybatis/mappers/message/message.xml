@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.message.Message" >
+	<resultMap id="messageResult" type="Message" >
+	<id column="id" property="id" />
+		<result column="admin_id" property="adminId" />
+		<result column="title" property="title" />
+		<result column="content" property="content" />
+		<result column="create_time" property="createTime" />
+		<result column="send_time" property="sendTime" />
+		<result column="type" property="type" />
+		<result column="status" property="status" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select m.id, m.admin_id, m.title, m.content, m.create_time, m.send_time,m.type, m.status
+		from dada_sports.message m
+	</sql>
+	<select id="getById" resultMap="messageResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where m.id = #{id}
+	</select>
+	<select id="queryPage" resultMap="messageResult">
+		<include refid="commonSelect"/>
+		where 1=1
+		<if test="params.condition != null">
+			and (m.title LIKE CONCAT(CONCAT('%',#{params.condition}),'%') or 
+		  	   m.content LIKE CONCAT(CONCAT('%',#{params.condition}),'%'))
+		</if>
+		<if test="params.status != null">
+			and m.status = #{params.status}
+		</if>
+		order by m.create_time desc
+	</select>
+	<delete id="delete" parameterType="Message" >
+		delete from dada_sports.message
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="Message" >
+		insert into dada_sports.message (id,admin_id,title,content,create_time,send_time,type,status
+		)
+ 		values (#{id},#{adminId},#{title},#{content},#{createTime},#{sendTime},#{type},#{status}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="Message" >
+		update dada_sports.message set admin_id=#{adminId},title=#{title},content=#{content},create_time=#{createTime},send_time=#{sendTime},type=#{type},status=#{status}
+		where id = #{id}
+</update>
+</mapper>

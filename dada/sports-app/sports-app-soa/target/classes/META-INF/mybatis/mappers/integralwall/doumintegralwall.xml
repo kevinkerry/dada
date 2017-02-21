@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.integralwall.DoumIntegralWall" >
+	<resultMap id="doumIntegralWallResult" type="DoumIntegralWall" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="orderid" property="orderid" />
+		<result column="pubid" property="pubid" />
+		<result column="ad" property="ad" />
+		<result column="adid" property="adid" />
+		<result column="device" property="device" />
+		<result column="channel" property="channel" />
+		<result column="price" property="price" />
+		<result column="point" property="point" />
+		<result column="ts" property="ts" />
+		<result column="sign" property="sign" />
+		<result column="pkg" property="pkg" />
+		<result column="action" property="action" />
+		<result column="action_name" property="actionName" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select d.id, d.user_id, d.orderid, d.pubid, d.ad, d.adid, d.device, d.channel, d.price, d.point, d.ts, d.sign, d.pkg, d.action, d.action_name
+		from dada_sports.duom_integral_wall d
+	</sql>
+	<select id="getById" resultMap="doumIntegralWallResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where d.id = #{id}
+	</select>
+	<select id="getByUserIdAndOrderId" resultMap="doumIntegralWallResult" >
+		<include refid="commonSelect"/>
+		where 1=1
+		<if test="orderid!=null">
+		and d.orderid = #{orderid}
+		</if>
+		<if test="userId!=null">
+		and d.user_id = #{userId}
+		</if>
+		
+	</select>
+	
+	<select id="queryPage" resultMap="doumIntegralWallResult">
+		<include refid="commonSelect"/>
+		order by d.id asc
+	</select>
+	<delete id="delete" parameterType="DoumIntegralWall" >
+		delete from dada_sports.duom_integral_wall
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="DoumIntegralWall" >
+		insert into dada_sports.duom_integral_wall (id,user_id,orderid,pubid,ad,adid,device,channel,price,point,ts,sign,pkg,action,action_name
+		)
+ 		values (#{id},#{userId},#{orderid},#{pubid},#{ad},#{adid},#{device},#{channel},#{price},#{point},#{ts},#{sign},#{pkg},#{action},#{actionName}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="DoumIntegralWall" >
+		update dada_sports.duom_integral_wall set user_id=#{userId},orderid=#{orderid},pubid=#{pubid},ad=#{ad},adid=#{adid},device=#{device},channel=#{channel},price=#{price},point=#{point},ts=#{ts},sign=#{sign},pkg=#{pkg},action=#{action},action_name=#{actionName}
+		where id = #{id}
+</update>
+</mapper>

@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.user.User">
+	<resultMap id="userResult" type="User">
+		<id column="id" property="id" />
+		<result column="username" property="username" />
+		<result column="usercode" property="usercode" />
+		<result column="password" property="password" />
+		<result column="pay_password" property="payPassword" />
+		<result column="nickname" property="nickname" />
+		<result column="head_portrait" property="headPortrait" />
+		<result column="sex" property="sex" />
+		<result column="age" property="age" />
+		<result column="height" property="height" />
+		<result column="weight" property="weight" />
+		<result column="mobile" property="mobile" />
+		<result column="city" property="city" />
+		<result column="province" property="province" />
+		<result column="birthday" property="birthday" />
+		<result column="user_type" property="userType" />
+		<result column="client_type" property="clientType" />
+		<result column="client_id" property="clientId" />
+		<result column="register_time" property="registerTime" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="status" property="status" />
+		<result column="phone_model" property="phoneModel" />
+		<result column="big_deals_remind" property="bigDealsRemind" />
+		<result column="performance_remind" property="performanceRemind" />
+		<result column="indoor_running" property="indoorRunning" />
+		<result column="channel" property="channel" />
+		
+		
+		<result column="total_asset" property="totalAsset" />
+		<result column="principal" property="principal" />
+		<result column="income" property="income" />
+		<result column="clientIdNum" property="clientIdNum" />
+		<association column="id" property="experienceAccount" select="com.youyisi.admin.domain.experience.ExperienceAccount.getByUserId" />
+		<association column="client_id"  property="clientIdNum" select="com.youyisi.admin.domain.user.User.countClientIdNum" />
+	</resultMap>
+	
+	<resultMap type="UserInvite" id="userInvite">
+		<id column="id" property="id" />
+		<result column="usercode" property="usercode" />
+		<result column="nickname" property="nickname" />
+		<result column="update_time" property="updateTime" />
+		<result column="create_time" property="createTime" />
+		<result column="inviteNum" property="inviteNum" />
+		
+		<association column="usercode" property="inviteNum" select="com.youyisi.admin.domain.user.User.getRecommendNum" />
+	</resultMap>
+	
+	<sql id="commonSelect">
+		select u.id, u.username,u.usercode, u.password,
+		u.pay_password, u.nickname, u.head_portrait, u.sex, u.age, u.height,
+		u.weight, u.mobile, u.city, u.province, u.birthday, u.user_type,
+		u.client_type, u.client_id, u.register_time,u.create_time,
+		u.update_time, u.status,u.phone_model,u.big_deals_remind,u.performance_remind,u.indoor_running,u.channel
+		from dada_sports.user u
+	</sql>
+	<select id="getById" resultMap="userResult" parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where u.id = #{id}
+	</select>
+	<select id="getByNickName" resultType="java.lang.String" parameterType="java.lang.Long">
+		select u.nickname from dada_sports.user u where u.id = #{userId}
+	</select>
+	
+	<select id="queryPage" resultMap="userResult">
+		<include refid="commonSelect" />
+		where 1=1
+		<if test="params.performanceRemind != null">
+		  and u.performance_remind = #{params.performanceRemind}
+		</if>
+		<if test="params.clientId != null">
+			and u.client_id = #{params.clientId}
+		</if>
+		order by u.id asc
+	</select>
+	
+	<select id="queryPageForPush" resultMap="userResult">
+		<include refid="commonSelect" />
+		where 1=1
+		<if test="params.performanceRemind != null">
+		  and u.performance_remind = #{params.performanceRemind}
+		</if>
+		group by u.client_id  order by u.id asc
+	</select>
+	
+	<delete id="delete" parameterType="User">
+		delete from
+		dada_sports.user
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="User">
+		insert into dada_sports.user
+		(id,username,usercode,password,pay_password,nickname,head_portrait,sex,age,height,weight,mobile,city,province,birthday,user_type,client_type,client_id,register_time,create_time,update_time,status,phone_model,phone_model,big_deals_remind,performance_remind,indoor_running,channel
+		)
+		values
+		(#{id},#{username},#{usercode},#{password},#{payPassword},#{nickname},#{headPortrait},#{sex},#{age},#{height},#{weight},#{mobile},#{city},#{province},#{birthday},#{userType},#{clientType},#{clientId},#{registerTime},#{createTime},#{updateTime},#{status},#{phoneModel},#{phoneModel},#{bigDealsRemind},#{performanceRemind},#{indoorRunning},#{channel}
+		)
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="User">
+		update dada_sports.user
+		set
+		username=#{username},usercode=#{usercode},password=#{password},pay_password=#{payPassword},nickname=#{nickname},head_portrait=#{headPortrait},sex=#{sex},age=#{age},height=#{height},weight=#{weight},mobile=#{mobile},city=#{city},province=#{province},birthday=#{birthday},user_type=#{userType},client_type=#{clientType},client_id=#{clientId},register_time=#{registerTime},create_time=#{createTime},update_time=#{updateTime},status=#{status},phone_model=#{phoneModel},phone_model=#{phoneModel},big_deals_remind=#{bigDealsRemind},performance_remind=#{performanceRemind},indoor_running=#{indoorRunning},channel=#{channel}
+		where id = #{id}
+	</update>
+	
+	<select id="queryPageUserList" resultMap="userResult">
+	   select u.*,w.total_asset,w.principal,w.income from dada_sports.user u LEFT JOIN dada_sports.wallet w ON u.id=w.user_id
+		where 1=1
+		<if test="params.beginTime != null and params.endTime !=null">
+			 and (<if test="params.dateType == 1">u.register_time</if>
+				  <if test="params.dateType == 2">u.update_time</if>
+				  <![CDATA[>=]]> #{params.beginTime}
+				  and
+				  <if test="params.dateType == 1">u.register_time</if>
+				  <if test="params.dateType == 2">u.update_time</if>
+			      <![CDATA[<=]]> #{params.endTime})
+		</if>
+		<if test="params.condition != null">
+		  and (
+		  	   u.id LIKE CONCAT(CONCAT('%',#{params.condition}),'%') or
+		  	   u.username LIKE CONCAT(CONCAT('%',#{params.condition}),'%') or
+		  	   u.mobile LIKE CONCAT(CONCAT('%',#{params.condition}),'%') or
+		  	   u.usercode LIKE CONCAT(CONCAT('%',#{params.condition}),'%') or
+		  	   u.channel LIKE CONCAT(CONCAT('%',#{params.condition}),'%') or
+		  	   u.nickname LIKE CONCAT(CONCAT('%',#{params.condition}),'%'))
+		</if>
+		<if test="params.field !=null">
+		   order by ${params.field} ${params.sort}
+		</if>
+		<if test="params.field ==null">
+		   order by u.create_time desc
+		</if>
+	</select>
+	
+	
+	<select id="queryPagePushUser" resultMap="userResult">
+		select u.id,u.client_type,u.client_id
+		from dada_sports.user u
+		where u.client_id != ''
+		<if test="params.clientType != null">
+			and u.client_type = #{params.clientType}
+		</if>
+	</select>
+	
+	<select id="countUser" resultType="java.lang.Integer">
+		select COUNT(*) from dada_sports.user u
+		where 1=1
+		 <if test="clientType != null">
+		 	and u.client_type = #{clientType}
+		 </if>
+		 <if test="beginTime != null">
+		 	and (u.register_time <![CDATA[>=]]> #{beginTime}
+		 	and u.register_time <![CDATA[<=]]> #{endTime})
+		 </if>
+	</select>
+	
+	<select id="countClientIdNum" resultType="java.lang.Integer">
+		select COUNT(u.client_id) from dada_sports.user u
+		where u.client_id = #{clientId}
+	</select>
+	
+	<select id="countRecommendCode" resultType="java.lang.Integer">
+		select COUNT(recommend_code) from dada_sports.user u
+		where  recommend_code = #{recommendCode}
+	</select>
+	
+	
+	<select id="getClientIdAndClientIdNum" resultMap="userResult">
+		SELECT * FROM
+			( SELECT
+					COUNT(*) AS clientIdNum,
+					client_id
+				FROM
+					dada_sports.user
+				GROUP BY
+					client_id
+			) t
+		WHERE
+			t.clientIdNum > 5
+		AND t.client_id != ''
+		ORDER BY
+			t.clientIdNum DESC
+	</select>
+	
+	<select id="getRecommendNum" resultType="java.lang.Integer" parameterType="java.lang.String">
+		SELECT count(uu.id) FROM dada_sports.user uu WHERE uu.recommend_code = #{usercode}
+	</select>
+	
+	<select id="queryPageUserInvite" resultMap="userInvite">
+			 SELECT u.id,u.usercode,u.nickname,u.update_time,u.create_time
+			 FROM dada_sports.user u 
+			 WHERE 
+			 u.id in(
+			 		SELECT DISTINCT(uc.user_id) FROM dada_sports.user_coupon uc  
+			 		LEFT JOIN dada_sports.coupon c ON c.id = uc.coupon_id
+			 		 WHERE c.type = 8 AND uc.category = 1 AND c.activity_id = #{params.activityId}
+			 		)
+	    <if test="params.condition != null">
+	    	and (
+		  	   u.id LIKE CONCAT(CONCAT('%',#{params.condition}),'%') or
+		  	   u.usercode LIKE CONCAT(CONCAT('%',#{params.condition}),'%') or
+		  	   u.nickname LIKE CONCAT(CONCAT('%',#{params.condition}),'%')
+		  	)
+		</if>
+	</select>
+	
+	<select id="countInviteNum" resultType="java.lang.Integer" parameterType="java.lang.Long">
+		SELECT  count(uc.id) FROM dada_sports.user_coupon uc  
+		LEFT JOIN dada_sports.coupon c ON c.id = uc.coupon_id 
+		WHERE c.type = 9 AND uc.category = 1 AND c.activity_id = #{activityId}	 		
+	</select>
+	
+	<select id="queryPageUserInviteDetail" resultMap="userInvite">
+	   SELECT u.id,u.nickname,u.create_time FROM dada_sports.user u 
+	 	 WHERE  1=1
+	    <if test="params.userCode != null">
+	    	and u.recommend_code = #{params.userCode}
+		</if>
+		ORDER BY u.create_time desc
+	</select>
+	
+</mapper>

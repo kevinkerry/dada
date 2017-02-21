@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.vote.domain.user.User" >
+	<resultMap id="userResult" type="User" >
+	<id column="id" property="id" />
+	<result column="name" property="name" />
+	<result column="age" property="age" />
+	<result column="sex" property="sex" />
+	<result column="mobile" property="mobile" />
+	<result column="wechat" property="wechat" />
+	<result column="personalProfile" property="personalProfile" />
+	<result column="headImage" property="headImage" />
+	<result column="createTime" property="createTime" />
+	<result column="voteNum" property="voteNum" />
+	<result column="state" property="state" />
+	<collection property="images" column="id" select="com.youyisi.vote.domain.image.Image.getByUserId"/>
+	
+	</resultMap>
+<sql id="commonSelect" >
+		select * 
+		from user u
+</sql>
+<select id="getById" resultMap="userResult" parameterType="java.lang.Long" >
+	<include refid="commonSelect"/>
+	where u.id = #{id}
+</select>
+<select id="queryPage" resultMap="userResult">
+	 <include refid="commonSelect"/>
+	 where state=0 
+	 <if test="params.keyword != null and params.keyword !=''">
+	 and u.name like CONCAT(CONCAT('%',
+			#{params.keyword}), '%')
+		</if>
+	order by u.voteNum desc , u.createTime asc
+</select>
+<delete id="delete" parameterType="User" >
+	 delete from user
+	where id = #{id}
+</delete>
+<insert id="save" parameterType="User" >
+	insert into user (id,name,age,sex,mobile,wechat,personalProfile,headImage,createTime,voteNum,state
+)
+ values (#{id},#{name},#{age},#{sex},#{mobile},#{wechat},#{personalProfile},#{headImage},#{createTime},#{voteNum},#{state}
+)
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+</insert>
+<update id="update" parameterType="User" >
+	update user set name=#{name},age=#{age},sex=#{sex},mobile=#{mobile},wechat=#{wechat},personalProfile=#{personalProfile},headImage=#{headImage},createTime=#{createTime},voteNum=#{voteNum},state=#{state}
+	where id = #{id}
+</update>
+
+<update id="updateVoteNum" parameterType="User" >
+	update user set voteNum=#{voteNum}
+	where id = #{id}
+</update>
+</mapper>

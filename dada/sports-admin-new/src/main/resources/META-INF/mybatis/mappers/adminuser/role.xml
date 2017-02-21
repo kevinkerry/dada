@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.youyisi.admin.domain.adminuser.Role">
+	<resultMap type="Role" id="roleMap">
+		<id column="role_id" property="id"/>
+		<result column="role_name" property="name"/>
+		<result column="role_showName" property="showName"/>
+		<collection column="collection" property="auths" javaType="com.youyisi.admin.domain.adminuser.Auth" resultMap="com.youyisi.admin.domain.adminuser.Auth.authMap"/>
+	</resultMap>
+
+	<sql id="commonSelect">
+		select role.id as role_id,
+			   role.name as role_name,
+			   role.showName as role_showName,
+			   auth.id as auth_id,
+			   auth.name as auth_name,
+			   auth.permission as auth_permission
+		from sports_admin.role role
+		left join sports_admin.role_auth roleAuth on role.id=roleAuth.role_id
+		left join sports_admin.auth auth on auth.id=roleAuth.auth_id
+	</sql>
+	
+	<sql id="lazySelect">
+		select role.id as role_id,
+			   role.name as role_name,
+			   role.showName as role_showName
+		from sports_admin.role role
+	</sql>
+	
+	<insert id="save" parameterType="Role">
+		insert into sports_admin.role (name,showName) values (#{name},#{showName})
+		<selectKey keyProperty="id" resultType="Integer" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<insert id="saveAuths" parameterType="Role">
+		insert into sports_admin.role_auth(role_id,auth_id) values
+		<foreach item="auth" collection="auths" open="" separator="," close="">
+			(#{id},#{auth.id})
+		</foreach>
+	</insert>
+	
+	<select id="getById" parameterType="Integer" resultMap="roleMap">
+		<include refid="commonSelect"/>
+		where role.id=#{id}
+	</select>
+	
+	<update id="update" parameterType="Role">
+		update sports_admin.role role set role.name=#{name},role.showName=#{showName}
+		where role.id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="Role">
+		delete from sports_admin.role where id=#{id}
+	</delete>
+	
+	<delete id="deleteAuths" parameterType="Role">
+		delete from sports_admin.role_auth where role_id=#{id}
+	</delete>
+	
+	<select id="query" resultMap="roleMap">
+		<include refid="commonSelect"/>
+		<where>
+			<if test="name != null">
+				role.name=#{name}
+			</if>
+			<if test="showName != null">
+				and role.showName=#{showName}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryPage" resultMap="roleMap">
+		<include refid="lazySelect"/>
+		<where>
+			1=1
+			<if test="params.name != null and params.name != ''">
+				and role.name like concat(concat('%',#{params.name}),'%')
+			</if>
+			<if test="params.showName != null and params.showName != ''">
+				and role.showName like concat(concat('%',#{params.showName}),'%')
+			</if>
+		</where>
+	</select>
+
+	<select id="count" resultType="long" >
+		select count(role.id) from sports_admin.role role
+		where role.name=#{name}
+	</select>
+</mapper>

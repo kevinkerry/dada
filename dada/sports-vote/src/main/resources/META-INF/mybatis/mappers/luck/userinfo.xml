@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.vote.domain.luck.UserInfo" >
+	<resultMap id="userInfoResult" type="UserInfo" >
+	    <id column="id" property="id" />
+		<result column="subscribe" property="subscribe" />
+		<result column="openid" property="openid" />
+		<result column="nickname" property="nickname" />
+		<result column="sex" property="sex" />
+		<result column="language" property="language" />
+		<result column="city" property="city" />
+		<result column="province" property="province" />
+		<result column="headimgurl" property="headimgurl" />
+		<result column="country" property="country" />
+		<result column="subscribe_time" property="subscribe_time" />
+		<result column="imageurl" property="imageurl" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select u.id, u.subscribe, u.openid, u.nickname, u.sex, u.language, u.city, u.province, u.headimgurl, u.country, u.subscribe_time,u.imageurl
+		from userInfo u
+	</sql>
+	<select id="getById" resultMap="userInfoResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where u.id = #{id}
+	</select>
+	<select id="selectById" resultMap="userInfoResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where u.id = #{userId}
+	</select>
+	<select id="getByOpenId" resultMap="userInfoResult" parameterType="java.lang.String" >
+		<include refid="commonSelect"/>
+		where u.openid = #{openid}
+	</select>
+	<select id="queryPage" resultMap="userInfoResult">
+		<include refid="commonSelect"/>
+		order by u.id asc
+	</select>
+	<delete id="delete" parameterType="UserInfo" >
+		delete from userInfo
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="UserInfo" >
+		insert into userInfo (id,subscribe,openid,nickname,sex,language,city,province,headimgurl,country,subscribe_time,imageurl
+		)
+ 		values (#{id},#{subscribe},#{openid},#{nickname},#{sex},#{language},#{city},#{province},#{headimgurl},#{country},#{subscribe_time},#{imageurl}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="UserInfo" >
+		update userInfo set subscribe=#{subscribe},openid=#{openid},nickname=#{nickname},sex=#{sex},language=#{language},city=#{city},province=#{province},headimgurl=#{headimgurl},country=#{country},subscribe_time=#{subscribe_time},imageurl=#{imageurl}
+		where id = #{id}
+</update>
+</mapper>

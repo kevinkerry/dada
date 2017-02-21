@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.orders.Orders">
+	<resultMap id="ordersResult" type="Orders">
+		<id column="id" property="id" />
+		<result column="order_number" property="orderNumber" />
+		<result column="type" property="type" />
+		<result column="product_id" property="productId" />
+		<result column="order_amount" property="orderAmount" />
+		<result column="pay_amount" property="payAmount" />
+		<result column="counts" property="counts" />
+		<result column="pay_status" property="payStatus" />
+		<result column="order_status" property="orderStatus" />
+		<result column="note" property="note" />
+		<result column="user_id" property="userId" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+
+		<association property="orderFlow" column="id"
+			select="com.youyisi.admin.domain.orders.OrderFlow.getByOrderId" />
+	</resultMap>
+	<sql id="commonSelect">
+		select o.id, o.order_number, o.type,
+		o.product_id, o.order_amount, o.pay_amount, o.counts, o.pay_status,
+		o.order_status, o.note, o.user_id, o.create_time, o.update_time
+		from
+		dada_sports.orders o
+	</sql>
+	<select id="getById" resultMap="ordersResult" parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where o.id = #{id}
+	</select>
+	<select id="queryPage" resultMap="ordersResult">
+		<include refid="commonSelect" />
+		where 1=1
+		<if test="params.userId != null">
+			and o.user_id = #{params.userId}
+		</if>
+		<if test="params.payStatus != null">
+			and o.pay_status = #{params.payStatus}
+		</if>
+		order by o.create_time desc
+	</select>
+	<delete id="delete" parameterType="Orders">
+		delete from
+		dada_sports.orders
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="Orders">
+		insert into dada_sports.orders
+		(id,order_number,type,product_id,order_amount,pay_amount,counts,pay_status,order_status,note,user_id,create_time,update_time
+		)
+		values
+		(#{id},#{orderNumber},#{type},#{productId},#{orderAmount},#{payAmount},#{counts},#{payStatus},#{orderStatus},#{note},#{userId},#{createTime},#{updateTime}
+		)
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="Orders">
+		update
+		dada_sports.orders set
+		order_number=#{orderNumber},type=#{type},product_id=#{productId},order_amount=#{orderAmount},pay_amount=#{payAmount},counts=#{counts},pay_status=#{payStatus},order_status=#{orderStatus},note=#{note},user_id=#{userId},create_time=#{createTime},update_time=#{updateTime}
+		where id = #{id}
+	</update>
+	
+	<select id="countPay" resultType="java.lang.Double">
+	  select  sum(o.pay_amount)  from dada_sports.orders o
+	  where o.user_id = #{userId} and o.pay_status = #{payStatus}
+	</select>
+</mapper>

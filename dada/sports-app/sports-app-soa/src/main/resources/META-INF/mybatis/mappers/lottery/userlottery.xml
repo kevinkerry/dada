@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.lottery.UserLottery" >
+	<resultMap id="userLotteryResult" type="UserLottery" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="lottery_id" property="lotteryId" />
+		<result column="my_number" property="myNumber" />
+		<result column="bet_count_id" property="betCountId" />
+		<result column="pay_status" property="payStatus" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select u.id, u.user_id, u.lottery_id, u.my_number, u.bet_count_id, u.pay_status, u.status, u.create_time
+		from dada_sports.user_lottery u
+	</sql>
+	<select id="getById" resultMap="userLotteryResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where u.id = #{id}
+	</select>
+	<select id="getUserLotteryCount" resultType="java.lang.Integer" >
+		select sum(b.count)
+		from dada_sports.user_lottery u
+		left join dada_sports.bet_count b on b.id=u.bet_count_id
+		where u.user_id=#{userId} and u.lottery_id=#{lotteryId} and u.pay_status=1 and u.status=1
+	</select>
+	
+	<select id="queryPage" resultMap="userLotteryResult">
+		<include refid="commonSelect"/>
+		order by u.id asc
+	</select>
+	<delete id="delete" parameterType="UserLottery" >
+		delete from dada_sports.user_lottery
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="UserLottery" >
+		insert into dada_sports.user_lottery (id,user_id,lottery_id,my_number,bet_count_id,pay_status,status,create_time
+		)
+ 		values (#{id},#{userId},#{lotteryId},#{myNumber},#{betCountId},#{payStatus},#{status},#{createTime}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="UserLottery" >
+		update dada_sports.user_lottery set user_id=#{userId},lottery_id=#{lotteryId},my_number=#{myNumber},bet_count_id=#{betCountId},pay_status=#{payStatus},status=#{status},create_time=#{createTime}
+		where id = #{id}
+</update>
+</mapper>

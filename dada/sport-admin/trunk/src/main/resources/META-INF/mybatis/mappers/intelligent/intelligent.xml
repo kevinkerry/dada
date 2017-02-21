@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.youyisi.admin.domain.intelligent.Intelligent">
+
+	<resultMap type="Intelligent" id="userMap">
+		<id column="id" property="id" />
+		<result column="username" property="username" />
+		<result column="sex" property="sex" />
+		<result column="birthday" property="birthday" />
+		<result column="mobile" property="mobile"/>
+		<result column="weibo" property="weibo"/>
+		<result column="createOn" property="createOn"/>
+		<result column="workUnit" property="workUnit"/>
+		<result column="height" property="height"/>
+		<result column="weight" property="weight"/>
+		<result column="bust" property="bust"/>
+		<result column="waist" property="waist"/>
+		<result column="hips" property="hips"/>
+		<result column="wechat" property="wechat"/>
+		<result column="clubName" property="clubName"/>
+		<result column="status" property="status"/>
+		<result column="notReason" property="notReason"/>
+		<result column="category" property="category"/>
+		<result column="orders" property="orders"/>
+		<result column="blog" property="blog"/>
+		<result column="joinClub" property="joinClub"/>
+		<result column="recommendFlag" property="recommendFlag"/>
+		<collection property="items" column="id" select="com.youyisi.admin.domain.intelligent.items.SportsItems.getByUserId" />
+		<collection property="images" column="id" select="com.youyisi.admin.domain.intelligent.image.Image.getByUserId" />
+		
+	</resultMap>
+	<sql id="commonSelect">
+		select user.id as id,
+		       user.username as username,
+			   user.sex as sex,
+			   user.birthday as birthday,
+			   user.mobile as mobile,
+			   user.weibo as weibo,
+			   user.createOn as createOn,
+			   user.workUnit as workUnit,
+			   user.height as height,
+			   user.weight as weight,
+			   user.status as status,
+			   user.clubName as clubName,
+			   user.bust as bust,
+			   user.orders as orders,
+	           user.waist  as waist,
+	           user.notReason as notReason,
+	           user.category  as category,
+	             user.hips  as hips,
+			   user.wechat as wechat,
+			   user.blog as blog,
+			   user.joinClub as joinClub,
+			   user.recommendFlag as recommendFlag
+			   
+		from website.user user
+	</sql>
+	
+	
+	<select id="getById" parameterType="java.lang.Long" resultMap="userMap">
+		<include refid="commonSelect"/>
+		where user.id=#{id}
+	</select>
+	
+	
+	<insert id="save" parameterType="Intelligent">
+		insert into website.user(username,sex,birthday,mobile,weibo,createOn,workUnit,height,weight,bust,waist,hips,wechat,blog,joinClub,clubName,status,notReason,category,orders,recommendFlag) 
+			     values (#{username},#{sex},#{birthday},#{mobile},#{weibo},#{createOn},#{workUnit},#{height},#{weight},#{bust},#{waist},#{hips},#{wechat},#{blog},#{joinClub},#{clubName},#{status},#{notReason},#{category},#{orders},#{recommendFlag})
+		<selectKey keyProperty="id" resultType="java.lang.Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	
+	<update id="update" parameterType="Intelligent">
+		update website.user user set user.username=#{username},user.sex=#{sex},user.birthday=#{birthday},user.mobile=#{mobile},user.weibo=#{weibo},user.createOn=#{createOn},user.workUnit=#{workUnit}
+		,user.height=#{height},user.weight=#{weight},user.bust=#{bust},user.hips=#{hips},user.waist=#{waist},user.wechat=#{wechat},user.blog=#{blog},user.joinClub=#{joinClub},user.clubName=#{clubName},user.status=#{status},user.notReason=#{notReason},user.category=#{category},user.orders=#{orders},user.recommendFlag=#{recommendFlag}
+		where user.id=#{id}
+	</update>
+	
+	<update id="out" parameterType="Intelligent">
+		update website.user user set user.status=-1,user.notReason=#{notReason}
+		where user.id=#{id}
+	</update>
+	
+	<update id="pass" parameterType="Intelligent">
+		update website.user user set user.status=${status},user.category=#{category}
+		where user.id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="Intelligent">
+		delete from website.user where id=#{id}
+	</delete>
+	
+	
+	<select id="queryPage" resultMap="userMap">
+		<include refid="commonSelect"/>
+		<where>
+		    1=1
+			<if test="params.username != null and params.username != ''">
+				and user.username like concat(concat('%',#{params.username}),'%')
+			</if>
+			<if test="params.mobile != null and params.mobile != ''">
+				and user.mobile like concat(concat('%',#{params.mobile}),'%')
+			</if>
+			<if test="params.id != null">
+				or user.id= #{params.id}
+			</if>
+			<if test="params.category != null">
+				and user.category= #{params.category}
+			</if>
+			<if test="params.status != null">
+				and user.status= #{params.status}
+			</if>
+			<if test="params.recommendFlag != null">
+				and user.recommendFlag= #{params.recommendFlag}
+			</if>
+		</where>
+		order by user.orders desc,user.createOn desc
+	</select>
+
+</mapper>

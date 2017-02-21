@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.medal.Medal">
+	<resultMap id="medalResult" type="Medal">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="logo" property="logo" />
+		<result column="type" property="type" />
+		<result column="category" property="category" />
+		<result column="not_light_logo" property="notLightLogo" />
+		<result column="note" property="note" />
+		
+	</resultMap>
+	<sql id="commonSelect">
+		select m.id, m.name, m.logo, m.type,
+		m.category,m.not_light_logo,m.note
+		from dada_sports.medal m
+	</sql>
+	<select id="getById" resultMap="medalResult" parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where m.id = #{id}
+	</select>
+	<select id="queryPage" resultMap="medalResult">
+		<include refid="commonSelect" />
+		order by m.id desc
+	</select>
+	<delete id="delete" parameterType="Medal">
+		delete from
+		dada_sports.medal
+		where id = #{id}
+	</delete>
+	
+	<delete id="delMedalById" parameterType="java.lang.Long">
+		delete from
+		dada_sports.medal
+		where id = #{id}
+	</delete>
+	
+	<insert id="save" parameterType="Medal">
+		insert into dada_sports.medal (id,name,logo,type,category,not_light_logo,note)
+		values (#{id},#{name},#{logo},#{type},#{category},#{notLightLogo},#{note} )
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="Medal">
+		update
+		dada_sports.medal set
+		name=#{name},logo=#{logo},type=#{type},category=#{category},not_light_logo=#{notLightLogo},note=#{note} where id =
+		#{id}
+	</update>
+	
+	
+	<select id="getMedalList" resultMap="medalResult">
+		<include refid="commonSelect" />
+		where 1=1
+		<if test="category != null">
+			and m.category = #{category}
+		</if>
+		<if test="type != null">
+			and m.type = #{type}
+		</if>
+		order by m.id asc
+	</select>
+</mapper>

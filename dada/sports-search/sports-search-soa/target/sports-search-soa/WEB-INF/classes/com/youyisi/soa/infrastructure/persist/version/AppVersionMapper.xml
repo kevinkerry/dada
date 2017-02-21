@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.soa.infrastructure.persist.version.AppVersionMapper" >
+  <resultMap id="BaseResultMap" type="AppVersion" >
+    <id column="VERSION_ID" property="versionId" jdbcType="BIGINT" />
+    <result column="VERSION_NAME" property="versionName" jdbcType="VARCHAR" />
+    <result column="CLIENT_TYPE" property="clientType" jdbcType="VARCHAR" />
+    <result column="VERSION" property="version" jdbcType="VARCHAR" />
+    <result column="VERSION_DESC" property="versionDesc" jdbcType="VARCHAR" />
+    <result column="MUSTUPDATE" property="mustupdate" jdbcType="INTEGER" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="MODIFIER" property="modifier" jdbcType="BIGINT" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from T_APP_VERSION
+    where VERSION_ID = #{versionId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="AppVersion" >
+    insert into T_APP_VERSION (VERSION_ID, VERSION_NAME, CLIENT_TYPE, 
+      VERSION, VERSION_DESC, MUSTUPDATE, 
+      CREATED_TIME, UPDATED_TIME, MODIFIER
+      )
+    values (#{versionId,jdbcType=BIGINT}, #{versionName,jdbcType=VARCHAR}, #{clientType,jdbcType=VARCHAR}, 
+      #{version,jdbcType=VARCHAR}, #{versionDesc,jdbcType=VARCHAR}, #{mustupdate,jdbcType=INTEGER}, 
+      #{createdTime,jdbcType=TIMESTAMP}, #{updatedTime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=BIGINT}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="AppVersion" >
+    update T_APP_VERSION
+    set VERSION_NAME = #{versionName,jdbcType=VARCHAR},
+      CLIENT_TYPE = #{clientType,jdbcType=VARCHAR},
+      VERSION = #{version,jdbcType=VARCHAR},
+      VERSION_DESC = #{versionDesc,jdbcType=VARCHAR},
+      MUSTUPDATE = #{mustupdate,jdbcType=INTEGER},
+      CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+      MODIFIER = #{modifier,jdbcType=BIGINT}
+    where VERSION_ID = #{versionId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select VERSION_ID, VERSION_NAME, CLIENT_TYPE, VERSION, VERSION_DESC, MUSTUPDATE, 
+    CREATED_TIME, UPDATED_TIME, MODIFIER
+    from T_APP_VERSION
+    where VERSION_ID = #{versionId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select VERSION_ID, VERSION_NAME, CLIENT_TYPE, VERSION, VERSION_DESC, MUSTUPDATE, 
+    CREATED_TIME, UPDATED_TIME, MODIFIER
+    from T_APP_VERSION
+  </select>
+</mapper>

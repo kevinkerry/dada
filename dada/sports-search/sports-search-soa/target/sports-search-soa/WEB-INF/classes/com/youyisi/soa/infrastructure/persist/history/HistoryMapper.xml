@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.soa.infrastructure.persist.history.HistoryMapper" >
+  <resultMap id="BaseResultMap" type="History" >
+    <id column="SPORT_ID" property="sportId" jdbcType="BIGINT" />
+    <result column="USER_ID" property="userId" jdbcType="BIGINT" />
+    <result column="CITY" property="city" jdbcType="VARCHAR" />
+    <result column="PARENT_CATEGORY" property="parentCategory" jdbcType="VARCHAR" />
+    <result column="CATEGORY_CODE" property="categoryCode" jdbcType="VARCHAR" />
+    <result column="SPORT_MODE" property="sportMode" jdbcType="INTEGER" />
+    <result column="SPORT_TIME" property="sportTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from T_SPORT_HISTORY
+    where SPORT_ID = #{sportId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="History" >
+    insert into T_SPORT_HISTORY (SPORT_ID, USER_ID, CITY, 
+      PARENT_CATEGORY, CATEGORY_CODE, SPORT_MODE, 
+      SPORT_TIME)
+    values (#{sportId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{city,jdbcType=VARCHAR}, 
+      #{parentCategory,jdbcType=VARCHAR}, #{categoryCode,jdbcType=VARCHAR}, #{sportMode,jdbcType=INTEGER}, 
+      #{sportTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="History" >
+    update T_SPORT_HISTORY
+    set USER_ID = #{userId,jdbcType=BIGINT},
+      CITY = #{city,jdbcType=VARCHAR},
+      PARENT_CATEGORY = #{parentCategory,jdbcType=VARCHAR},
+      CATEGORY_CODE = #{categoryCode,jdbcType=VARCHAR},
+      SPORT_MODE = #{sportMode,jdbcType=INTEGER},
+      SPORT_TIME = #{sportTime,jdbcType=TIMESTAMP}
+    where SPORT_ID = #{sportId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select SPORT_ID, USER_ID, CITY, PARENT_CATEGORY, CATEGORY_CODE, SPORT_MODE, SPORT_TIME
+    from T_SPORT_HISTORY
+    where SPORT_ID = #{sportId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select SPORT_ID, USER_ID, CITY, PARENT_CATEGORY, CATEGORY_CODE, SPORT_MODE, SPORT_TIME
+    from T_SPORT_HISTORY
+  </select>
+</mapper>

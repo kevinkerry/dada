@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.lottery.Lottery" >
+	<resultMap id="lotteryResult" type="Lottery" >
+	<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="win_number" property="winNumber" />
+		<result column="lottery_num" property="lotteryNum" />
+		<result column="date" property="date" />
+		<result column="logo" property="logo" />
+		<result column="gold_bean" property="goldBean" />
+		<result column="begin_time" property="beginTime" />
+		<result column="end_time" property="endTime" />
+		<result column="lottery_time" property="lotteryTime" />
+		<result column="get_expiry_day" property="getExpiryDay" />
+		<result column="bonus_expiry_day" property="bonusExpiryDay" />
+		<result column="rule" property="rule" />
+		<result column="message" property="message" />
+		<result column="cron_expression" property="cronExpression" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="settle" property="settle" />
+	</resultMap>
+	
+	<resultMap id="lotteryWithMoreResult" type="LotteryWithMore" >
+	<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="win_number" property="winNumber" />
+		<result column="lottery_num" property="lotteryNum" />
+		<result column="date" property="date" />
+		<result column="logo" property="logo" />
+		<result column="gold_bean" property="goldBean" />
+		<result column="begin_time" property="beginTime" />
+		<result column="end_time" property="endTime" />
+		<result column="lottery_time" property="lotteryTime" />
+		<result column="get_expiry_day" property="getExpiryDay" />
+		<result column="bonus_expiry_day" property="bonusExpiryDay" />
+		<result column="rule" property="rule" />
+		<result column="message" property="message" />
+		<result column="cron_expression" property="cronExpression" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="settle" property="settle" />
+	</resultMap>
+	
+	<resultMap id="lotteryWithUserWinMoreResult" type="LotteryWithUserWinMore" >
+	<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="win_number" property="winNumber" />
+		<result column="lottery_num" property="lotteryNum" />
+		<result column="date" property="date" />
+		<result column="logo" property="logo" />
+		<result column="gold_bean" property="goldBean" />
+		<result column="begin_time" property="beginTime" />
+		<result column="end_time" property="endTime" />
+		<result column="lottery_time" property="lotteryTime" />
+		<result column="get_expiry_day" property="getExpiryDay" />
+		<result column="bonus_expiry_day" property="bonusExpiryDay" />
+		<result column="rule" property="rule" />
+		<result column="message" property="message" />
+		<result column="cron_expression" property="cronExpression" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="settle" property="settle" />
+		<collection property="lotteryWinMore" column="id" select="com.youyisi.sports.domain.lottery.LotteryWin.getLotteryWinMoreByLotteryId"></collection>
+	</resultMap>
+	<sql id="commonSelect" >
+		select l.id, l.name, l.win_number, l.lottery_num, l.date, l.logo, l.gold_bean, l.begin_time, l.end_time, l.lottery_time, l.get_expiry_day, l.bonus_expiry_day, l.rule, l.message, l.cron_expression, l.create_time, l.update_time, l.settle
+		from dada_sports.lottery l
+	</sql>
+	<select id="getById" resultMap="lotteryResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where l.id = #{id}
+	</select>
+	<select id="queryPageForHistory" resultMap="lotteryWithUserWinMoreResult">
+		<include refid="commonSelect"/>
+		where 1=1
+		<if test="params.date!=null">
+		and  #{params.date}>l.date
+		</if>
+		order by l.date desc
+	</select>
+	
+	<select id="getLotteryNumById" resultType="java.lang.String" parameterType="java.lang.Long" >
+		select  l.lottery_num
+		from dada_sports.lottery l
+		where l.id = #{id}
+	</select>
+	
+	<select id="getByDate" resultMap="lotteryWithMoreResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where l.date = #{date}
+	</select>
+	
+	<select id="queryPage" resultMap="lotteryResult">
+		<include refid="commonSelect"/>
+		order by l.id asc
+	</select>
+	<delete id="delete" parameterType="Lottery" >
+		delete from dada_sports.lottery
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="Lottery" >
+		insert into dada_sports.lottery (id,name,win_number,lottery_num,date,logo,gold_bean,begin_time,end_time,lottery_time,get_expiry_day,bonus_expiry_day,rule,message,cron_expression,create_time,update_time,settle
+		)
+ 		values (#{id},#{name},#{winNumber},#{lotteryNum},#{date},#{logo},#{goldBean},#{beginTime},#{endTime},#{lotteryTime},#{getExpiryDay},#{bonusExpiryDay},#{rule},#{message},#{cronExpression},#{createTime},#{updateTime},#{settle}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="Lottery" >
+		update dada_sports.lottery set name=#{name},win_number=#{winNumber},lottery_num=#{lotteryNum},date=#{date},logo=#{logo},gold_bean=#{goldBean},begin_time=#{beginTime},end_time=#{endTime},lottery_time=#{lotteryTime},get_expiry_day=#{getExpiryDay},bonus_expiry_day=#{bonusExpiryDay},rule=#{rule},message=#{message},cron_expression=#{cronExpression},create_time=#{createTime},update_time=#{updateTime},settle=#{settle}
+		where id = #{id}
+</update>
+</mapper>

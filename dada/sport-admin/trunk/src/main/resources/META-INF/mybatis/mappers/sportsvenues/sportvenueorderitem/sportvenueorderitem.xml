@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.sportsvenues.sportvenueorderitem.SportVenueOrderItem" >
+	<resultMap id="sportVenueOrderItemResult" type="SportVenueOrderItem" >
+		<result column="ORDER_ITEM_ID" property="orderItemId" />
+		<result column="ORDER_ITEM_CODE" property="orderItemCode" />
+		<result column="VENUE_ID" property="venueId" />
+		<result column="CHILD_VENUE_ID" property="childVenueId" />
+		<result column="CHILD_VENUE_NO" property="childVenueNo" />
+		<result column="VENUE_SCHEDULE_ID" property="venueScheduleId" />
+		<result column="START_TIME" property="startTime" />
+		<result column="END_TIME" property="endTime" />
+		<result column="TOTAL_TIME" property="totalTime" />
+		<result column="MARKETING_PRICE" property="marketingPrice" />
+		<result column="SALE_PRICE" property="salePrice" />
+		<result column="PAY_PRICE" property="payPrice" />
+		<result column="CREATOR" property="creator" />
+		<result column="CREATED_TIME" property="createdTime" />
+		<result column="MODIFIER" property="modifier" />
+		<result column="UPDATED_TIME" property="updatedTime" />
+		<result column="STATUS" property="status" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select t.ORDER_ITEM_ID, t.ORDER_ITEM_CODE, t.VENUE_ID, t.CHILD_VENUE_ID, t.CHILD_VENUE_NO, t.VENUE_SCHEDULE_ID, t.START_TIME, t.END_TIME, t.TOTAL_TIME, t.MARKETING_PRICE, t.SALE_PRICE, t.PAY_PRICE, t.CREATOR, t.CREATED_TIME, t.MODIFIER, t.UPDATED_TIME, t.STATUS
+		from sports.T_SPORT_VENUE_ORDER_ITEM t
+	</sql>
+	<select id="getById" resultMap="sportVenueOrderItemResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where t.ORDER_ITEM_ID = #{orderItemId}
+	</select>
+	<select id="queryPage" resultMap="sportVenueOrderItemResult">
+		<include refid="commonSelect"/>
+		order by t.ORDER_ITEM_ID asc
+	</select>
+	<delete id="delete" parameterType="SportVenueOrderItem" >
+		delete from sports.T_SPORT_VENUE_ORDER_ITEM
+		where ORDER_ITEM_ID = #{orderItemId}
+	</delete>
+	<insert id="save" parameterType="SportVenueOrderItem" >
+		insert into sports.T_SPORT_VENUE_ORDER_ITEM (ORDER_ITEM_ID,ORDER_ITEM_CODE,VENUE_ID,CHILD_VENUE_ID,CHILD_VENUE_NO,VENUE_SCHEDULE_ID,START_TIME,END_TIME,TOTAL_TIME,MARKETING_PRICE,SALE_PRICE,PAY_PRICE,CREATOR,CREATED_TIME,MODIFIER,UPDATED_TIME,STATUS
+		)
+ 		values (#{orderItemId},#{orderItemCode},#{venueId},#{childVenueId},#{childVenueNo},#{venueScheduleId},#{startTime},#{endTime},#{totalTime},#{marketingPrice},#{salePrice},#{payPrice},#{creator},#{createdTime},#{modifier},#{updatedTime},#{status}
+		)
+			<selectKey keyProperty="orderItemId" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="SportVenueOrderItem" >
+		update sports.T_SPORT_VENUE_ORDER_ITEM set ORDER_ITEM_ID=#{orderItemId},ORDER_ITEM_CODE=#{orderItemCode},VENUE_ID=#{venueId},CHILD_VENUE_ID=#{childVenueId},CHILD_VENUE_NO=#{childVenueNo},VENUE_SCHEDULE_ID=#{venueScheduleId},START_TIME=#{startTime},END_TIME=#{endTime},TOTAL_TIME=#{totalTime},MARKETING_PRICE=#{marketingPrice},SALE_PRICE=#{salePrice},PAY_PRICE=#{payPrice},CREATOR=#{creator},CREATED_TIME=#{createdTime},MODIFIER=#{modifier},UPDATED_TIME=#{updatedTime},STATUS=#{status}
+		where ORDER_ITEM_ID = #{orderItemId}
+	</update>
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.wallet.WalletDetail" >
+	<resultMap id="walletDetailResult" type="WalletDetail" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="type" property="type" />
+		<result column="money" property="money" />
+		<result column="create_time" property="createTime" />
+		<result column="date" property="date" />
+		<result column="result" property="result" />
+		
+	</resultMap>
+	
+	<resultMap id="walletDetailWithUserResult" type="WalletDetailWithUser" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="type" property="type" />
+		<result column="money" property="money" />
+		<result column="create_time" property="createTime" />
+		<result column="date" property="date" />
+		<result column="result" property="result" />
+		<association property="user" column="user_id"  select="com.youyisi.sports.domain.user.User.getUserLessInfoById"></association>
+	</resultMap>
+	
+	<sql id="commonSelect" >
+		select w.id, w.user_id, w.type, w.money, w.create_time,w.date,w.result
+		from dada_sports.wallet_detail w
+	</sql>
+	<select id="getById" resultMap="walletDetailResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where w.id = #{id}
+	</select>
+	
+	<select id="getSumThighByDate" resultType="java.lang.Double"  >
+		select sum(w.money)
+		from dada_sports.wallet_detail w where w.date=#{date} and w.type=5 and w.user_id=#{userId}
+	</select>
+	
+	<select id="getSumByType" resultType="java.lang.Double" >
+		select sum(w.money)
+		from dada_sports.wallet_detail w where w.type=#{type} and w.user_id=#{userId}
+	</select>
+	
+	<select id="getIncomeByDateAndUserId" resultType="java.lang.Double" >
+		select w.money
+		from dada_sports.wallet_detail w where w.type=7 and w.user_id=#{userId} and date=#{date}
+	</select>
+	
+	<select id="queryPage" resultMap="walletDetailResult">
+		<include refid="commonSelect"/>
+		where 1=1
+		<if test="params.userId!=null">
+		and w.user_id=#{params.userId}
+		</if>
+		order by w.create_time desc
+	</select>
+	
+	<select id="queryPageRanklist" resultMap="walletDetailWithUserResult">
+		<include refid="commonSelect"/>
+		where 1=1
+		<if test="params.type!=null">
+		and (w.type=#{params.type} or w.type=7)
+		</if>
+		<if test="params.date!=null">
+		and w.date=#{params.date}
+		</if>
+		order by w.money desc,w.id desc
+	</select>
+	
+	<select id="getByUserIdAndDate" resultMap="walletDetailResult" >
+		<include refid="commonSelect"/>
+		where w.date = #{date} and w.user_id=#{userId}
+	</select>
+	
+	<select id="getByUserIdAndDateAndType" resultMap="walletDetailResult" >
+		<include refid="commonSelect"/>
+		where w.date = #{date} and w.user_id=#{userId} and (w.type=3 or w.type=7)
+	</select>
+	
+	<select id="getMyRanking" resultType="java.lang.Long" >
+		select count(*)
+		from dada_sports.wallet_detail w
+		where (w.type=3 or w.type=7) and w.date = #{date} and (w.money>#{money} or (w.money=#{money} and w.id>#{id}))
+	</select>
+	
+	
+	
+	
+	<delete id="delete" parameterType="WalletDetail" >
+		delete from dada_sports.wallet_detail
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="WalletDetail" >
+		insert into dada_sports.wallet_detail (id,user_id,type,money,create_time,date,result
+		)
+ 		values (#{id},#{userId},#{type},#{money},#{createTime},#{date},#{result}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="WalletDetail" >
+		update dada_sports.wallet_detail set user_id=#{userId},type=#{type},money=#{money},create_time=#{createTime},date=#{date},result=#{result}
+		where id = #{id}
+   </update>
+   
+   
+</mapper>

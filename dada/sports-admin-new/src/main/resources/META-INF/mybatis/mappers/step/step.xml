@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.step.Step">
+	<resultMap id="stepResult" type="Step">
+		<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="step" property="step" />
+		<result column="status" property="status" />
+		<result column="date" property="date" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		
+		<association property="user" column="user_id" select="com.youyisi.admin.domain.user.User.getById"/>
+	</resultMap>
+	<sql id="commonSelect">
+		select s.id, s.user_id, s.step,s.status,s.date,
+		s.create_time, s.update_time
+		from dada_sports.step s
+	</sql>
+	<select id="getById" resultMap="stepResult" parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where s.id = #{id}
+	</select>
+	<select id="queryPage" resultMap="stepResult">
+		<include refid="commonSelect" />
+		where 1=1
+		<if test="params.date != null">
+			and  s.date = #{params.date}
+		</if>
+		<if test="params.step != null">
+			and  s.step <![CDATA[>=]]> #{params.step}
+		</if>
+		order by s.step desc
+	</select>
+	<delete id="delete" parameterType="Step">
+		delete from
+		dada_sports.step
+		where id = #{id}
+	</delete>
+	
+	<select id="getTeamStep" resultType="java.lang.Integer">
+		select sum(case when s.step>#{maxStep} then #{maxStep} else s.step end)
+		from dada_sports.step s
+		where  s.date>=#{begin} and #{end}>=s.date and s.user_id in(select user_id from dada_sports.relay_member where team_id=#{teamId} and status=1 and pay_status=1)
+	</select>
+	
+	<insert id="save" parameterType="Step">
+		insert into dada_sports.step
+		(id,user_id,step,status,date,create_time,update_time )
+		values (#{id},#{userId},#{step},#{status},#{date},#{createTime},#{updateTime} )
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="Step">
+		update dada_sports.step
+		set
+		user_id=#{userId},step=#{step},status=#{status},date=#{date},create_time=#{createTime},update_time=#{updateTime}
+		where id = #{id}
+	</update>
+	
+	<select id="countStep" resultType="java.lang.Integer">
+		select  count(*)  from dada_sports.step s
+		<if test="clientType != null">
+		   LEFT JOIN dada_sports.user u ON s.user_id = u.id
+		</if>
+		where 1=1
+			<if test="clientType != null">
+		 	    and u.client_type = #{clientType}
+		 	</if>
+		 	<if test="beginTime != null">
+			 	and (s.create_time <![CDATA[>=]]> #{beginTime}
+			 	and s.create_time <![CDATA[<=]]> #{endTime})
+		    </if>
+	</select>
+	
+	<select id="countStepByUserId" resultType="java.lang.Integer">
+		select  sum(s.step)  from dada_sports.step s
+		where 1=1
+			<if test="userId != null">
+		 	    and s.user_id = #{userId}
+		 	</if>
+		 	<if test="date != null">
+			 	and s.date = #{date}
+		    </if>
+		    and s.status = 0
+	</select>
+	
+	
+	<select id="countStepNum" resultType="java.lang.Integer" parameterType="java.util.Map">
+		select  count(*)  from dada_sports.step s
+		where 1=1
+			<if test="userId != null">
+		 	    and s.user_id = #{userId}
+		 	</if>
+		 	<if test="beginStep != null and endStep !=null">
+			 	and (s.step <![CDATA[>=]]> #{beginStep}
+			 	and s.step <![CDATA[<=]]> #{endStep})
+		    </if>
+		    <if test="beginStep != null and endStep ==null">
+			 	and  s.step <![CDATA[>]]> #{beginStep}
+		    </if>
+		    <if test="beginStep == null and endStep !=null">
+			 	and  s.step <![CDATA[<]]> #{endStep}
+		    </if>
+	</select>
+	
+	<select id="getRelayTeamStepNum" resultType="java.lang.Double">
+		select  
+			SUM(case when s.step <![CDATA[>]]> #{maxStep} then #{maxStep} else s.step end) / #{stepToDistance}
+		from dada_sports.step s  LEFT JOIN  dada_sports.relay_member m ON s.user_id=m.user_id
+		where  
+			m.status = 1 
+		and m.team_id=#{teamId}
+		and (s.create_time <![CDATA[>=]]> #{beginTime} and s.create_time <![CDATA[<=]]> #{endTime})
+		and s.status = 0
+	</select>
+	
+	<select id="getUserStep" resultType="java.lang.Integer">
+		select sum(case when s.step>#{maxStep} then #{maxStep} else s.step end)
+		from dada_sports.step s
+		where  s.date>=#{begin} and #{end}>=s.date and s.user_id=#{userId}
+	</select>
+	
+	
+	<select id="sumStep" resultMap="stepResult">
+		select  sum(s.step) as step,s.create_time
+		from dada_sports.step s
+		where   s.user_id = #{userId}
+			 	and s.date <![CDATA[>=]]> #{beginTime}
+			 	and s.date <![CDATA[<=]]> #{endTime}
+		        and (s.status = 0 OR  ISNULL(s.status))
+	</select>
+	
+</mapper>

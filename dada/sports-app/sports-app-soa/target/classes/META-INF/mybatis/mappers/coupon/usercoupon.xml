@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.coupon.UserCoupon" >
+	<resultMap id="userCouponResult" type="UserCoupon" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="coupon_id" property="couponId" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="expiry_time" property="expiryTime" />
+		<result column="status" property="status" />
+		<result column="date" property="date" />
+		<result column="category" property="category" />
+	</resultMap>
+	
+	<resultMap id="userCouponWithCouponResult" type="UserCouponWithCoupon" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="coupon_id" property="couponId" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="expiry_time" property="expiryTime" />
+		<result column="status" property="status" />
+		<result column="date" property="date" />
+		<result column="category" property="category" />
+		<association property="coupon" column="coupon_id" select="com.youyisi.sports.domain.coupon.Coupon.getById"></association>
+	</resultMap>
+
+	
+	<resultMap id="userCouponWithCouponMoreResult" type="UserCouponWithCoupon" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="coupon_id" property="couponId" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="expiry_time" property="expiryTime" />
+		<result column="status" property="status" />
+		<result column="date" property="date" />
+		<result column="category" property="category" />
+		<association property="coupon" column="coupon_id" select="com.youyisi.sports.domain.coupon.Coupon.getById"></association>
+		<association property="income" column="{date=date,userId=user_id}" select="com.youyisi.sports.domain.wallet.WalletDetail.getIncomeByDateAndUserId"></association>
+	</resultMap>
+	<resultMap id="userCouponWithCouponAndUserResult" type="UserCouponWithCouponMore" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="coupon_id" property="couponId" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="expiry_time" property="expiryTime" />
+		<result column="status" property="status" />
+		<result column="date" property="date" />
+		<result column="category" property="category" />
+		<association property="coupon" column="coupon_id" select="com.youyisi.sports.domain.coupon.Coupon.getById"></association>
+		<association property="user" column="user_id" select="com.youyisi.sports.domain.user.User.getUserLessInfoById"></association>
+	</resultMap>
+	
+	
+	<sql id="commonSelect" >
+		select u.id, u.user_id, u.coupon_id, u.create_time, u.expiry_time, u.status, u.date,u.update_time,u.category
+		from dada_sports.user_coupon u
+	</sql>
+	<select id="getById" resultMap="userCouponResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where u.id = #{id}
+	</select>
+	<select id="getUsing" resultMap="userCouponResult"  >
+		<include refid="commonSelect"/>
+		where u.date = #{date} and u.user_id=#{userId} and u.status=1 limit 0,1
+	</select>
+	
+	<select id="getUsingWithCoupon" resultMap="userCouponWithCouponResult" >
+		<include refid="commonSelect"/>
+		where u.date = #{date} and u.user_id=#{userId} and u.status=1 limit 0,1
+	</select>
+	
+	
+	<select id="getCount" resultType="java.lang.Integer">
+		select count(*)
+		from dada_sports.user_coupon u
+		where u.user_id=#{userId}
+		<if test="status!=null and status==0">
+		and u.status=#{status} and u.expiry_time>#{currentTime}
+		</if>
+	</select>
+	
+	<select id="queryPage" resultMap="userCouponResult">
+		<include refid="commonSelect"/>
+		order by u.id asc
+	</select>
+	<select id="queryPageUserCouponWithCoupon" resultMap="userCouponWithCouponResult">
+		<include refid="commonSelect"/>
+		where u.user_id=#{params.userId}
+		<if test="params.status!=null and params.status==0">
+		and u.status=#{params.status} and u.expiry_time>#{params.currentTime} order by u.expiry_time asc
+		</if>
+		
+		<if test="params.status!=null and params.status==1">
+		and (u.status=#{params.status} or (u.status=-1)) order by u.status desc,u.date desc
+		</if>
+		<if test="params.status!=null and params.status==-1">
+		and u.status=0 and #{params.currentTime}>u.expiry_time  order by u.expiry_time desc
+		</if>
+		
+	</select>
+	
+	<select id="getByCategoryAndUser" resultMap="userCouponResult">
+		select u.id, u.user_id, u.coupon_id, u.create_time, u.expiry_time, u.status, u.date,u.update_time,u.category
+		from dada_sports.user_coupon u
+		left join dada_sports.coupon c on c.id=u.coupon_id
+		where u.status=0
+		<if test="activityId!=null">
+		and c.activity_id=#{activityId}
+		</if>
+		<if test="userId!=null">
+		and u.user_id=#{userId}
+		</if>
+		<if test="time!=null">
+		and u.expiry_time>#{time}
+		</if>
+		<if test="category!=null">
+		and u.category=#{category}
+		</if>
+		limit 0,1
+	</select>
+		
+	<select id="queryPageForMyList" resultMap="userCouponWithCouponMoreResult">
+		<include refid="commonSelect"/>
+		where 1=1
+		<if test="params.userId!=null">
+		and u.user_id=#{params.userId}
+		</if>
+		<if test="params.category!=null">
+		and u.category=#{params.category}
+		</if>
+		 order by u.create_time desc
+	</select>
+	<select id="queryPageForInviteFriend" resultMap="userCouponWithCouponAndUserResult">
+		<include refid="commonSelect"/>
+		where 1=1
+		<if test="params.userId!=null">
+		and u.user_id=#{params.userId}
+		</if>
+		<if test="params.category!=null">
+		and u.category=#{params.category}
+		</if>
+		 order by u.create_time desc
+	</select>
+	
+	
+	<delete id="delete" parameterType="UserCoupon" >
+		delete from dada_sports.user_coupon
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="UserCoupon" >
+		insert into dada_sports.user_coupon (id,user_id,coupon_id,create_time,expiry_time,status,date,update_time,category
+		)
+ 		values (#{id},#{userId},#{couponId},#{createTime},#{expiryTime},#{status},#{date},#{updateTime},#{category}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="UserCoupon" >
+		update dada_sports.user_coupon set user_id=#{userId},coupon_id=#{couponId},create_time=#{createTime},expiry_time=#{expiryTime},status=#{status},date=#{date},update_time=#{updateTime},category=#{category}
+		where id = #{id}
+</update>
+</mapper>

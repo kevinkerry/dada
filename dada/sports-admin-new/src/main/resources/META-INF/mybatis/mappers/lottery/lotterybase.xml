@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.lottery.LotteryBase">
+	<resultMap id="lotteryBaseResult" type="LotteryBase">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="logo" property="logo" />
+		<result column="gold_bean" property="goldBean" />
+		<result column="begin_time" property="beginTime" />
+		<result column="end_time" property="endTime" />
+		<result column="get_expiry_day" property="getExpiryDay" />
+		<result column="bonus_expiry_day" property="bonusExpiryDay" />
+		<result column="rule" property="rule" />
+		<result column="message" property="message" />
+		<result column="cron_expression" property="cronExpression" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		
+		<collection column="id" property="betCountBaseList" select="com.youyisi.admin.domain.bet.BetCountBase.getBetCountBaseList" />
+		<collection column="id" property="lotteryWinBaseList" select="com.youyisi.admin.domain.lottery.LotteryWinBase.getLotteryWinBaseList" />
+		<collection column="id" property="delayLotteryBaseList" select="com.youyisi.admin.domain.lottery.DelayLotteryBase.getDelayLotteryBaseList" />
+	</resultMap>
+	<sql id="commonSelect">
+		select l.id, l.name, l.logo, l.gold_bean,
+		l.begin_time, l.end_time, l.get_expiry_day, l.bonus_expiry_day,
+		l.rule, l.message, l.cron_expression, l.create_time, l.update_time
+		from dada_sports.lottery_base l
+	</sql>
+	<select id="getById" resultMap="lotteryBaseResult"
+		parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where l.id = #{id}
+	</select>
+	<select id="queryPage" resultMap="lotteryBaseResult">
+		<include refid="commonSelect" />
+		order by l.id asc
+	</select>
+	<delete id="delete" parameterType="LotteryBase">
+		delete from
+		dada_sports.lottery_base
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="LotteryBase">
+		insert into dada_sports.lottery_base
+		(id,name,logo,gold_bean,begin_time,end_time,get_expiry_day,bonus_expiry_day,rule,message,cron_expression,create_time,update_time
+		)
+		values
+		(#{id},#{name},#{logo},#{goldBean},#{beginTime},#{endTime},#{getExpiryDay},#{bonusExpiryDay},#{rule},#{message},#{cronExpression},#{createTime},#{updateTime}
+		)
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="LotteryBase">
+		update
+		dada_sports.lottery_base set
+		name=#{name},logo=#{logo},gold_bean=#{goldBean},begin_time=#{beginTime},end_time=#{endTime},get_expiry_day=#{getExpiryDay},bonus_expiry_day=#{bonusExpiryDay},rule=#{rule},message=#{message},cron_expression=#{cronExpression},create_time=#{createTime},update_time=#{updateTime}
+		where id = #{id}
+	</update>
+	
+	<select id="getLotteryBase" resultMap="lotteryBaseResult">
+		<include refid="commonSelect" />
+		LIMIT 0,1
+	</select>
+</mapper>

@@ -1,0 +1,56 @@
+�?<?xml version="1.0" encoding="UTF-8"?>  
+  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans    
+         http://www.springframework.org/schema/beans/spring-beans-2.5.xsd    
+         http://www.springframework.org/schema/context    
+         http://www.springframework.org/schema/context/spring-context-2.5.xsd">  
+  
+    <!-- 配置JMS连接工厂 -->  
+    <bean id="myConnectionFactory"  
+        class="org.springframework.jms.connection.CachingConnectionFactory">  
+        <!-- Session缓存数量 -->  
+        <property name="sessionCacheSize" value="10" />  
+        <property name="targetConnectionFactory">  
+            <bean class="org.apache.activemq.ActiveMQConnectionFactory">  
+                <!-- MQ地址 -->  
+                <property name="brokerURL" value="tcp://10.1.80.200:61616" />  
+                 <!-- 是否异步发�?? -->  
+                <property name="useAsyncSend" value="true" />  
+            </bean>  
+        </property>  
+    </bean>  
+    
+    
+    
+     <!--    ======================   活动                          ================== --> 
+    <!-- 发�?�消息的目的地（�?个主题） -->  
+    <bean id="userQueueDestination" class="org.apache.activemq.command.ActiveMQQueue">  
+        <!-- 设置消息主题的名�? -->  
+        <constructor-arg index="0" value="DaDa.Queue.User" />  
+    </bean>  
+  
+    <!-- 生产消息配置 （自己定义）-->  
+    <bean id="userQueueConsumer" class="com.youyisi.soa.infrastructure.search.message.user.UserMqLitener" />  
+  
+    <!-- 消息监听�? -->  
+    <bean id="userQueueListener"  
+        class="org.springframework.jms.listener.adapter.MessageListenerAdapter">  
+        <constructor-arg ref="userQueueConsumer" />  
+        <!-- 接收消息的方法名�? -->  
+        <property name="defaultListenerMethod" value="receive" />  
+        <!-- 不进行消息转�? -->  
+        <property name="messageConverter"><null/></property>  
+    </bean>  
+  
+    <!-- 消息监听容器 -->  
+    <bean id="userQueueListenerContainer"  
+        class="org.springframework.jms.listener.DefaultMessageListenerContainer">  
+        <property name="connectionFactory" ref="myConnectionFactory" />  
+        <property name="destination" ref="userQueueDestination" />  
+        <property name="messageListener" ref="userQueueListener" />  
+    </bean> 
+    
+     
+</beans> 

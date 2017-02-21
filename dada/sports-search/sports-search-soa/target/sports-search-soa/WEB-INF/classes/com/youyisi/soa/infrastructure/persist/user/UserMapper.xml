@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.soa.infrastructure.persist.user.UserMapper" >
+  <resultMap id="BaseResultMap" type="User" >
+    <id column="USER_ID" property="userId" jdbcType="BIGINT" />
+    <result column="USER_CODE" property="userCode" jdbcType="VARCHAR" />
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+    <result column="USER_PWD" property="userPwd" jdbcType="VARCHAR" />
+    <result column="USER_TYPE" property="userType" jdbcType="INTEGER" />
+    <result column="REG_SOURCE" property="regSource" jdbcType="INTEGER" />
+    <result column="EXTERNAL_IDENTIFIER" property="externalIdentifier" jdbcType="VARCHAR" />
+    <result column="CLIENT_TYPE" property="clientType" jdbcType="VARCHAR" />
+    <result column="REGISTER_TIME" property="registerTime" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="CHAR" />
+    <result column="PAY_PWD" property="payPwd" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from T_SPORT_USER
+    where USER_ID = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="User" >
+    insert into T_SPORT_USER (USER_ID, USER_CODE, USER_NAME, 
+      USER_PWD, USER_TYPE, REG_SOURCE, 
+      EXTERNAL_IDENTIFIER, CLIENT_TYPE, REGISTER_TIME, 
+      STATUS,PAY_PWD)
+    values (#{userId,jdbcType=BIGINT}, #{userCode,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{userPwd,jdbcType=VARCHAR}, #{userType,jdbcType=INTEGER}, #{regSource,jdbcType=INTEGER}, 
+      #{externalIdentifier,jdbcType=VARCHAR}, #{clientType,jdbcType=VARCHAR}, #{registerTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=CHAR},#{payPwd,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="User" >
+    update T_SPORT_USER
+    set USER_CODE = #{userCode,jdbcType=VARCHAR},
+      USER_NAME = #{userName,jdbcType=VARCHAR},
+      USER_PWD = #{userPwd,jdbcType=VARCHAR},
+      USER_TYPE = #{userType,jdbcType=INTEGER},
+      REG_SOURCE = #{regSource,jdbcType=INTEGER},
+      EXTERNAL_IDENTIFIER = #{externalIdentifier,jdbcType=VARCHAR},
+      CLIENT_TYPE = #{clientType,jdbcType=VARCHAR},
+      REGISTER_TIME = #{registerTime,jdbcType=TIMESTAMP},
+      STATUS = #{status,jdbcType=CHAR},
+      PAY_PWD = #{payPwd,jdbcType=VARCHAR}
+    where USER_ID = #{userId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select USER_ID, USER_CODE, USER_NAME, USER_PWD, USER_TYPE, REG_SOURCE, EXTERNAL_IDENTIFIER, 
+    CLIENT_TYPE, REGISTER_TIME, STATUS,PAY_PWD
+    from T_SPORT_USER
+    where USER_ID = #{userId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select USER_ID, USER_CODE, USER_NAME, USER_PWD, USER_TYPE, REG_SOURCE, EXTERNAL_IDENTIFIER, 
+    CLIENT_TYPE, REGISTER_TIME, STATUS,PAY_PWD
+    from T_SPORT_USER
+  </select>
+</mapper>

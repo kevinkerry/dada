@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.soa.infrastructure.persist.sso.SSOTrsceMapper" >
+  <resultMap id="BaseResultMap" type="SSOTrsce" >
+    <id column="TRACE_ID" property="traceId" jdbcType="BIGINT" />
+    <result column="TOKEN_ID" property="tokenId" jdbcType="VARCHAR" />
+    <result column="USER_ID" property="userId" jdbcType="BIGINT" />
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+    <result column="LOGIN_TIME" property="loginTime" jdbcType="TIMESTAMP" />
+    <result column="LOGOUT_TIME" property="logoutTime" jdbcType="TIMESTAMP" />
+    <result column="CLIENT_TYPE" property="clientType" jdbcType="VARCHAR" />
+    <result column="CLIENT_IP" property="clientIp" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from T_SSO_TRACE
+    where TRACE_ID = #{traceId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="SSOTrsce" >
+    insert into T_SSO_TRACE (TRACE_ID, TOKEN_ID, USER_ID, 
+      USER_NAME, LOGIN_TIME, LOGOUT_TIME, 
+      CLIENT_TYPE, CLIENT_IP)
+    values (#{traceId,jdbcType=BIGINT}, #{tokenId,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT}, 
+      #{userName,jdbcType=VARCHAR}, #{loginTime,jdbcType=TIMESTAMP}, #{logoutTime,jdbcType=TIMESTAMP}, 
+      #{clientType,jdbcType=VARCHAR}, #{clientIp,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="SSOTrsce" >
+    update T_SSO_TRACE
+    set TOKEN_ID = #{tokenId,jdbcType=VARCHAR},
+      USER_ID = #{userId,jdbcType=BIGINT},
+      USER_NAME = #{userName,jdbcType=VARCHAR},
+      LOGIN_TIME = #{loginTime,jdbcType=TIMESTAMP},
+      LOGOUT_TIME = #{logoutTime,jdbcType=TIMESTAMP},
+      CLIENT_TYPE = #{clientType,jdbcType=VARCHAR},
+      CLIENT_IP = #{clientIp,jdbcType=VARCHAR}
+    where TRACE_ID = #{traceId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select TRACE_ID, TOKEN_ID, USER_ID, USER_NAME, LOGIN_TIME, LOGOUT_TIME, CLIENT_TYPE, 
+    CLIENT_IP
+    from T_SSO_TRACE
+    where TRACE_ID = #{traceId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select TRACE_ID, TOKEN_ID, USER_ID, USER_NAME, LOGIN_TIME, LOGOUT_TIME, CLIENT_TYPE, 
+    CLIENT_IP
+    from T_SSO_TRACE
+  </select>
+</mapper>

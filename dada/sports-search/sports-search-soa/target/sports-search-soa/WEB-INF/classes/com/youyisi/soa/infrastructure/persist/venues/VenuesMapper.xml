@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.soa.infrastructure.persist.venues.VenuesMapper">
+	<resultMap id="VenuesMap" type="Venues">
+		<id column="VENUE_ID" property="venueId" jdbcType="BIGINT" />
+		<result column="VENUE_NAME" property="venueName" jdbcType="VARCHAR" />
+		<result column="VENUE_CODE" property="venueCode" jdbcType="VARCHAR" />
+		<result column="VENUE_DESC" property="venueDesc" jdbcType="VARCHAR" />
+		<result column="VENUE_LOGO" property="venueLogo" jdbcType="VARCHAR" />
+		<result column="VENUE_CONTACT" property="venueContact" jdbcType="VARCHAR" />
+		<result column="CITY" property="city" jdbcType="VARCHAR" />
+		<result column="DISTRICT" property="district" jdbcType="VARCHAR" />
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+		<result column="BUS_INFORMATION" property="busInformation" jdbcType="VARCHAR" />
+		<result column="FACILITY" property="facility" jdbcType="VARCHAR" />
+		<result column="GPS_X" property="gpsX" jdbcType="VARCHAR" />
+		<result column="GPS_Y" property="gpsY" jdbcType="VARCHAR" />
+		<result column="VENUE_GRADE" property="venueGrade" jdbcType="INTEGER" />
+		<result column="VENUE_CHANNEL" property="venueChannel"
+			jdbcType="INTEGER" />
+		<result column="MERCHANT_CODE" property="merchantCode"
+			jdbcType="VARCHAR" />
+		<result column="EXTERNAL_CODE" property="externalCode"
+			jdbcType="VARCHAR" />
+		<result column="CREATOR" property="creator" jdbcType="BIGINT" />
+		<result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+		<result column="MODIFIER" property="modifier" jdbcType="BIGINT" />
+		<result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<collection property="venueImagesList" column="VENUE_ID" select="com.youyisi.soa.infrastructure.persist.venues.VenueImagesMapper.selectByVenueId"></collection>
+		<collection property="venueChildList" column="VENUE_ID" select="com.youyisi.soa.infrastructure.persist.venues.VenueChildMapper.selectByVenueId"></collection>
+	</resultMap>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		T_SPORT_VENUES
+		where VENUE_ID = #{venueId,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="Venues" useGeneratedKeys="true"
+		keyProperty="venueId">
+		insert into T_SPORT_VENUES ( VENUE_NAME, VENUE_CODE,
+		VENUE_DESC,VENUE_LOGO,VENUE_CONTACT, CITY, DISTRICT,
+		ADDRESS,BUS_INFORMATION,FACILITY, GPS_X, GPS_Y,
+		VENUE_GRADE,
+		VENUE_CHANNEL, MERCHANT_CODE,
+		EXTERNAL_CODE, CREATOR, CREATED_TIME,
+		MODIFIER, UPDATED_TIME, STATUS
+		)
+		values (#{venueName,jdbcType=VARCHAR},
+		#{venueCode,jdbcType=VARCHAR},
+		#{venueDesc,jdbcType=VARCHAR},
+		#{venueLogo,jdbcType=VARCHAR},
+		#{venueContact,jdbcType=VARCHAR},
+		#{city,jdbcType=VARCHAR}, #{district,jdbcType=VARCHAR},
+		#{address,jdbcType=VARCHAR},#{busInformation,jdbcType=VARCHAR},
+		#{facility,jdbcType=VARCHAR},
+		#{gpsX,jdbcType=VARCHAR},
+		#{gpsY,jdbcType=VARCHAR},
+		#{venueGrade,jdbcType=INTEGER},
+		#{venueChannel,jdbcType=INTEGER}, #{merchantCode,jdbcType=VARCHAR},
+		#{externalCode,jdbcType=VARCHAR}, #{creator,jdbcType=BIGINT},
+		#{createdTime,jdbcType=TIMESTAMP},
+		#{modifier,jdbcType=BIGINT},
+		#{updatedTime,jdbcType=TIMESTAMP}, #{status,jdbcType=CHAR}
+		)
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="Venues">
+		update
+		T_SPORT_VENUES
+		set VENUE_NAME = #{venueName,jdbcType=VARCHAR},
+		VENUE_CODE = #{venueCode,jdbcType=VARCHAR},
+		VENUE_DESC =
+		#{venueDesc,jdbcType=VARCHAR},
+		VENUE_LOGO = #{venueLogo,jdbcType=VARCHAR},
+		VENUE_CONTACT = #{venueContact,jdbcType=VARCHAR},
+		CITY = #{city,jdbcType=VARCHAR},
+		DISTRICT = #{district,jdbcType=VARCHAR},
+		ADDRESS =
+		#{address,jdbcType=VARCHAR},
+		BUS_INFORMATION = #{busInformation,jdbcType=VARCHAR},
+		FACILITY = #{facility,jdbcType=VARCHAR},
+		GPS_X = #{gpsX,jdbcType=VARCHAR},
+		GPS_Y = #{gpsY,jdbcType=VARCHAR},
+		VENUE_GRADE = #{venueGrade,jdbcType=INTEGER},
+		VENUE_CHANNEL = #{venueChannel,jdbcType=INTEGER},
+		MERCHANT_CODE =
+		#{merchantCode,jdbcType=VARCHAR},
+		EXTERNAL_CODE =
+		#{externalCode,jdbcType=VARCHAR},
+		CREATOR = #{creator,jdbcType=BIGINT},
+		CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+		MODIFIER =
+		#{modifier,jdbcType=BIGINT},
+		UPDATED_TIME =
+		#{updatedTime,jdbcType=TIMESTAMP},
+		STATUS = #{status,jdbcType=CHAR}
+		where VENUE_ID = #{venueId,jdbcType=BIGINT}
+	</update>
+	<select id="selectByPrimaryKey" resultMap="VenuesMap"
+		parameterType="java.lang.Long">
+		select VENUE_ID, VENUE_NAME, VENUE_CODE, VENUE_DESC,
+		 VENUE_LOGO,VENUE_CONTACT,CITY, DISTRICT,
+		ADDRESS,BUS_INFORMATION, FACILITY,GPS_X,
+		GPS_Y, VENUE_GRADE, VENUE_CHANNEL,
+		MERCHANT_CODE, EXTERNAL_CODE, CREATOR,
+		CREATED_TIME,
+		MODIFIER,
+		UPDATED_TIME, STATUS
+		from T_SPORT_VENUES
+		where VENUE_ID =
+		#{venueId,jdbcType=BIGINT}
+	</select>
+	<select id="selectAll" resultMap="VenuesMap">
+		select VENUE_ID, VENUE_NAME,
+		VENUE_CODE, VENUE_DESC,VENUE_LOGO,VENUE_CONTACT, CITY, DISTRICT,
+		ADDRESS,BUS_INFORMATION,FACILITY, GPS_X,
+		GPS_Y,
+		VENUE_GRADE, VENUE_CHANNEL, MERCHANT_CODE, EXTERNAL_CODE, CREATOR,
+		CREATED_TIME,
+		MODIFIER, UPDATED_TIME, STATUS
+		from T_SPORT_VENUES
+	</select>
+
+	<select id="queryPage" resultMap="VenuesMap" parameterType="java.util.Map">
+		select t.VENUE_ID, t.VENUE_NAME, t.VENUE_CODE, t.VENUE_DESC,t.VENUE_LOGO,t.VENUE_CONTACT, t.CITY, t.DISTRICT,
+		t.ADDRESS,t.BUS_INFORMATION,t.FACILITY,t.GPS_X,
+		t.GPS_Y, t.VENUE_GRADE, t.VENUE_CHANNEL, t.MERCHANT_CODE,
+		t.EXTERNAL_CODE, t.CREATOR,
+		t.CREATED_TIME,
+		t.MODIFIER, t.UPDATED_TIME, t.STATUS
+		from T_SPORT_VENUES as t
+		<if test="type!=null and type!=''">
+		 LEFT JOIN T_SPORT_VENUE_CHILD as v  ON t.VENUE_ID = v.VENUE_ID
+		 where 1=1
+		  and v.CATEGORY_CODE = #{type}
+		</if>
+		<if test="type==null or type==''">
+		  where 1=1
+		</if>
+		<include refid="query" />
+		<if test="pageSize!=0">
+			limit ${offset},${pageSize}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="java.util.Map" resultType="java.lang.Long">
+		select count(1) from T_SPORT_VENUES as t
+		<if test="type!=null and type!=''">
+		 LEFT JOIN T_SPORT_VENUE_CHILD as v  ON t.VENUE_ID = v.VENUE_ID
+		 	where 1=1
+		  and v.CATEGORY_CODE = #{type}
+		</if>
+		<if test="type==null or type==''">
+		  where 1=1
+		</if>
+		<include refid="query" />
+	</select>
+
+	<sql id="query">
+		<if test="city!=null and city!=''">
+			and t.CITY  like CONCAT(CONCAT('%', #{city}), '%')
+		</if>
+		
+		<if test="district!=null and district!=''">
+			and t.DISTRICT  like CONCAT(CONCAT('%', #{district}), '%')
+		</if>
+		and t.STATUS='A'
+		
+		<if test="condition == null">
+		   ORDER BY t.CREATED_TIME DESC
+		</if>
+		
+		<if test="condition != null">
+			ORDER BY
+			<if test="condition == 1">
+			 	 t.VENUE_GRADE
+			</if>
+		  	<if test="condition == 2">
+				v.SALE_PRICE
+			</if>
+			<if test="sort == 1">
+			  desc
+			</if>
+			<if test="sort == 2">
+			  asc
+			</if>
+		</if>
+	</sql>
+</mapper>

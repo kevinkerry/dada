@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.soa.infrastructure.persist.club.ClubMemberMapper" >
+  <resultMap id="BaseResultMap" type="ClubMember">
+		<id column="CLUB_MEMBER_ID" property="clubMemberId" jdbcType="BIGINT" />
+		<result column="CLUB_ID" property="clubId" jdbcType="BIGINT" />
+		<result column="USER_ID" property="userId" jdbcType="BIGINT" />
+		<result column="RELATION_FLAG" property="relationFlag" jdbcType="INTEGER" />
+		<result column="ROLE_TYPE" property="roleType" jdbcType="INTEGER" />
+		<result column="ACTIVE_INDEX" property="activeIndex" jdbcType="INTEGER" />
+		<result column="JOIN_TIME" property="joinTime" jdbcType="TIMESTAMP" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+	</resultMap>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		T_SPORT_CLUB_MEMBER
+		where CLUB_MEMBER_ID =
+		#{clubMemberId,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="ClubMember" useGeneratedKeys="true"
+		keyProperty="clubMemberId">
+		insert into T_SPORT_CLUB_MEMBER (CLUB_ID, USER_ID,RELATION_FLAG,
+		ROLE_TYPE, ACTIVE_INDEX, JOIN_TIME,
+		STATUS)
+		values
+		(#{clubId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT},#{relationFlag,jdbcType=INTEGER},
+		#{roleType,jdbcType=INTEGER}, #{activeIndex,jdbcType=INTEGER},
+		#{joinTime,jdbcType=TIMESTAMP},
+		#{status,jdbcType=CHAR})
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="ClubMember">
+		update
+		T_SPORT_CLUB_MEMBER
+		set CLUB_ID = #{clubId,jdbcType=BIGINT},
+		USER_ID =
+		#{userId,jdbcType=BIGINT},
+		RELATION_FLAG =#{relationFlag,jdbcType=INTEGER},
+		ROLE_TYPE = #{roleType,jdbcType=INTEGER},
+		ACTIVE_INDEX = #{activeIndex,jdbcType=INTEGER},
+		JOIN_TIME =
+		#{joinTime,jdbcType=TIMESTAMP},
+		STATUS = #{status,jdbcType=CHAR}
+		where
+		CLUB_MEMBER_ID = #{clubMemberId,jdbcType=BIGINT}
+	</update>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select CLUB_MEMBER_ID, CLUB_ID, USER_ID,RELATION_FLAG,
+		ROLE_TYPE, ACTIVE_INDEX, JOIN_TIME,
+		STATUS
+		from T_SPORT_CLUB_MEMBER
+		where
+		CLUB_MEMBER_ID = #{clubMemberId,jdbcType=BIGINT}
+	</select>
+	
+	<select id="selectCountByClubId" resultType="java.lang.Long"
+		parameterType="java.lang.Long">
+		select count(CLUB_MEMBER_ID)
+		from T_SPORT_CLUB_MEMBER
+		where
+		CLUB_ID = #{clubId,jdbcType=BIGINT}
+		AND RELATION_FLAG=2
+	</select>
+	
+	<select id="selectAll" resultMap="BaseResultMap">
+		select CLUB_MEMBER_ID, CLUB_ID, USER_ID,RELATION_FLAG,
+		ROLE_TYPE, ACTIVE_INDEX, JOIN_TIME,
+		STATUS
+		from
+		T_SPORT_CLUB_MEMBER
+	</select>
+
+	<select id="queryPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select CLUB_MEMBER_ID, CLUB_ID, USER_ID,RELATION_FLAG,
+		ROLE_TYPE, ACTIVE_INDEX, JOIN_TIME,
+		STATUS
+		from T_SPORT_CLUB_MEMBER t
+		where 1=1
+		<include refid="query" />
+		<if test="pageSize!=0">
+			limit ${offset},${pageSize}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="java.util.Map" resultType="java.lang.Long">
+		select count(1) from T_SPORT_CLUB_MEMBER t
+		where 1=1
+		<include refid="query" />
+	</select>
+	
+	<select id="isApply" parameterType="ClubMember" resultType="java.lang.Integer">
+		select count(CLUB_MEMBER_ID) from T_SPORT_CLUB_MEMBER t
+		where 1=1
+		<include refid="query" />
+	</select>
+
+
+	<sql id="query">
+		<if test="clubId != null and clubId !=''">
+			and t.CLUB_ID=#{clubId}
+		</if>
+		<if test="userId != null and userId !=''">
+			and t.USER_ID=#{userId}
+		</if>
+		<if test="relationFlag != null and relationFlag !=''">
+			and t.RELATION_FLAG=#{relationFlag}
+		</if>
+	
+	</sql>
+
+</mapper>

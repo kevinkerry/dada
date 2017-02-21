@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.thigh.HugThigh" >
+	<resultMap id="hugThighResult" type="HugThigh" >
+	<id column="id" property="id" />
+		<result column="thigh_id" property="thighId" />
+		<result column="user_id" property="userId" />
+		<result column="activity_id" property="activityId" />
+		<result column="pay_type" property="payType" />
+		<result column="pay_status" property="payStatus" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+	</resultMap>
+	
+	<resultMap id="hugThighWithUserResult" type="HugThighWithUser" >
+	<id column="id" property="id" />
+		<result column="thigh_id" property="thighId" />
+		<result column="user_id" property="userId" />
+		<result column="activity_id" property="activityId" />
+		<result column="pay_type" property="payType" />
+		<result column="pay_status" property="payStatus" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<association property="user" column="user_id" select="com.youyisi.sports.domain.user.User.getUserLessInfoById"></association>
+	</resultMap>
+	
+	
+	<sql id="commonSelect" >
+		select h.id, h.thigh_id, h.user_id, h.activity_id, h.pay_type, h.pay_status, h.status, h.create_time
+		from dada_sports.hug_thigh h
+	</sql>
+	<select id="getById" resultMap="hugThighResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where h.id = #{id}
+	</select>
+	
+	<select id="getCountByThighId" resultType="java.lang.Long"  parameterType="java.lang.Long" >
+		select count(*)
+		from dada_sports.hug_thigh h
+		where h.thigh_id = #{thighId} and h.status=1
+	</select>
+	
+	<select id="getCount" resultType="java.lang.Integer"  >
+		select count(*)
+		from dada_sports.hug_thigh h
+		where h.activity_id = #{activityId} and h.user_id=#{userId} and h.status=1
+	</select>
+	
+	
+	<select id="getHugThighCount" resultType="java.lang.Integer" >
+		select count(*) 
+		from dada_sports.hug_thigh h
+		where h.thigh_id = #{thighId} and ((h.status=0 and h.create_time>#{createTime}) or h.status=1)
+	</select>
+	
+	<select id="getByUserAndThighId" resultMap="hugThighResult" >
+		<include refid="commonSelect"/>
+		where h.thigh_id = #{thighId} and h.user_id=#{userId} and ((h.status=0 and h.create_time>#{createTime}) or h.status=1)
+	</select>
+	
+	<select id="getByUserIdAndThighId" resultType="java.lang.Integer" >
+		select count(*) 
+		from dada_sports.hug_thigh h
+		where h.thigh_id = #{thighId} and h.user_id=#{userId} and  h.status=1
+	</select>
+	
+	<select id="getListByThighId" resultMap="hugThighWithUserResult" >
+		<include refid="commonSelect"/>
+		where h.thigh_id = #{thighId} and h.status=1
+		order by h.create_time desc
+	</select>
+	
+	<select id="queryPage" resultMap="hugThighResult">
+		<include refid="commonSelect"/>
+		order by h.id asc
+	</select>
+	<delete id="delete" parameterType="HugThigh" >
+		delete from dada_sports.hug_thigh
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="HugThigh" >
+		insert into dada_sports.hug_thigh (id,thigh_id,user_id,activity_id,pay_type,pay_status,status,create_time
+		)
+ 		values (#{id},#{thighId},#{userId},#{activityId},#{payType},#{payStatus},#{status},#{createTime}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="HugThigh" >
+		update dada_sports.hug_thigh set thigh_id=#{thighId},user_id=#{userId},activity_id=#{activityId},pay_type=#{payType},pay_status=#{payStatus},status=#{status},create_time=#{createTime}
+		where id = #{id}
+</update>
+</mapper>

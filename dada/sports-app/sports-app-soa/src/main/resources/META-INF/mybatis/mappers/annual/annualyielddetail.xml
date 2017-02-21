@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.annual.AnnualYieldDetail" >
+	<resultMap id="annualYieldDetailResult" type="AnnualYieldDetail" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="annual_yield_ increase" property="annualYieldIncrease" />
+		<result column="create_time" property="createTime" />
+		<result column="type" property="type" />
+		<result column="run_id" property="runId" />
+		<result column="date" property="date" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select a.id, a.user_id, a.annual_yield_increase, a.create_time, a.type,a.run_id,a.date
+		from dada_sports.annual_yield_detail a
+	</sql>
+	<select id="getById" resultMap="annualYieldDetailResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where a.id = #{id}
+	</select>
+	
+	<select id="getCurrentDay" resultMap="annualYieldDetailResult" >
+		<include refid="commonSelect"/>
+		where a.user_id = #{userId} 
+		<if test="type!=null">
+		and a.type=#{type}
+		</if>
+		<if test="runId!=null">
+		and a.run_id=#{runId}
+		</if>
+		  and a.date=#{date} 
+	</select>
+	
+	<select id="getSumCurrentDayDistance" resultType="java.lang.Double" >
+		SELECT SUM(annual_yield_increase) FROM dada_sports.annual_yield_detail a
+		where a.user_id = #{userId} and (a.type=5 or a.type=6 or a.type=7 or a.type=8) and a.date=#{date} 
+	</select>
+	
+	<select id="query" resultMap="annualYieldDetailResult">
+		<include refid="commonSelect"/>
+		  where 1=1
+		  <if test="userId != null">
+		    and a.user_id = #{userId}
+		  </if>
+		  <if test="type != null">
+		    and a.type = #{type}
+		  </if>
+		   <if test="date != null">
+		    and a.date = #{date}
+		  </if>
+	</select>
+	
+	<select id="queryPage" resultMap="annualYieldDetailResult">
+		<include refid="commonSelect"/>
+		order by a.id asc
+	</select>
+	<delete id="delete" parameterType="AnnualYieldDetail" >
+		delete from dada_sports.annual_yield_detail
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="AnnualYieldDetail" >
+		insert into dada_sports.annual_yield_detail (id,user_id,annual_yield_increase,create_time,type,run_id,date
+		)
+ 		values (#{id},#{userId},#{annualYieldIncrease},#{createTime},#{type},#{runId},#{date}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="AnnualYieldDetail" >
+		update dada_sports.annual_yield_detail set user_id=#{userId},annual_yield_increase=#{annualYieldIncrease},create_time=#{createTime},type=#{type},run_id=#{runId},date=#{date}
+		where id = #{id}
+</update>
+</mapper>

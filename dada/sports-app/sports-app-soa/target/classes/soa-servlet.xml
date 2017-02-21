@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd    
+           http://www.springframework.org/schema/context     
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+           http://www.springframework.org/schema/util 
+           http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+	<context:annotation-config />
+	<context:component-scan base-package="com.youyisi.app.soa" />
+	<import resource="classpath:/META-INF/spring/application-root.xml" />
+
+	<bean name="/user"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="userService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.user.UserServiceRemote" />
+	</bean>
+	
+	<bean name="/annualYieldDetail"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="annualYieldDetailService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.annual.AnnualYieldDetailServiceRemote" />
+	</bean>
+	
+	<bean name="/annualYield"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="annualYieldService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.annual.AnnualYieldServiceRemote" />
+	</bean>
+	
+	<bean name="/distance"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="distanceService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.distance.DistanceServiceRemote" />
+	</bean>
+	<bean name="/experienceAccount"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="experienceAccountService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.experience.ExperienceAccountServiceRemote" />
+	</bean>
+	<bean name="/orders"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="ordersService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.orders.OrdersServiceRemote" />
+	</bean>
+	
+	<bean name="/orderFlow"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="orderFlowService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.orders.OrderFlowServiceRemote" />
+	</bean>
+	
+	<bean name="/run"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="runService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.run.RunServiceRemote" />
+	</bean>
+	
+	<bean name="/runningTrack"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="runningTrackService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.run.RunningTrackServiceRemote" />
+	</bean>
+	
+	<bean name="/step"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="stepService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.step.StepServiceRemote" />
+	</bean>
+	
+	<bean name="/walletDetail"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="walletDetailService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.wallet.WalletDetailServiceRemote" />
+	</bean>
+	<bean name="/wallet"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="walletService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.wallet.WalletServiceRemote" />
+	</bean>
+	
+	<bean name="/withdraw"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="withdrawService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.withdraw.WithdrawServiceRemote" />
+	</bean>
+	
+	<bean name="/feedback"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="feedbackService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.feedback.FeedbackServiceRemote" />
+	</bean>
+	
+	<bean name="/alipay"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="alipayService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.alipay.AlipayServiceRemote" />
+	</bean>
+	
+		<bean name="/area"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="areaService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.area.AreaServiceRemote" />
+	</bean>
+	
+	<bean name="/activity"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="activityService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.activity.ActivityServiceRemote" />
+	</bean> 
+	
+	<bean name="/coupon"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="couponService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.coupon.CouponServiceRemote" />
+	</bean>
+	
+	<bean name="/userCoupon"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="userCouponService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.coupon.UserCouponServiceRemote" />
+	</bean>
+	
+	<bean name="/thigh"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="thighService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.thigh.ThighServiceRemote" />
+	</bean>
+	
+	<bean name="/hugThigh"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="hugThighService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.thigh.HugThighServiceRemote" />
+	</bean>
+	
+	<bean name="/hugThighActivity"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="hugThighActivityService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.thigh.HugThighActivityServiceRemote" />
+	</bean>
+	<bean name="/inviteFriendActivity"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="inviteFriendActivityService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.activity.InviteFriendActivityServiceRemote" />
+	</bean>
+	<bean name="/integralWall"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="integralWallService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.integralwall.IntegralWallServiceRemote" />
+	</bean>
+	<bean name="/doumIntegralWall"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="doumIntegralWallService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.integralwall.DoumIntegralWallServiceRemote" />
+	</bean>
+	<bean name="/runAssist"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="runAssistService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.run.RunAssistServiceRemote" />
+	</bean>
+	
+	<bean name="/appVersion"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="appVersionService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.version.AppVersionServiceRemote" />
+	</bean>
+	
+	
+	<bean name="/relayRaceActivity"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="relayRaceActivityService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.activity.RelayRaceActivityServiceRemote" />
+	</bean>
+	
+	
+	<bean name="/relayMember"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="relayMemberService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.relay.RelayMemberServiceRemote" />
+	</bean>
+	
+	<bean name="/relayTeam"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="relayTeamService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.relay.RelayTeamServiceRemote" />
+	</bean>
+	
+		<bean name="/relayLine"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="relayLineService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.relay.RelayLineServiceRemote" />
+	</bean>
+	
+		<bean name="/relayMessage"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="relayMessageService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.relay.RelayMessageServiceRemote" />
+	</bean>
+	<bean name="/relayMemberFavour"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="relayMemberFavourService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.relay.RelayMemberFavourServiceRemote" />
+	</bean>
+	
+	<bean name="/medal"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="medalService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.medal.MedalServiceRemote" />
+	</bean>
+	
+	<bean name="/userMedal"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="userMedalService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.medal.UserMedalServiceRemote" />
+	</bean>
+	
+	
+	<bean name="/userSnatch"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="userSnatchService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.snatch.UserSnatchServiceRemote" />
+	</bean>
+	
+		<bean name="/snatchFee"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="snatchFeeService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.snatch.SnatchFeeServiceRemote" />
+	</bean>
+	
+		<bean name="/snatchWin"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="snatchWinService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.snatch.SnatchWinServiceRemote" />
+	</bean>
+	
+	<bean name="/snatchActivity"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="snatchActivityService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.snatch.SnatchActivityServiceRemote" />
+	</bean>
+	
+	<bean name="/goldBean"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="goldBeanService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.goldbean.GoldBeanServiceRemote" />
+	</bean>
+	
+	
+	<bean name="/goldBeanCash"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="goldBeanCashService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.goldbean.GoldBeanCashServiceRemote" />
+	</bean>
+	
+	
+	<bean name="/goldBeanDetail"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="goldBeanDetailService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.goldbean.GoldBeanDetailServiceRemote" />
+	</bean>
+	
+	<bean name="/goldBeanRecharge"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="goldBeanRechargeService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.goldbean.GoldBeanRechargeServiceRemote" />
+	</bean>
+	
+	<bean name="/userGoldBean"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="userGoldBeanService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.goldbean.UserGoldBeanServiceRemote" />
+	</bean>
+	
+	
+	<bean name="/lottery"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="lotteryService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.lottery.LotteryServiceRemote" />
+	</bean>
+	
+		<bean name="/lotteryWin"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="lotteryWinService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.lottery.LotteryWinServiceRemote" />
+	</bean>
+	
+	<bean name="/userLotteryWin"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="userLotteryWinService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.lottery.UserLotteryWinServiceRemote" />
+	</bean>
+	
+		<bean name="/userLottery"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="userLotteryService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.lottery.UserLotteryServiceRemote" />
+	</bean>
+	
+	<bean name="/betCount"
+		class="org.springframework.remoting.caucho.HessianServiceExporter">
+		<property name="service" ref="betCountService" />
+		<property name="serviceInterface"
+			value="com.youyisi.app.soa.remote.lottery.BetCountServiceRemote" />
+	</bean>
+	
+</beans>

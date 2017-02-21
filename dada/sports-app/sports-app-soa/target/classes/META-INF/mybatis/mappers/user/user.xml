@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.user.User">
+	<resultMap id="userResult" type="User">
+		<id column="id" property="id" />
+		<result column="username" property="username" />
+		<result column="usercode" property="usercode" />
+		<result column="password" property="password" />
+		<result column="pay_password" property="payPassword" />
+		<result column="nickname" property="nickname" />
+		<result column="head_portrait" property="headPortrait" />
+		<result column="sex" property="sex" />
+		<result column="age" property="age" />
+		<result column="height" property="height" />
+		<result column="weight" property="weight" />
+		<result column="mobile" property="mobile" />
+		<result column="city" property="city" />
+		<result column="province" property="province" />
+		<result column="birthday" property="birthday" />
+		<result column="user_type" property="userType" />
+		<result column="client_type" property="clientType" />
+		<result column="client_id" property="clientId" />
+		<result column="phone_model" property="phoneModel" />
+		<result column="register_time" property="registerTime" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="status" property="status" />
+		<result column="big_deals_remind" property="bigDealsRemind" />
+		<result column="performance_remind" property="performanceRemind" />
+		<result column="praise_remind" property="praiseRemind" />
+		<result column="cheer_remind" property="cheerRemind" />
+		<result column="voice_remind" property="voiceRemind" />
+		<result column="activity_invite_remind" property="activityInviteRemind" />
+		<result column="indoor_running" property="indoorRunning" />
+		<result column="channel" property="channel" />
+		<result column="recommend_code" property="recommendCode" />
+		
+		
+	</resultMap>
+	
+	<resultMap id="userMoreInfoResult" type="UserMoreInfo">
+		<id column="id" property="id" />
+		<result column="username" property="username" />
+		<result column="usercode" property="usercode" />
+		<result column="password" property="password" />
+		<result column="pay_password" property="payPassword" />
+		<result column="nickname" property="nickname" />
+		<result column="head_portrait" property="headPortrait" />
+		<result column="sex" property="sex" />
+		<result column="age" property="age" />
+		<result column="height" property="height" />
+		<result column="weight" property="weight" />
+		<result column="mobile" property="mobile" />
+		<result column="city" property="city" />
+		<result column="province" property="province" />
+		<result column="birthday" property="birthday" />
+		<result column="user_type" property="userType" />
+		<result column="client_type" property="clientType" />
+		<result column="client_id" property="clientId" />
+		<result column="phone_model" property="phoneModel" />
+		<result column="register_time" property="registerTime" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="status" property="status" />
+		<result column="big_deals_remind" property="bigDealsRemind" />
+		<result column="performance_remind" property="performanceRemind" />
+		<result column="praise_remind" property="praiseRemind" />
+		<result column="cheer_remind" property="cheerRemind" />
+		<result column="voice_remind" property="voiceRemind" />
+		<result column="activity_invite_remind" property="activityInviteRemind" />
+		<result column="indoor_running" property="indoorRunning" />
+		<result column="distanceMax" property="distanceMax"/>
+		<result column="stepMax" property="stepMax"/>
+		<result column="channel" property="channel" />
+		<result column="recommend_code" property="recommendCode" />
+		<association column="id" property="wallet"  select="com.youyisi.sports.domain.wallet.Wallet.getByUserId" />
+		<association column="id" property="annualYield" select="com.youyisi.sports.domain.annual.AnnualYield.getByUserIdAndDate" />
+		<association column="id" property="step" select="com.youyisi.sports.domain.step.Step.getByUserIdAndDate" />
+		<association column="id" property="distance" select="com.youyisi.sports.domain.distance.Distance.getByUserIdAndDate" />
+		<association column="id" property="experienceAccount" select="com.youyisi.sports.domain.experience.ExperienceAccount.getByUserId" />
+	</resultMap>
+	
+	
+	<resultMap id="userLessInfoResult" type="UserLessInfo">
+		<id column="id" property="id" />
+		<result column="nickname" property="nickname" />
+		<result column="head_portrait" property="headPortrait" />
+	</resultMap>
+	
+	
+	<sql id="commonSelect">
+		select u.id, u.username, u.password,u.usercode,
+		u.pay_password, u.nickname, u.head_portrait, u.sex, u.age, u.height,
+		u.weight, u.mobile, u.city, u.province, u.birthday, u.user_type,
+		u.client_type, u.client_id, u.register_time, u.create_time,u.phone_model,
+		u.update_time, u.status,u.big_deals_remind,u.performance_remind,u.indoor_running,u.channel,u.recommend_code,
+		u.praise_remind,u.cheer_remind,u.voice_remind,u.activity_invite_remind
+		from dada_sports.user u
+	</sql>
+	<select id="getById" resultMap="userResult" parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where u.id = #{id}
+	</select>
+	
+	<select id="getByUsercode" resultMap="userResult" parameterType="java.lang.String">
+		<include refid="commonSelect" />
+		where u.usercode = #{usercode}
+	</select>
+	
+	<select id="getByClientId" resultMap="userResult" parameterType="java.lang.String">
+		<include refid="commonSelect" />
+		where u.client_id = #{clientId} limit 0,1
+	</select>
+	
+	<select id="getUserLessInfoById" resultMap="userLessInfoResult" parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where u.id = #{id}
+	</select>
+	
+	<select id="queryPageForPush" resultMap="userLessInfoResult">
+		select u.id, u.username, u.password,u.usercode,
+		u.pay_password, u.nickname, u.head_portrait, u.sex, u.age, u.height,
+		u.weight, u.mobile, u.city, u.province, u.birthday, u.user_type,
+		u.client_type, u.client_id, u.register_time, u.create_time,u.phone_model,
+		u.update_time, u.status,u.big_deals_remind,u.performance_remind,u.indoor_running,u.channel,u.recommend_code,
+		u.praise_remind,u.cheer_remind,u.voice_remind,u.activity_invite_remind
+		from dada_sports.user u
+		where 1=1
+		<if test="params.time!=null">
+		and u.update_time>#{params.time}
+		</if>
+		<if test="params.id!=null">
+		and u.id!=#{params.id}
+		</if>
+		<if test="params.activityId!=null">
+		and u.id not in (select r.user_id from dada_sports.relay_member r where r.activity_id=#{params.activityId} and r.status=1 and r.pay_status=1)
+		</if>
+		order by u.update_time desc
+	</select>
+	
+	<select id="queryPage" resultMap="userResult">
+		<include refid="commonSelect" />
+		where 1=1
+		<if test="params.time!=null">
+		and u.update_time>#{params.time}
+		</if>
+		<if test="params.id!=null">
+		and u.id!=#{params.id}
+		</if>
+		order by u.update_time desc
+	</select>
+	<delete id="delete" parameterType="User">
+		delete from
+		dada_sports.user
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="User">
+		insert into dada_sports.user
+		(id,username,password,pay_password,nickname,head_portrait,sex,age,height,weight,mobile,city,province,birthday,user_type,client_type,client_id,register_time,create_time,update_time,status,phone_model,big_deals_remind,performance_remind,indoor_running,channel,usercode,recommend_code,praise_remind,cheer_remind,voice_remind,activity_invite_remind
+		)
+		values
+		(#{id},#{username},#{password},#{payPassword},#{nickname},#{headPortrait},#{sex},#{age},#{height},#{weight},#{mobile},#{city},#{province},#{birthday},#{userType},#{clientType},#{clientId},#{registerTime},#{createTime},#{updateTime},#{status},#{phoneModel},#{bigDealsRemind},#{performanceRemind},#{indoorRunning},#{channel},#{usercode},#{recommendCode},#{praiseRemind},#{cheerRemind},#{voiceRemind},#{activityInviteRemind}
+		)
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="User">
+		update dada_sports.user
+		set
+		username=#{username},password=#{password},pay_password=#{payPassword},nickname=#{nickname},head_portrait=#{headPortrait},sex=#{sex},age=#{age},height=#{height},weight=#{weight},mobile=#{mobile},city=#{city},province=#{province},birthday=#{birthday},user_type=#{userType},client_type=#{clientType},client_id=#{clientId},register_time=#{registerTime},create_time=#{createTime},update_time=#{updateTime},status=#{status},phone_model=#{phoneModel},big_deals_remind=#{bigDealsRemind},performance_remind=#{performanceRemind},indoor_running=#{indoorRunning},channel=#{channel},usercode=#{usercode},recommend_code=#{recommendCode}
+		,praise_remind=#{praiseRemind},cheer_remind=#{cheerRemind},voice_remind=#{voiceRemind},activity_invite_remind=#{activityInviteRemind}
+		where id = #{id}
+	</update>
+	
+	<select id="getByUserName" resultMap="userResult">
+		<include refid="commonSelect" />
+		where u.username = #{userName}
+	</select>
+	
+	<select id="getByUserNameOrMobile" resultMap="userResult">
+		<include refid="commonSelect" />
+		where u.username = #{userName} or u.mobile = #{userName}
+	</select>
+
+    <select id="login" resultMap="userMoreInfoResult">
+		<include refid="commonSelect" />
+		where u.username = #{userName} or u.mobile = #{userName}
+	</select>
+	
+	<insert id="saveUserMoreInfo" parameterType="UserMoreInfo">
+		insert into dada_sports.user
+		(id,username,password,pay_password,nickname,head_portrait,sex,age,height,weight,mobile,city,province,birthday,user_type,client_type,client_id,register_time,create_time,update_time,status,phone_model,big_deals_remind,performance_remind,indoor_running,channel,usercode,recommend_code,praise_remind,cheer_remind,voice_remind,activity_invite_remind
+		)
+		values
+		(#{id},#{username},#{password},#{payPassword},#{nickname},#{headPortrait},#{sex},#{age},#{height},#{weight},#{mobile},#{city},#{province},#{birthday},#{userType},#{clientType},#{clientId},#{registerTime},#{createTime},#{updateTime},#{status},#{phoneModel},#{bigDealsRemind},#{performanceRemind},#{indoorRunning},#{channel},#{usercode},#{recommendCode},#{praiseRemind},#{cheerRemind},#{voiceRemind},#{activityInviteRemind}
+		)
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	
+	<update id="updateUserMoreInfo" parameterType="UserMoreInfo">
+		update dada_sports.user
+		set
+		username=#{username},password=#{password},pay_password=#{payPassword},nickname=#{nickname},head_portrait=#{headPortrait},sex=#{sex},age=#{age},height=#{height},weight=#{weight},mobile=#{mobile},city=#{city},province=#{province},birthday=#{birthday},user_type=#{userType},client_type=#{clientType},client_id=#{clientId},register_time=#{registerTime},create_time=#{createTime},update_time=#{updateTime},status=#{status},phone_model=#{phoneModel},big_deals_remind=#{bigDealsRemind},performance_remind=#{performanceRemind},indoor_running=#{indoorRunning},channel=#{channel},usercode=#{usercode},recommend_code=#{recommendCode}
+		,praise_remind=#{praiseRemind},cheer_remind=#{cheerRemind},voice_remind=#{voiceRemind},activity_invite_remind=#{activityInviteRemind}
+		where id = #{id}
+	</update>
+</mapper>

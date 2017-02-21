@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.distance.Distance" >
+	<resultMap id="distanceResult" type="Distance" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="date" property="date" />
+		<result column="distance" property="distance" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select d.id, d.user_id, d.date, d.distance, d.create_time, d.update_time
+		from dada_sports.distance d
+	</sql>
+	<select id="getById" resultMap="distanceResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where d.id = #{id}
+	</select>
+	
+	<select id="getByUserIdAndDate" resultMap="distanceResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where d.user_id = #{userId} and d.date = UNIX_TIMESTAMP(CURDATE())
+	</select>
+	<select id="getByUserIdAndEnyDate" resultMap="distanceResult" >
+		<include refid="commonSelect"/>
+		where d.user_id = #{userId} and d.date = #{date}
+	</select>
+	
+	<select id="getSumDistance" parameterType="java.lang.Long" resultType="java.lang.Double" >
+		select sum(d.distance)
+		from dada_sports.distance d where d.user_id=#{userId}
+	</select>
+	<select id="getTeamDistance"  resultType="java.lang.Double" >
+		select sum(case when d.distance>#{maxDistance} then #{maxDistance} else d.distance end)
+		from dada_sports.distance d where d.date>=#{begin} and #{end}>=d.date and d.user_id in(select user_id from dada_sports.relay_member where team_id=#{teamId} and status=1 and pay_status=1)
+	</select>
+	
+	<select id="getUserDistance"  resultType="java.lang.Double" >
+		select sum(case when d.distance>#{maxDistance} then #{maxDistance} else d.distance end)
+		from dada_sports.distance d where d.date>=#{begin} and #{end}>=d.date and d.user_id=#{userId}
+	</select>
+	
+	
+	<select id="queryPage" resultMap="distanceResult">
+		<include refid="commonSelect"/>
+		order by d.id asc
+	</select>
+	<delete id="delete" parameterType="Distance" >
+		delete from dada_sports.distance
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="Distance" >
+		insert into dada_sports.distance (id,user_id,date,distance,create_time,update_time
+		)
+ 		values (#{id},#{userId},#{date},#{distance},#{createTime},#{updateTime}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="Distance" >
+		update dada_sports.distance set user_id=#{userId},date=#{date},distance=#{distance},create_time=#{createTime},update_time=#{updateTime}
+		where id = #{id}
+</update>
+</mapper>

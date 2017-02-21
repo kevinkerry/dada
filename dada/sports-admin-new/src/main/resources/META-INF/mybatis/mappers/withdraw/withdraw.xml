@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.withdraw.Withdraw" >
+	<resultMap id="withdrawResult" type="Withdraw" >
+	    <id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="withdraw_number" property="withdrawNumber" />
+		<result column="money" property="money" />
+		<result column="status" property="status" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="note" property="note" />
+		<result column="principal" property="principal" />
+		
+		<association property="alipay" column="user_id" select="com.youyisi.admin.domain.alipay.Alipay.getByUserId"/>
+		<association property="user" column="user_id" select="com.youyisi.admin.domain.user.User.getById"/>
+		<!-- <association property="totalAsset" column="user_id" select="com.youyisi.admin.domain.wallet.Wallet.getTotalAssetByUserId" /> -->
+		<association property="walletPrincipal" column="user_id" select="com.youyisi.admin.domain.wallet.Wallet.getPrincipalByUserId" />
+	</resultMap>
+	
+	<sql id="commonSelect" >
+		select w.id, w.user_id, w.withdraw_number, w.money, w.status, w.create_time, w.update_time, w.note,w.principal
+		from dada_sports.withdraw w
+	</sql>
+	<select id="getById" resultMap="withdrawResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where w.id = #{id}
+	</select>
+	
+	
+	<select id="sumWithdraw" resultType="java.lang.Double">
+		select  sum(w.money)
+		from dada_sports.withdraw w
+		where w.user_id= #{userId} and w.status = #{status}
+	</select>
+	
+	<select id="getByDrawbackNum" resultMap="withdrawResult" parameterType="java.lang.String" >
+		<include refid="commonSelect"/>
+		where w.withdraw_number = #{withdrawNumber}
+	</select>
+	<select id="queryPage" resultMap="withdrawResult">
+		<include refid="commonSelect"/>
+		where 1=1
+		<if test="params.userId != null">
+			and w.user_id = #{params.userId}
+		</if>
+		<if test="params.status != null">
+			and w.status = #{params.status}
+		</if>
+		order by w.create_time desc
+	</select>
+	<delete id="delete" parameterType="Withdraw" >
+		delete from dada_sports.withdraw
+		where id = #{id} 
+	</delete>
+	<insert id="save" parameterType="Withdraw" >
+		insert into dada_sports.withdraw (id,user_id,withdraw_number,money,status,create_time,update_time,note,principal
+		)
+ 		values (#{id},#{userId},#{withdrawNumber},#{money},#{status},#{createTime},#{updateTime},#{note},#{principal}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	
+	<update id="update" parameterType="Withdraw" >
+		update dada_sports.withdraw set user_id=#{userId},withdraw_number=#{withdrawNumber},money=#{money},status=#{status},create_time=#{createTime},update_time=#{updateTime},note=#{note},principal=#{principal}
+		where id = #{id}
+    </update>
+    
+	<select id="queryPageWithdraw" resultMap="withdrawResult">
+		<include refid="commonSelect"/>
+			LEFT JOIN dada_sports.user u ON w.user_id = u.id
+			LEFT JOIN dada_sports.alipay a ON w.user_id = a.user_id
+		where 1=1
+		<if test="params.status != null">
+			and w.status = #{params.status}
+		</if>
+		<if test="params.condition != null and params.condition !=''">
+		    and (u.id LIKE CONCAT(CONCAT('%',#{params.condition}),'%') or 
+		  	   a.alipay LIKE CONCAT(CONCAT('%',#{params.condition}),'%') or
+		  	   u.nickname LIKE CONCAT(CONCAT('%',#{params.condition}),'%'))
+		</if>  
+		 <if test="params.field !=null and params.field !=''">
+		   order by ${params.field} ${params.sort}
+		</if>
+		<if test="params.field == null or params.field ==''">
+			ORDER BY w.create_time, w.user_id
+		</if>
+		 
+	</select>
+	
+	<select id="getWithdrawList" resultMap="withdrawResult">
+		<include refid="commonSelect"/>
+		where 1=1
+		<if test="beginTime != null and endTime !=null">
+			and (w.create_time <![CDATA[>=]]> #{beginTime}
+		 	and w.create_time <![CDATA[<=]]> #{endTime})
+		</if>
+		order by w.create_time
+	</select>
+	
+	
+	
+	
+</mapper>

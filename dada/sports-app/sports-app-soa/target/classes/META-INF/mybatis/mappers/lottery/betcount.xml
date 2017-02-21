@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.lottery.BetCount" >
+	<resultMap id="betCountResult" type="BetCount" >
+	<id column="id" property="id" />
+		<result column="count" property="count" />
+		<result column="lottery_id" property="lotteryId" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select b.id, b.count, b.lottery_id
+		from dada_sports.bet_count b
+	</sql>
+	<select id="getById" resultMap="betCountResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where b.id = #{id}
+	</select>
+	<select id="queryPage" resultMap="betCountResult">
+		<include refid="commonSelect"/>
+		order by b.id asc
+	</select>
+	<select id="getByLotteryId" resultMap="betCountResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where b.lottery_id = #{lotteryId} order by b.count asc
+	</select>
+	
+	<delete id="delete" parameterType="BetCount" >
+		delete from dada_sports.bet_count
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="BetCount" >
+		insert into dada_sports.bet_count (id,count,lottery_id
+		)
+ 		values (#{id},#{count},#{lotteryId}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="BetCount" >
+		update dada_sports.bet_count set count=#{count},lottery_id=#{lotteryId}
+		where id = #{id}
+</update>
+</mapper>

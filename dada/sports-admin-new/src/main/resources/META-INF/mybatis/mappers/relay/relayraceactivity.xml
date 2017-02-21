@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.relay.RelayRaceActivity">
+	<resultMap id="relayRaceActivityResult" type="RelayRaceActivity">
+		<id column="id" property="id" />
+		<result column="activity_id" property="activityId" />
+		<result column="team_limit" property="teamLimit" />
+		<result column="relay_baton_limit" property="relayBatonLimit" />
+		<result column="first_fee" property="firstFee" />
+		<result column="other_fee" property="otherFee" />
+		<result column="level_limit" property="levelLimit" />
+		<result column="first_bonus" property="firstBonus" />
+		<result column="other_bonus" property="otherBonus" />
+		<result column="invite_expiry_day" property="inviteExpiryDay" />
+		<result column="league_bonus_expiry_day" property="leagueBonusExpiryDay" />
+		<result column="contribute_bonus" property="contributeBonus" />
+		<result column="step_to_distance" property="stepToDistance" />
+		<result column="max_step" property="maxStep" />
+		<result column="max_distance" property="maxDistance" />
+		<result column="activity_medal" property="activityMedal" />
+		<result column="league_medal" property="leagueMedal" />
+		<result column="team_leader_medal" property="teamLeaderMedal" />
+		<result column="push_count" property="pushCount" />
+		<result column="rule" property="rule" />
+		<result column="message" property="message" />
+		<result column="cron_expression" property="cronExpression" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+	</resultMap>
+	<sql id="commonSelect">
+		select r.id, r.activity_id, r.team_limit,
+		r.relay_baton_limit, r.first_fee, r.other_fee, r.level_limit,
+		r.first_bonus, r.other_bonus, r.invite_expiry_day,
+		r.league_bonus_expiry_day, r.contribute_bonus, r.step_to_distance,
+		r.max_step, r.max_distance, r.activity_medal, r.league_medal,
+		r.team_leader_medal,r.push_count, r.rule, r.message, r.cron_expression,
+		r.create_time, r.update_time
+		from dada_sports.relay_race_activity r
+	</sql>
+	<select id="getById" resultMap="relayRaceActivityResult"
+		parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where r.id = #{id}
+	</select>
+
+	<select id="getByActivityId" resultMap="relayRaceActivityResult"
+		parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where r.activity_id = #{activityId}
+	</select>
+
+	<select id="queryPage" resultMap="relayRaceActivityResult">
+		<include refid="commonSelect" />
+		order by r.id asc
+	</select>
+	<delete id="delete" parameterType="RelayRaceActivity">
+		delete
+		from dada_sports.relay_race_activity
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="RelayRaceActivity">
+		insert into dada_sports.relay_race_activity
+		(id,activity_id,team_limit,relay_baton_limit,first_fee,other_fee,level_limit,first_bonus,other_bonus,invite_expiry_day,league_bonus_expiry_day,contribute_bonus,step_to_distance,max_step,max_distance,activity_medal,league_medal,team_leader_medal,push_count,rule,message,cron_expression,create_time,update_time
+		)
+		values
+		(#{id},#{activityId},#{teamLimit},#{relayBatonLimit},#{firstFee},#{otherFee},#{levelLimit},#{firstBonus},#{otherBonus},#{inviteExpiryDay},#{leagueBonusExpiryDay},#{contributeBonus},#{stepToDistance},#{maxStep},#{maxDistance},#{activityMedal},#{leagueMedal},#{teamLeaderMedal},#{pushCount},#{rule},#{message},#{cronExpression},#{createTime},#{updateTime}
+		)
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="RelayRaceActivity">
+		update
+		dada_sports.relay_race_activity set
+		activity_id=#{activityId},team_limit=#{teamLimit},relay_baton_limit=#{relayBatonLimit},first_fee=#{firstFee},other_fee=#{otherFee},level_limit=#{levelLimit},first_bonus=#{firstBonus},other_bonus=#{otherBonus},invite_expiry_day=#{inviteExpiryDay},league_bonus_expiry_day=#{leagueBonusExpiryDay},contribute_bonus=#{contributeBonus},step_to_distance=#{stepToDistance},max_step=#{maxStep},max_distance=#{maxDistance},activity_medal=#{activityMedal},league_medal=#{leagueMedal},team_leader_medal=#{teamLeaderMedal},push_count=#{pushCount},rule=#{rule},message=#{message},cron_expression=#{cronExpression},create_time=#{createTime},update_time=#{updateTime}
+		where id = #{id}
+	</update>
+	
+	<delete id="delByActivityId" parameterType="java.lang.Long" >
+		delete from dada_sports.relay_race_activity
+		where activity_id = #{activityId}
+	</delete>
+	
+</mapper>

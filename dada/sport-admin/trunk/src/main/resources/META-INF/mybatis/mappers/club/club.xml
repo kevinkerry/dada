@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.club.Club" >
+	<resultMap id="clubResult" type="Club" >
+		<result column="CLUB_ID" property="clubId" />
+		<result column="CLUB_NAME" property="clubName" />
+		<result column="CLUB_CODE" property="clubCode" />
+		<result column="PARENT_CATEGORY" property="parentCategory" />
+		<result column="CATEGORY_CODE" property="categoryCode" />
+		<result column="CLUB_CULTURE" property="clubCulture" />
+		<result column="CLUB_DESC" property="clubDesc" />
+		<result column="CLUB_LOGO" property="clubLogo" />
+		<result column="CLUB_OWNER" property="clubOwner" />
+		<result column="CITY" property="city" />
+		<result column="FEE_FLAG" property="feeFlag" />
+		<result column="FEE_COMMENTS" property="feeComments" />
+		<result column="RECOMMEND_FLAG" property="recommendFlag" />
+		<result column="DISTRICT" property="district" />
+		<result column="GPS_X" property="gpsX" />
+		<result column="GPS_Y" property="gpsY" />
+		<result column="CLUB_LEVEL" property="clubLevel" />
+		<result column="ACTIVE_INDEX" property="activeIndex" />
+		<result column="CREATOR" property="creator" />
+		<result column="CREATED_TIME" property="createdTime" />
+		<result column="MODIFIER" property="modifier" />
+		<result column="UPDATED_TIME" property="updatedTime" />
+		<result column="STATUS" property="status" />
+		<association property="clubMemberCount" column="CLUB_ID" javaType="java.lang.Long" select="com.youyisi.admin.domain.club.clubmember.ClubMember.getCountByClubId"></association>
+		<association property="owner" column="CLUB_OWNER" javaType="com.youyisi.admin.domain.sportuser.SportUser" select="com.youyisi.admin.domain.sportuser.SportUser.getById"></association>
+		<association property="clubCreator" column="CREATOR" javaType="com.youyisi.admin.domain.sportuser.SportUser" select="com.youyisi.admin.domain.sportuser.SportUser.getById"></association>
+		<association property="category" column="CATEGORY_CODE" javaType="com.youyisi.admin.domain.category.Category" select="com.youyisi.admin.domain.category.Category.getByCategoryCode"/>
+	</resultMap>
+	<sql id="commonSelect" >
+		select t.CLUB_ID, t.CLUB_NAME, t.CLUB_CODE, t.PARENT_CATEGORY, t.CATEGORY_CODE, t.CLUB_CULTURE, t.CLUB_DESC, t.CLUB_LOGO, t.CLUB_OWNER, t.CITY, t.FEE_FLAG, t.FEE_COMMENTS, t.RECOMMEND_FLAG, t.DISTRICT, t.GPS_X, t.GPS_Y, t.CLUB_LEVEL, t.ACTIVE_INDEX, t.CREATOR, t.CREATED_TIME, t.MODIFIER, t.UPDATED_TIME, t.STATUS
+		from sports.T_SPORT_CLUB t
+	</sql>
+	<select id="getById" resultMap="clubResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where t.CLUB_ID = #{clubId}
+	</select>
+	<select id="queryPage" resultMap="clubResult">
+		<include refid="commonSelect"/>
+		<where>
+		    1=1
+		    <if test="params.clubName != null and params.clubName != ''">
+				and t.CLUB_NAME like concat(concat('%',#{params.clubName}),'%') 
+			</if>
+			<if test="params.parentCategory != null and params.parentCategory != ''">
+				and t.PARENT_CATEGORY= #{params.parentCategory}
+			</if>
+			<if test="params.recommendFlag != null">
+				and t.RECOMMEND_FLAG = #{params.recommendFlag}
+			</if>
+			<if test="params.feeFlag != null">
+				and t.FEE_FLAG = #{params.feeFlag}
+			</if>
+		</where>
+		order by t.CLUB_LEVEL desc , t.ACTIVE_INDEX desc
+	</select>
+	<delete id="delete" parameterType="Club" >
+		delete from sports.T_SPORT_CLUB
+		where CLUB_ID = #{clubId}
+	</delete>
+	<insert id="save" parameterType="Club" >
+		insert into sports.T_SPORT_CLUB (CLUB_ID,CLUB_NAME,CLUB_CODE,PARENT_CATEGORY,CATEGORY_CODE,CLUB_CULTURE,CLUB_DESC,CLUB_LOGO,CLUB_OWNER,CITY,FEE_FLAG,FEE_COMMENTS,RECOMMEND_FLAG,DISTRICT,GPS_X,GPS_Y,CLUB_LEVEL,ACTIVE_INDEX,CREATOR,CREATED_TIME,MODIFIER,UPDATED_TIME,STATUS
+		)
+ 		values (#{clubId},#{clubName},#{clubCode},#{parentCategory},#{categoryCode},#{clubCulture},#{clubDesc},#{clubLogo},#{clubOwner},#{city},#{feeFlag},#{feeComments},#{recommendFlag},#{district},#{gpsX},#{gpsY},#{clubLevel},#{activeIndex},#{creator},#{createdTime},#{modifier},#{updatedTime},#{status}
+		)
+		<selectKey keyProperty="clubId" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="Club" >
+		update sports.T_SPORT_CLUB set CLUB_ID=#{clubId},CLUB_NAME=#{clubName},CLUB_CODE=#{clubCode},PARENT_CATEGORY=#{parentCategory},CATEGORY_CODE=#{categoryCode},CLUB_CULTURE=#{clubCulture},CLUB_DESC=#{clubDesc},CLUB_LOGO=#{clubLogo},CLUB_OWNER=#{clubOwner},CITY=#{city},FEE_FLAG=#{feeFlag},FEE_COMMENTS=#{feeComments},RECOMMEND_FLAG=#{recommendFlag},DISTRICT=#{district},GPS_X=#{gpsX},GPS_Y=#{gpsY},CLUB_LEVEL=#{clubLevel},ACTIVE_INDEX=#{activeIndex},CREATOR=#{creator},CREATED_TIME=#{createdTime},MODIFIER=#{modifier},UPDATED_TIME=#{updatedTime},STATUS=#{status}
+		where CLUB_ID = #{clubId}
+	</update>
+</mapper>

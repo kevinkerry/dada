@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.medal.UserMedal" >
+	<resultMap id="userMedalResult" type="UserMedal" >
+	<id column="id" property="id" />
+		<result column="medal_id" property="medalId" />
+		<result column="user_id" property="userId" />
+		<result column="create_time" property="createTime" />
+	</resultMap>
+	
+		<resultMap id="userMedalWithMedalResult" type="UserMedalWithMedal" >
+	<id column="id" property="id" />
+		<result column="medal_id" property="medalId" />
+		<result column="user_id" property="userId" />
+		<result column="create_time" property="createTime" />
+		<association property="medal" column="medal_id" select="com.youyisi.sports.domain.medal.Medal.getById"></association>
+	</resultMap>
+	<sql id="commonSelect" >
+		select u.id, u.medal_id, u.user_id, u.create_time
+		from dada_sports.user_medal u
+	</sql>
+	<select id="getById" resultMap="userMedalResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where u.id = #{id}
+	</select>
+	<select id="getByUserId" resultMap="userMedalWithMedalResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where u.user_id = #{userId}
+	</select>
+	
+	<select id="getByUserIdAndTypeCategory" resultMap="userMedalWithMedalResult" >
+		select u.id, u.medal_id, u.user_id, u.create_time
+		from dada_sports.user_medal u
+		left join dada_sports.medal m on m.id=u.medal_id
+		where u.user_id = #{userId} and m.type=#{type} and m.category=#{category}
+	</select>
+	
+	<select id="queryPage" resultMap="userMedalResult">
+		<include refid="commonSelect"/>
+		order by u.id asc
+	</select>
+	<delete id="delete" parameterType="UserMedal" >
+		delete from dada_sports.user_medal
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="UserMedal" >
+		insert into dada_sports.user_medal (id,medal_id,user_id,create_time
+		)
+ 		values (#{id},#{medalId},#{userId},#{createTime}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="UserMedal" >
+		update dada_sports.user_medal set medal_id=#{medalId},user_id=#{userId},create_time=#{createTime}
+		where id = #{id}
+</update>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.integralwall.IntegralWall" >
+	<resultMap id="integralWallResult" type="IntegralWall" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="sn" property="sn" />
+		<result column="pk" property="pk" />
+		<result column="score" property="score" />
+		<result column="sg" property="sg" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select i.id, i.user_id, i.sn, i.pk, i.score, i.sg
+		from dada_sports.integral_wall i
+	</sql>
+	<select id="getById" resultMap="integralWallResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where i.id = #{id}
+	</select>
+	<select id="queryPage" resultMap="integralWallResult">
+		<include refid="commonSelect"/>
+		order by i.id asc
+	</select>
+	<select id="getByUserIdAndPK" resultMap="integralWallResult">
+		<include refid="commonSelect"/>
+		where 1=1
+		<if test="userId!=null">
+		and i.user_id=#{userId}
+		</if>
+		<if test="pk!=null">
+		and i.pk=#{pk}
+		</if>
+	</select>
+	
+	<delete id="delete" parameterType="IntegralWall" >
+		delete from dada_sports.integral_wall
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="IntegralWall" >
+		insert into dada_sports.integral_wall (id,user_id,sn,pk,score,sg
+		)
+ 		values (#{id},#{userId},#{sn},#{pk},#{score},#{sg}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="IntegralWall" >
+		update dada_sports.integral_wall set user_id=#{userId},sn=#{sn},pk=#{pk},score=#{score},sg=#{sg}
+		where id = #{id}
+</update>
+</mapper>

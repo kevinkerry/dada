@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.gift.gifttype.GiftType" >
+	<resultMap id="giftTypeResult" type="GiftType" >
+		<result column="GIFT_TYPE_ID" property="giftTypeId" />
+		<result column="LIMIT" property="limit" />
+		<result column="SURPLUS" property="surplus" />
+		<result column="PARENT_TYPE_ID" property="parentTypeId" />
+		<result column="TYPE_NAME" property="typeName" />
+		<result column="VALUE" property="value" />
+		<association property="parentType" column="PARENT_TYPE_ID" javaType="com.youyisi.admin.domain.gift.gifttype.GiftType" select="getByParentId"></association>
+	</resultMap>
+	<sql id="commonSelect" >
+		select t.GIFT_TYPE_ID, t.LIMIT, t.SURPLUS, t.PARENT_TYPE_ID, t.TYPE_NAME, t.VALUE
+		from sports.T_SPORT_GIFT_TYPE t
+	</sql>
+	<select id="getById" resultMap="giftTypeResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where t.GIFT_TYPE_ID = #{giftTypeId}
+	</select>
+	<select id="getByParentId" resultMap="giftTypeResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		WHERE t.GIFT_TYPE_ID = #{parentTypeId}
+	</select>
+	<select id="queryPage" resultMap="giftTypeResult">
+		<include refid="commonSelect"/>
+		<where>
+			<if test="params.isParent != null and params.isParent == true">
+			    t.PARENT_TYPE_ID IS NULL
+			</if>
+			<if test="params.isParent != null and params.isParent == false">
+			    t.PARENT_TYPE_ID IS NOT NULL
+			</if>		  
+			<if test="params.parentTypeId != null">
+			   	and (t.PARENT_TYPE_ID = #{params.parentTypeId} or t.GIFT_TYPE_ID = #{params.parentTypeId})
+			</if>
+		</where>
+		order by t.GIFT_TYPE_ID asc
+	</select>
+	<select id="queryAll" resultMap="giftTypeResult">
+		<include refid="commonSelect"/>
+		<where>
+			<if test="isParent != null and isParent == true">
+			    t.PARENT_TYPE_ID IS NULL
+			</if>
+			<if test="isParent != null and isParent == false">
+			    t.PARENT_TYPE_ID IS NOT NULL
+			</if>		    
+		</where>
+	</select>
+	<delete id="delete" parameterType="GiftType" >
+		delete from sports.T_SPORT_GIFT_TYPE
+		where GIFT_TYPE_ID = #{giftTypeId}
+	</delete>
+	<insert id="save" parameterType="GiftType" >
+		insert into sports.T_SPORT_GIFT_TYPE (`LIMIT`,SURPLUS,PARENT_TYPE_ID,TYPE_NAME,`VALUE`)
+ 		values (#{limit},#{surplus},#{parentTypeId},#{typeName},#{value})
+		<selectKey keyProperty="giftTypeId" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="GiftType" >
+		update sports.T_SPORT_GIFT_TYPE set GIFT_TYPE_ID=#{giftTypeId},`LIMIT`=#{limit},SURPLUS=#{surplus},PARENT_TYPE_ID=#{parentTypeId},TYPE_NAME=#{typeName},`VALUE`=#{value}
+		where GIFT_TYPE_ID = #{giftTypeId}
+	</update>
+</mapper>

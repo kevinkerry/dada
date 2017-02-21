@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.area.Area" >
+	<resultMap id="areaResult" type="Area" >
+	<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="parent_id" property="parentId" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select a.id, a.name, a.parent_id
+		from dada_sports.area a
+	</sql>
+	<select id="getById" resultMap="areaResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where a.id = #{id}
+	</select>
+	<select id="getByParentId" resultMap="areaResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where a.parent_id = #{parentId}
+	</select>
+	
+	<select id="queryPage" resultMap="areaResult">
+		<include refid="commonSelect"/>
+		order by a.id asc
+	</select>
+	<delete id="delete" parameterType="Area" >
+		delete from dada_sports.area
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="Area" >
+		insert into dada_sports.area (id,name,parent_id
+		)
+ 		values (#{id},#{name},#{parentId}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="Area" >
+		update dada_sports.area set name=#{name},parent_id=#{parentId}
+		where id = #{id}
+</update>
+</mapper>

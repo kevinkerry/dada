@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	 					http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+	
+	<bean id="shiroRealm" class="com.youyisi.admin.infrastructure.shiro.ShiroRealm"/>
+	
+	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+    <property name="globalSessionTimeout" value="864000000"/>
+  </bean>
+
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="shiroRealm" />
+	</bean>
+	<!-- <bean id="shiroSessionValidationScheduler" class="org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler">
+		<constructor-arg name="sessionManager" ref="sessionManager"/>
+		<property name="interval" value="10000"/>  定时半小时检验一次有所session是否有效（毫秒单位）
+	</bean> -->
+	
+	
+	
+	
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="staticMethod"
+			value="org.apache.shiro.SecurityUtils.setSecurityManager" />
+		<property name="arguments" ref="securityManager" />
+	</bean>
+	
+	<!-- Post processor that automatically invokes init() and destroy() methods -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+</beans>

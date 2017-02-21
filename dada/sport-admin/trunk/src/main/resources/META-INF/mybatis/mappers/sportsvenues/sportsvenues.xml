@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.sportsvenues.SportsVenues" >
+	<resultMap id="sportsVenuesResult" type="SportsVenues" >
+		<result column="VENUE_ID" property="venueId" />
+		<result column="VENUE_NAME" property="venueName" />
+		<result column="VENUE_CODE" property="venueCode" />
+		<result column="VENUE_DESC" property="venueDesc" />
+		<result column="VENUE_LOGO" property="venueLogo" />
+		<result column="VENUE_CONTACT" property="venueContact" />
+		<result column="PROVINCE" property="province" />
+		<result column="CITY" property="city" />
+		<result column="DISTRICT" property="district" />
+		<result column="ADDRESS" property="address" />
+		<result column="BUS_INFORMATION" property="busInformation" />
+		<result column="FACILITY" property="facility" />
+		<result column="GPS_X" property="gpsX" />
+		<result column="GPS_Y" property="gpsY" />
+		<result column="VENUE_GRADE" property="venueGrade" />
+		<result column="VENUE_CHANNEL" property="venueChannel" />
+		<result column="MERCHANT_CODE" property="merchantCode" />
+		<result column="EXTERNAL_CODE" property="externalCode" />
+		<result column="CREATOR" property="creator" />
+		<result column="CREATED_TIME" property="createdTime" />
+		<result column="MODIFIER" property="modifier" />
+		<result column="UPDATED_TIME" property="updatedTime" />
+		<result column="STATUS" property="status" />
+		<association property="venueChileCount" column="VENUE_ID" javaType="java.lang.Long" select="com.youyisi.admin.domain.sportsvenues.sportsvenueschild.SportsVenuesChild.getCountByVenueId"></association>
+		<collection property="venueImages" column="VENUE_ID" ofType="com.youyisi.admin.domain.sportsvenues.sportvenueimage.SportVenueImage" select="com.youyisi.admin.domain.sportsvenues.sportvenueimage.SportVenueImage.getByVenueId" />
+		<collection property="venueDistrictCounts" column="VENUE_ID" javaType="java.util.List" select="queryDistrictsByVenueId"></collection>
+	</resultMap>
+	<resultMap type="java.util.Map" id="districtMap">
+		<result column="CHILD_VENUE_ID" property="chidVenueId"/>
+		<result column="CHILD_VENUE_NAME" property="childCenueName"/>
+		<result column="DISTRICT_COUNT" property="districtCount"/>
+	</resultMap>
+	<sql id="commonSelect" >
+			select t.VENUE_ID, t.VENUE_NAME, t.VENUE_CODE, t.VENUE_DESC, t.VENUE_LOGO, t.VENUE_CONTACT, t.PROVINCE, t.CITY, t.DISTRICT, t.ADDRESS, t.BUS_INFORMATION, t.FACILITY, t.GPS_X, t.GPS_Y, t.VENUE_GRADE, t.VENUE_CHANNEL, t.MERCHANT_CODE, t.EXTERNAL_CODE, t.CREATOR, t.CREATED_TIME, t.MODIFIER, t.UPDATED_TIME, t.STATUS
+			from sports.T_SPORT_VENUES t
+	</sql>
+	<select id="getById" resultMap="sportsVenuesResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where t.VENUE_ID = #{venueId}
+	</select>
+	<select id="queryPage" resultMap="sportsVenuesResult">
+		 <include refid="commonSelect"/>
+		 <where>
+		    1=1 and t.STATUS = 'A'
+			<if test="params.venueName != null and params.venueName != ''">
+				and t.VENUE_NAME like concat(concat('%',#{params.venueName}),'%')
+			</if>
+			<if test="params.province != null and params.province != ''">
+				and t.PROVINCE like concat(concat('%',#{params.province}),'%')
+			</if>
+			<if test="params.city != null and params.city != ''">
+				and t.CITY like concat(concat('%',#{params.city}),'%')
+			</if>
+			<if test="params.district != null and params.district != ''">
+				and t.DISTRICT like concat(concat('%',#{params.district}),'%')
+			</if>
+		</where>
+		order by t.VENUE_GRADE desc, t.CREATED_TIME desc
+	</select>
+	<select id="queryDistrictsByVenueId" resultMap="districtMap" parameterType="java.lang.Long">
+		SELECT
+			svc.CHILD_VENUE_ID,
+			svc.CHILD_VENUE_NAME,
+			count(svd.DISTRICT_ID) AS DISTRICT_COUNT
+		FROM
+			sports.T_SPORT_VENUE_DISTRICT svd
+		INNER JOIN sports.T_SPORT_VENUE_CHILD svc ON svc.CHILD_VENUE_ID = svd.CHILD_VENUE_ID
+		LEFT JOIN sports.T_SPORT_VENUES sv ON svc.VENUE_ID = sv.VENUE_ID
+		WHERE
+			sv.VENUE_ID = #{venueId}
+		GROUP BY
+			svc.CHILD_VENUE_ID;
+	</select>
+	<delete id="delete" parameterType="SportsVenues" >
+		 delete from sports.T_SPORT_VENUES
+		where VENUE_ID = #{venueId}
+	</delete>
+	<insert id="save" parameterType="SportsVenues" >
+		insert into sports.T_SPORT_VENUES (VENUE_NAME,VENUE_CODE,VENUE_DESC,VENUE_LOGO,VENUE_CONTACT,PROVINCE,CITY,DISTRICT,ADDRESS,BUS_INFORMATION,FACILITY,GPS_X,GPS_Y,VENUE_GRADE,VENUE_CHANNEL,MERCHANT_CODE,EXTERNAL_CODE,CREATOR,CREATED_TIME,MODIFIER,UPDATED_TIME,STATUS
+	)
+	 values (#{venueName},#{venueCode},#{venueDesc},#{venueLogo},#{venueContact},#{province},#{city},#{district},#{address},#{busInformation},#{facility},#{gpsX},#{gpsY},#{venueGrade},#{venueChannel},#{merchantCode},#{externalCode},#{creator},#{createdTime},#{modifier},#{updatedTime},#{status}
+	)
+			<selectKey keyProperty="venueId" resultType="Long" statementType="PREPARED">
+				select LAST_INSERT_ID() as value
+			</selectKey>
+	</insert>
+	<update id="update" parameterType="SportsVenues" >
+		update sports.T_SPORT_VENUES set VENUE_ID=#{venueId},VENUE_NAME=#{venueName},VENUE_CODE=#{venueCode},VENUE_DESC=#{venueDesc},VENUE_LOGO=#{venueLogo},VENUE_CONTACT=#{venueContact},CITY=#{city},PROVINCE=#{province},DISTRICT=#{district},ADDRESS=#{address},BUS_INFORMATION=#{busInformation},FACILITY=#{facility},GPS_X=#{gpsX},GPS_Y=#{gpsY},VENUE_GRADE=#{venueGrade},VENUE_CHANNEL=#{venueChannel},MERCHANT_CODE=#{merchantCode},EXTERNAL_CODE=#{externalCode},CREATOR=#{creator},CREATED_TIME=#{createdTime},MODIFIER=#{modifier},UPDATED_TIME=#{updatedTime},STATUS=#{status}
+		where VENUE_ID = #{venueId}
+	</update>
+</mapper>

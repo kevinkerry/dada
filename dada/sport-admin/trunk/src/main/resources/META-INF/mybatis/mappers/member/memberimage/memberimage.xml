@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.member.memberimage.MemberImage" >
+	<resultMap id="memberImageResult" type="MemberImage" >
+		<result column="IMG_ID" property="imgId" />
+		<result column="USER_ID" property="userId" />
+		<result column="MEMBER_ID" property="memberId" />
+		<result column="IMG_URL" property="imgUrl" />
+		<result column="IMG_ORDER" property="imgOrder" />
+		<result column="IS_MASTER" property="isMaster" />
+		<result column="CREATOR" property="creator" />
+		<result column="CREATED_TIME" property="createdTime" />
+		<result column="MODIFIER" property="modifier" />
+		<result column="UPDATED_TIME" property="updatedTime" />
+		<result column="STATUS" property="status" />
+	</resultMap>
+	<sql id="commonSelect" >
+			select t.IMG_ID, t.USER_ID, t.MEMBER_ID, t.IMG_URL, t.IMG_ORDER, t.IS_MASTER, t.CREATOR, t.CREATED_TIME, t.MODIFIER, t.UPDATED_TIME, t.STATUS
+			from sports.T_SPORT_MEMBER_IMG t
+	</sql>
+	<select id="getById" resultMap="memberImageResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where t.IMG_ID = #{imgId}
+	</select>
+	<select id="getByMemberId" resultMap="memberImageResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where t.MEMBER_ID = #{memberId}
+	</select>
+	<select id="queryPage" resultMap="memberImageResult">
+		 <include refid="commonSelect"/>
+		order by t.IMG_ID asc
+	</select>
+	<delete id="delete" parameterType="MemberImage" >
+		 delete from sports.T_SPORT_MEMBER_IMG
+		where IMG_ID = #{imgId}
+	</delete>
+	<insert id="save" parameterType="MemberImage" >
+		insert into sports.T_SPORT_MEMBER_IMG (USER_ID,MEMBER_ID,IMG_URL,IMG_ORDER,IS_MASTER,CREATOR,CREATED_TIME,MODIFIER,UPDATED_TIME,STATUS
+	)
+	 values (#{userId},#{memberId},#{imgUrl},#{imgOrder},#{isMaster},#{creator},#{createdTime},#{modifier},#{updatedTime},#{status}
+	)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+				select LAST_INSERT_ID() as value
+			</selectKey>
+	</insert>
+	<update id="update" parameterType="MemberImage" >
+		update sports.T_SPORT_MEMBER_IMG set IMG_ID=#{imgId},USER_ID=#{userId},MEMBER_ID=#{memberId},IMG_URL=#{imgUrl},IMG_ORDER=#{imgOrder},IS_MASTER=#{isMaster},CREATOR=#{creator},CREATED_TIME=#{createdTime},MODIFIER=#{modifier},UPDATED_TIME=#{updatedTime},STATUS=#{status}
+		where IMG_ID = #{imgId}
+	</update>
+</mapper>

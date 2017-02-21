@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.soa.infrastructure.persist.category.CategoryMapper" >
+  <resultMap id="BaseResultMap" type="Category" >
+    <id column="CATEGORY_ID" property="categoryId" jdbcType="BIGINT" />
+    <result column="CATEGORY_NAME" property="categoryName" jdbcType="VARCHAR" />
+    <result column="CATEGORY_CODE" property="categoryCode" jdbcType="VARCHAR" />
+    <result column="PARENT_ID" property="parentId" jdbcType="BIGINT" />
+    <result column="PARENT_CODE" property="parentCode" jdbcType="VARCHAR" />
+    <result column="CATEGORY_LEVEL" property="categoryLevel" jdbcType="INTEGER" />
+    <result column="CATEGORY_DESC" property="categoryDesc" jdbcType="VARCHAR" />
+    <result column="CATEGORY_LOGO_URL" property="categoryLogoUrl" jdbcType="VARCHAR" />
+    <result column="CREATOR" property="creator" jdbcType="BIGINT" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="MODIFIER" property="modifier" jdbcType="BIGINT" />
+    <result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="CHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from T_SPORT_CATEGORY
+    where CATEGORY_ID = #{categoryId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="Category" >
+    insert into T_SPORT_CATEGORY (CATEGORY_ID, CATEGORY_NAME, CATEGORY_CODE, 
+      PARENT_ID, PARENT_CODE, CATEGORY_LEVEL, 
+      CATEGORY_DESC, CATEGORY_LOGO_URL, CREATOR, 
+      CREATED_TIME, MODIFIER, UPDATED_TIME, 
+      STATUS)
+    values (#{categoryId,jdbcType=BIGINT}, #{categoryName,jdbcType=VARCHAR}, #{categoryCode,jdbcType=VARCHAR}, 
+      #{parentId,jdbcType=BIGINT}, #{parentCode,jdbcType=VARCHAR}, #{categoryLevel,jdbcType=INTEGER}, 
+      #{categoryDesc,jdbcType=VARCHAR}, #{categoryLogoUrl,jdbcType=VARCHAR}, #{creator,jdbcType=BIGINT}, 
+      #{createdTime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=BIGINT}, #{updatedTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=CHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="Category" >
+    update T_SPORT_CATEGORY
+    set CATEGORY_NAME = #{categoryName,jdbcType=VARCHAR},
+      CATEGORY_CODE = #{categoryCode,jdbcType=VARCHAR},
+      PARENT_ID = #{parentId,jdbcType=BIGINT},
+      PARENT_CODE = #{parentCode,jdbcType=VARCHAR},
+      CATEGORY_LEVEL = #{categoryLevel,jdbcType=INTEGER},
+      CATEGORY_DESC = #{categoryDesc,jdbcType=VARCHAR},
+      CATEGORY_LOGO_URL = #{categoryLogoUrl,jdbcType=VARCHAR},
+      CREATOR = #{creator,jdbcType=BIGINT},
+      CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      MODIFIER = #{modifier,jdbcType=BIGINT},
+      UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+      STATUS = #{status,jdbcType=CHAR}
+    where CATEGORY_ID = #{categoryId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select CATEGORY_ID, CATEGORY_NAME, CATEGORY_CODE, PARENT_ID, PARENT_CODE, CATEGORY_LEVEL, 
+    CATEGORY_DESC, CATEGORY_LOGO_URL, CREATOR, CREATED_TIME, MODIFIER, UPDATED_TIME, 
+    STATUS
+    from T_SPORT_CATEGORY
+    where CATEGORY_ID = #{categoryId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select CATEGORY_ID, CATEGORY_NAME, CATEGORY_CODE, PARENT_ID, PARENT_CODE, CATEGORY_LEVEL, 
+    CATEGORY_DESC, CATEGORY_LOGO_URL, CREATOR, CREATED_TIME, MODIFIER, UPDATED_TIME, 
+    STATUS
+    from T_SPORT_CATEGORY
+  </select>
+  
+  <select id="selectByCategoryCode" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select CATEGORY_ID, CATEGORY_NAME, CATEGORY_CODE,
+		PARENT_ID, PARENT_CODE,
+		CATEGORY_LEVEL,
+		CATEGORY_DESC,
+		CATEGORY_LOGO_URL, CREATOR, CREATED_TIME, MODIFIER, UPDATED_TIME,
+		STATUS
+		from T_SPORT_CATEGORY
+		where CATEGORY_CODE =
+		#{categoryCode,jdbcType=VARCHAR}
+		and STATUS='A'
+	</select>
+</mapper>

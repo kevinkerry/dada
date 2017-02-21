@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.sportsvenues.sportvenueschedule.SportVenueSchedule" >
+	<resultMap id="sportVenueScheduleResult" type="SportVenueSchedule" >
+		<result column="SCHEDULE_ID" property="scheduleId" />
+		<result column="VENUE_ID" property="venueId" />
+		<result column="CHILD_VENUE_ID" property="childVenueId" />
+		<result column="DISTRICT_ID" property="districtId" />
+		<result column="MAKETING_PRICE" property="maketingPrice" />
+		<result column="SALE_PRICE" property="salePrice" />
+		<result column="START_TIME" property="startTime" />
+		<result column="END_TIME" property="endTime" />
+		<result column="BOOKING_STATE" property="bookingState" />
+		<result column="CREATOR" property="creator" />
+		<result column="CREATED_TIME" property="createdTime" />
+		<result column="MODIFIER" property="modifier" />
+		<result column="UPDATED_TIME" property="updatedTime" />
+		<result column="STATUS" property="status" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select t.SCHEDULE_ID, t.VENUE_ID, t.CHILD_VENUE_ID, t.DISTRICT_ID, t.MAKETING_PRICE, t.SALE_PRICE, t.START_TIME, t.END_TIME, t.BOOKING_STATE, t.CREATOR, t.CREATED_TIME, t.MODIFIER, t.UPDATED_TIME, t.STATUS
+		from sports.T_SPORT_VENUE_SCHEDULE t
+	</sql>
+	<select id="getById" resultMap="sportVenueScheduleResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where t.SCHEDULE_ID = #{scheduleId}
+	</select>
+	<select id="queryPage" resultMap="sportVenueScheduleResult">
+		<include refid="commonSelect"/>
+		<where>
+			1=1
+			<if test="params.districtId != null">
+				and t.DISTRICT_ID= #{params.districtId}
+			</if>
+		</where>
+		order by t.SCHEDULE_ID asc
+	</select>
+	<delete id="delete" parameterType="SportVenueSchedule" >
+		delete from sports.T_SPORT_VENUE_SCHEDULE
+		where SCHEDULE_ID = #{scheduleId}
+	</delete>
+	<insert id="save" parameterType="SportVenueSchedule" >
+		insert into sports.T_SPORT_VENUE_SCHEDULE (SCHEDULE_ID,VENUE_ID,CHILD_VENUE_ID,DISTRICT_ID,MAKETING_PRICE,SALE_PRICE,START_TIME,END_TIME,BOOKING_STATE,CREATOR,CREATED_TIME,MODIFIER,UPDATED_TIME,STATUS)
+ 		values (#{scheduleId},#{venueId},#{childVenueId},#{districtId},#{maketingPrice},#{salePrice},#{startTime},#{endTime},#{bookingState},#{creator},#{createdTime},#{modifier},#{updatedTime},#{status})
+		<selectKey keyProperty="scheduleId" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="SportVenueSchedule" >
+		update sports.T_SPORT_VENUE_SCHEDULE set SCHEDULE_ID=#{scheduleId},VENUE_ID=#{venueId},CHILD_VENUE_ID=#{childVenueId},DISTRICT_ID=#{districtId},MAKETING_PRICE=#{maketingPrice},SALE_PRICE=#{salePrice},START_TIME=#{startTime},END_TIME=#{endTime},BOOKING_STATE=#{bookingState},CREATOR=#{creator},CREATED_TIME=#{createdTime},MODIFIER=#{modifier},UPDATED_TIME=#{updatedTime},STATUS=#{status}
+		where SCHEDULE_ID = #{scheduleId}
+	</update>
+</mapper>

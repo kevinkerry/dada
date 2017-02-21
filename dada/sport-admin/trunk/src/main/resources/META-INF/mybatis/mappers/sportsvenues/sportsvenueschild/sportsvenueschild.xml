@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.sportsvenues.sportsvenueschild.SportsVenuesChild" >
+	<resultMap id="sportsVenuesChildResult" type="SportsVenuesChild" >
+		<result column="CHILD_VENUE_ID" property="childVenueId" />
+		<result column="CHILD_VENUE_NAME" property="childVenueName" />
+		<result column="CHILD_VENUE_CODE" property="childVenueCode" />
+		<result column="VENUE_ID" property="venueId" />
+		<result column="VENUE_CODE" property="venueCode" />
+		<result column="CHILD_VENUE_DESC" property="childVenueDesc" />
+		<result column="PARENT_CATEGORY" property="parentCategory" />
+		<result column="CATEGORY_CODE" property="categoryCode" />
+		<result column="VENUE_CONTACT" property="venueContact" />
+		<result column="MAKETING_PRICE" property="maketingPrice" />
+		<result column="SALE_PRICE" property="salePrice" />
+		<result column="CHILD_VENUE_COUNT" property="childVenueCount" />
+		<result column="BOOKING_START_TIME" property="bookingStartTime" />
+		<result column="BOOKING_END_TIME" property="bookingEndTime" />
+		<result column="BOOKING_TIME_INTERAL" property="bookingTimeInteral" />
+		<result column="VENUE_CHANNEL" property="venueChannel" />
+		<result column="MERCHANT_CODE" property="merchantCode" />
+		<result column="EXTERNAL_CODE" property="externalCode" />
+		<result column="CREATOR" property="creator" />
+		<result column="CREATED_TIME" property="createdTime" />
+		<result column="MODIFIER" property="modifier" />
+		<result column="UPDATED_TIME" property="updatedTime" />
+		<result column="STATUS" property="status" />
+		<association property="category" column="CATEGORY_CODE" javaType="com.youyisi.admin.domain.category.Category" select="com.youyisi.admin.domain.category.Category.getByCategoryCode"/>
+		<association property="venueChildDistrictCount" column="CHILD_VENUE_ID" javaType="java.lang.Long" select="com.youyisi.admin.domain.sportsvenues.sportvenuedistrict.SportVenueDistrict.getCountByChildVenueId"></association>
+		<association property="sportsVenue" column="VENUE_ID" javaType="com.youyisi.admin.domain.sportsvenues.SportsVenues" select="com.youyisi.admin.domain.sportsvenues.SportsVenues.getById"></association>
+	</resultMap>
+	<sql id="commonSelect" >
+			select t.CHILD_VENUE_ID, t.CHILD_VENUE_NAME, t.CHILD_VENUE_CODE, t.VENUE_ID, t.VENUE_CODE, t.CHILD_VENUE_DESC, t.PARENT_CATEGORY, t.CATEGORY_CODE, t.VENUE_CONTACT, t.MAKETING_PRICE, t.SALE_PRICE, t.CHILD_VENUE_COUNT, t.BOOKING_START_TIME, t.BOOKING_END_TIME, t.BOOKING_TIME_INTERAL, t.VENUE_CHANNEL, t.MERCHANT_CODE, t.EXTERNAL_CODE, t.CREATOR, t.CREATED_TIME, t.MODIFIER, t.UPDATED_TIME, t.STATUS
+			from sports.T_SPORT_VENUE_CHILD t
+	</sql>
+	<select id="getById" resultMap="sportsVenuesChildResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where t.CHILD_VENUE_ID = #{childVenueId}
+	</select>
+	<select id="getCountByVenueId" resultType="Long" parameterType="java.lang.Long" >
+		select count(*) from sports.T_SPORT_VENUE_CHILD t where t.VENUE_ID = #{venueId}
+	</select>
+	<select id="queryPage" resultMap="sportsVenuesChildResult">
+		 <include refid="commonSelect"/>
+		 <where>
+		    1=1
+			<if test="params.venueId != null">
+				and t.VENUE_ID= #{params.venueId}
+			</if>
+			<if test="params.childVenueName != null and params.childVenueName != ''">
+				and t.CHILD_VENUE_NAME like concat(concat('%',#{params.childVenueName}),'%') 
+			</if>
+		</where>
+		order by t.CHILD_VENUE_ID asc
+	</select>
+	<delete id="delete" parameterType="SportsVenuesChild" >
+		 delete from sports.T_SPORT_VENUE_CHILD
+		where CHILD_VENUE_ID = #{childVenueId}
+	</delete>
+	<insert id="save" parameterType="SportsVenuesChild" >
+		insert into sports.T_SPORT_VENUE_CHILD (CHILD_VENUE_NAME,CHILD_VENUE_CODE,VENUE_ID,VENUE_CODE,CHILD_VENUE_DESC,PARENT_CATEGORY,CATEGORY_CODE,VENUE_CONTACT,MAKETING_PRICE,SALE_PRICE,CHILD_VENUE_COUNT,BOOKING_START_TIME,BOOKING_END_TIME,BOOKING_TIME_INTERAL,VENUE_CHANNEL,MERCHANT_CODE,EXTERNAL_CODE,CREATOR,CREATED_TIME,MODIFIER,UPDATED_TIME,STATUS
+	)
+	 values (#{childVenueName},#{childVenueCode},#{venueId},#{venueCode},#{childVenueDesc},#{parentCategory},#{categoryCode},#{venueContact},#{maketingPrice},#{salePrice},#{childVenueCount},#{bookingStartTime},#{bookingEndTime},#{bookingTimeInteral},#{venueChannel},#{merchantCode},#{externalCode},#{creator},#{createdTime},#{modifier},#{updatedTime},#{status}
+	)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+				select LAST_INSERT_ID() as value
+			</selectKey>
+	</insert>
+	<update id="update" parameterType="SportsVenuesChild" >
+		update sports.T_SPORT_VENUE_CHILD set CHILD_VENUE_ID=#{childVenueId},CHILD_VENUE_NAME=#{childVenueName},CHILD_VENUE_CODE=#{childVenueCode},VENUE_ID=#{venueId},VENUE_CODE=#{venueCode},CHILD_VENUE_DESC=#{childVenueDesc},PARENT_CATEGORY=#{parentCategory},CATEGORY_CODE=#{categoryCode},VENUE_CONTACT=#{venueContact},MAKETING_PRICE=#{maketingPrice},SALE_PRICE=#{salePrice},CHILD_VENUE_COUNT=#{childVenueCount},BOOKING_START_TIME=#{bookingStartTime},BOOKING_END_TIME=#{bookingEndTime},BOOKING_TIME_INTERAL=#{bookingTimeInteral},VENUE_CHANNEL=#{venueChannel},MERCHANT_CODE=#{merchantCode},EXTERNAL_CODE=#{externalCode},CREATOR=#{creator},CREATED_TIME=#{createdTime},MODIFIER=#{modifier},UPDATED_TIME=#{updatedTime},STATUS=#{status}
+		where CHILD_VENUE_ID = #{childVenueId}
+	</update>
+</mapper>

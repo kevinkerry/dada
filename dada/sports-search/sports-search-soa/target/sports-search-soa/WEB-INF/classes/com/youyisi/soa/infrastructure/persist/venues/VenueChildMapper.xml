@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.soa.infrastructure.persist.venues.VenueChildMapper">
+	<resultMap id="VenueChildMap" type="VenueChild">
+		<id column="CHILD_VENUE_ID" property="childVenueId" jdbcType="BIGINT" />
+		<result column="CHILD_VENUE_NAME" property="childVenueName"
+			jdbcType="VARCHAR" />
+		<result column="CHILD_VENUE_CODE" property="childVenueCode"
+			jdbcType="VARCHAR" />
+		<result column="VENUE_ID" property="venueId" jdbcType="BIGINT" />
+		<result column="VENUE_CODE" property="venueCode" jdbcType="VARCHAR" />
+		<result column="CHILD_VENUE_DESC" property="childVenueDesc"
+			jdbcType="VARCHAR" />
+		<result column="PARENT_CATEGORY" property="parentCategory"
+			jdbcType="VARCHAR" />
+		<result column="CATEGORY_CODE" property="categoryCode"
+			jdbcType="VARCHAR" />
+		<result column="VENUE_CONTACT" property="venueContact"
+			jdbcType="VARCHAR" />
+		<result column="MAKETING_PRICE" property="maketingPrice"
+			jdbcType="DOUBLE" />
+		<result column="SALE_PRICE" property="salePrice" jdbcType="DOUBLE" />
+		<result column="CHILD_VENUE_COUNT" property="childVenueCount"
+			jdbcType="INTEGER" />
+		<result column="BOOKING_START_TIME" property="bookingStartTime"
+			jdbcType="VARCHAR" />
+		<result column="BOOKING_END_TIME" property="bookingEndTime"
+			jdbcType="VARCHAR" />
+		<result column="BOOKING_TIME_INTERAL" property="bookingTimeInteral"
+			jdbcType="INTEGER" />
+		<result column="VENUE_CHANNEL" property="venueChannel"
+			jdbcType="INTEGER" />
+		<result column="MERCHANT_CODE" property="merchantCode"
+			jdbcType="VARCHAR" />
+		<result column="EXTERNAL_CODE" property="externalCode"
+			jdbcType="VARCHAR" />
+		<result column="CREATOR" property="creator" jdbcType="BIGINT" />
+		<result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+		<result column="MODIFIER" property="modifier" jdbcType="BIGINT" />
+		<result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+		<association property="category" column="CATEGORY_CODE" select="com.youyisi.soa.infrastructure.persist.category.CategoryMapper.selectByCategoryCode"></association>
+	</resultMap>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from T_SPORT_VENUE_CHILD
+		where CHILD_VENUE_ID = #{childVenueId,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="VenueChild" useGeneratedKeys="true" keyProperty="childVenueId">
+		insert into T_SPORT_VENUE_CHILD ( CHILD_VENUE_NAME,
+		CHILD_VENUE_CODE,
+		VENUE_ID, VENUE_CODE, CHILD_VENUE_DESC,
+		PARENT_CATEGORY, CATEGORY_CODE, VENUE_CONTACT,
+		MAKETING_PRICE, SALE_PRICE, CHILD_VENUE_COUNT,
+		BOOKING_START_TIME, BOOKING_END_TIME, BOOKING_TIME_INTERAL,
+		VENUE_CHANNEL, MERCHANT_CODE, EXTERNAL_CODE,
+		CREATOR, CREATED_TIME, MODIFIER,
+		UPDATED_TIME, STATUS)
+		values ( #{childVenueName,jdbcType=VARCHAR},
+		#{childVenueCode,jdbcType=VARCHAR},
+		#{venueId,jdbcType=BIGINT}, #{venueCode,jdbcType=VARCHAR}, #{childVenueDesc,jdbcType=VARCHAR},
+		#{parentCategory,jdbcType=VARCHAR}, #{categoryCode,jdbcType=VARCHAR},
+		#{venueContact,jdbcType=VARCHAR},
+		#{maketingPrice,jdbcType=DOUBLE}, #{salePrice,jdbcType=DOUBLE}, #{childVenueCount,jdbcType=INTEGER},
+		#{bookingStartTime,jdbcType=VARCHAR},
+		#{bookingEndTime,jdbcType=VARCHAR},
+		#{bookingTimeInteral,jdbcType=INTEGER},
+		#{venueChannel,jdbcType=INTEGER}, #{merchantCode,jdbcType=VARCHAR},
+		#{externalCode,jdbcType=VARCHAR},
+		#{creator,jdbcType=BIGINT}, #{createdTime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=BIGINT},
+		#{updatedTime,jdbcType=TIMESTAMP}, #{status,jdbcType=CHAR})
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="VenueChild">
+		update T_SPORT_VENUE_CHILD
+		set CHILD_VENUE_NAME = #{childVenueName,jdbcType=VARCHAR},
+		CHILD_VENUE_CODE = #{childVenueCode,jdbcType=VARCHAR},
+		VENUE_ID = #{venueId,jdbcType=BIGINT},
+		VENUE_CODE = #{venueCode,jdbcType=VARCHAR},
+		CHILD_VENUE_DESC = #{childVenueDesc,jdbcType=VARCHAR},
+		PARENT_CATEGORY = #{parentCategory,jdbcType=VARCHAR},
+		CATEGORY_CODE = #{categoryCode,jdbcType=VARCHAR},
+		VENUE_CONTACT = #{venueContact,jdbcType=VARCHAR},
+		MAKETING_PRICE = #{maketingPrice,jdbcType=DOUBLE},
+		SALE_PRICE = #{salePrice,jdbcType=DOUBLE},
+		CHILD_VENUE_COUNT = #{childVenueCount,jdbcType=INTEGER},
+		BOOKING_START_TIME = #{bookingStartTime,jdbcType=VARCHAR},
+		BOOKING_END_TIME = #{bookingEndTime,jdbcType=VARCHAR},
+		BOOKING_TIME_INTERAL = #{bookingTimeInteral,jdbcType=INTEGER},
+		VENUE_CHANNEL = #{venueChannel,jdbcType=INTEGER},
+		MERCHANT_CODE = #{merchantCode,jdbcType=VARCHAR},
+		EXTERNAL_CODE = #{externalCode,jdbcType=VARCHAR},
+		CREATOR = #{creator,jdbcType=BIGINT},
+		CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+		MODIFIER = #{modifier,jdbcType=BIGINT},
+		UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+		STATUS = #{status,jdbcType=CHAR}
+		where CHILD_VENUE_ID = #{childVenueId,jdbcType=BIGINT}
+	</update>
+	<select id="selectByPrimaryKey" resultMap="VenueChildMap"
+		parameterType="java.lang.Long">
+		select CHILD_VENUE_ID, CHILD_VENUE_NAME, CHILD_VENUE_CODE, VENUE_ID,
+		VENUE_CODE,
+		CHILD_VENUE_DESC, PARENT_CATEGORY, CATEGORY_CODE, VENUE_CONTACT, MAKETING_PRICE,
+		SALE_PRICE, CHILD_VENUE_COUNT, BOOKING_START_TIME, BOOKING_END_TIME,
+		BOOKING_TIME_INTERAL,
+		VENUE_CHANNEL, MERCHANT_CODE, EXTERNAL_CODE, CREATOR, CREATED_TIME, MODIFIER,
+		UPDATED_TIME,
+		STATUS
+		from T_SPORT_VENUE_CHILD
+		where CHILD_VENUE_ID = #{childVenueId,jdbcType=BIGINT}
+	</select>
+	
+	<select id="selectByVenueId" resultMap="VenueChildMap" parameterType="java.lang.Long">
+		select CHILD_VENUE_ID, CHILD_VENUE_NAME, CHILD_VENUE_CODE, VENUE_ID,
+		VENUE_CODE,
+		CHILD_VENUE_DESC, PARENT_CATEGORY, CATEGORY_CODE, VENUE_CONTACT, MAKETING_PRICE,
+		SALE_PRICE, CHILD_VENUE_COUNT, BOOKING_START_TIME, BOOKING_END_TIME,
+		BOOKING_TIME_INTERAL,
+		VENUE_CHANNEL, MERCHANT_CODE, EXTERNAL_CODE, CREATOR, CREATED_TIME, MODIFIER,
+		UPDATED_TIME,
+		STATUS
+		from T_SPORT_VENUE_CHILD
+		where VENUE_ID = #{venueId,jdbcType=BIGINT}
+		and STATUS='A'
+		ORDER BY SALE_PRICE 
+	</select>
+	<select id="selectAll" resultMap="VenueChildMap">
+		select CHILD_VENUE_ID, CHILD_VENUE_NAME, CHILD_VENUE_CODE, VENUE_ID,
+		VENUE_CODE,
+		CHILD_VENUE_DESC, PARENT_CATEGORY, CATEGORY_CODE, VENUE_CONTACT, MAKETING_PRICE,
+		SALE_PRICE, CHILD_VENUE_COUNT, BOOKING_START_TIME, BOOKING_END_TIME,
+		BOOKING_TIME_INTERAL,
+		VENUE_CHANNEL, MERCHANT_CODE, EXTERNAL_CODE, CREATOR, CREATED_TIME, MODIFIER,
+		UPDATED_TIME,
+		STATUS
+		from T_SPORT_VENUE_CHILD
+	</select>
+	
+	
+
+	<select id="queryPage" resultMap="VenueChildMap" parameterType="java.util.Map">
+		select CHILD_VENUE_ID, CHILD_VENUE_NAME, CHILD_VENUE_CODE, VENUE_ID,
+		VENUE_CODE,
+		CHILD_VENUE_DESC, PARENT_CATEGORY, CATEGORY_CODE, VENUE_CONTACT, MAKETING_PRICE,
+		SALE_PRICE, CHILD_VENUE_COUNT, BOOKING_START_TIME, BOOKING_END_TIME,
+		BOOKING_TIME_INTERAL,
+		VENUE_CHANNEL, MERCHANT_CODE, EXTERNAL_CODE, CREATOR, CREATED_TIME, MODIFIER,
+		UPDATED_TIME,
+		STATUS
+		from T_SPORT_VENUE_CHILD t
+		where 1=1
+		<include refid="query" />
+		<if test="pageSize!=0">
+			limit ${offset},${pageSize}
+		</if>
+	</select>
+	
+	<select id="getCount" parameterType="java.util.Map" resultType="java.lang.Long">
+		select count(1) from T_SPORT_VENUE_CHILD t
+		where 1=1
+		<include refid="query" />
+	</select>
+	
+	<sql id="query">
+		<if test="userId != null">
+			and t.USER_ID=#{userId}
+		</if>
+	</sql>
+</mapper>

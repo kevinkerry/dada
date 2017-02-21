@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.category.Category" >
+	<resultMap id="categoryResult" type="Category" >
+	<result column="CATEGORY_ID" property="categoryId" />
+	<result column="CATEGORY_NAME" property="categoryName" />
+	<result column="CATEGORY_CODE" property="categoryCode" />
+	<result column="PARENT_ID" property="parentId" />
+	<result column="PARENT_CODE" property="parentCode" />
+	<result column="CATEGORY_LEVEL" property="categoryLevel" />
+	<result column="CATEGORY_DESC" property="categoryDesc" />
+	<result column="CATEGORY_LOGO_URL" property="categoryLogoUrl" />
+	<result column="CREATOR" property="creator" />
+	<result column="CREATED_TIME" property="createdTime" />
+	<result column="MODIFIER" property="modifier" />
+	<result column="UPDATED_TIME" property="updatedTime" />
+	<result column="STATUS" property="status" />
+	</resultMap>
+<sql id="commonSelect" >
+		select t.CATEGORY_ID, t.CATEGORY_NAME, t.CATEGORY_CODE, t.PARENT_ID, t.PARENT_CODE, t.CATEGORY_LEVEL, t.CATEGORY_DESC, t.CATEGORY_LOGO_URL, t.CREATOR, t.CREATED_TIME, t.MODIFIER, t.UPDATED_TIME, t.STATUS
+		from sports.T_SPORT_CATEGORY t
+</sql>
+<select id="getById" resultMap="categoryResult" parameterType="java.lang.Integer" >
+	<include refid="commonSelect"/>
+	where t.CATEGORY_ID = #{categoryId}
+</select>
+<select id="getByCategoryCode" resultMap="categoryResult">
+	 <include refid="commonSelect"/>
+	where t.CATEGORY_CODE = #{CATEGORY_CODE}
+</select>
+<select id="query" resultMap="categoryResult">
+	 <include refid="commonSelect"/>
+	order by t.CATEGORY_ID asc
+</select>
+<select id="queryPage" resultMap="categoryResult">
+	 <include refid="commonSelect"/>
+	order by t.CATEGORY_ID asc
+</select>
+<delete id="delete" parameterType="Category" >
+	 delete from sports.T_SPORT_CATEGORY
+	where CATEGORY_ID = #{categoryId}
+</delete>
+<insert id="save" parameterType="Category" >
+	insert into sports.T_SPORT_CATEGORY (CATEGORY_NAME,CATEGORY_CODE,PARENT_ID,PARENT_CODE,CATEGORY_LEVEL,CATEGORY_DESC,CATEGORY_LOGO_URL,CREATOR,CREATED_TIME,MODIFIER,UPDATED_TIME,STATUS
+)
+ values (#{categoryName},#{categoryCode},#{parentId},#{parentCode},#{categoryLevel},#{categoryDesc},#{categoryLogoUrl},#{creator},#{createdTime},#{modifier},#{updatedTime},#{status}
+)
+		<selectKey keyProperty="categoryId" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+</insert>
+<update id="update" parameterType="Category" >
+	update sports.T_SPORT_CATEGORY set CATEGORY_ID=#{categoryId},CATEGORY_NAME=#{categoryName},CATEGORY_CODE=#{categoryCode},PARENT_ID=#{parentId},PARENT_CODE=#{parentCode},CATEGORY_LEVEL=#{categoryLevel},CATEGORY_DESC=#{categoryDesc},CATEGORY_LOGO_URL=#{categoryLogoUrl},CREATOR=#{creator},CREATED_TIME=#{createdTime},MODIFIER=#{modifier},UPDATED_TIME=#{updatedTime},STATUS=#{status}
+	where CATEGORY_ID = #{categoryId}
+</update>
+</mapper>

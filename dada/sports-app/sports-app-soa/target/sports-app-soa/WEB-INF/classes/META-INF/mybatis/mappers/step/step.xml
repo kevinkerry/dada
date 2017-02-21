@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.step.Step" >
+	<resultMap id="stepResult" type="Step" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="step" property="step" />
+		<result column="status" property="status" />
+		<result column="date" property="date" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+	</resultMap>
+	
+	<resultMap id="stepWithUserResult" type="StepWithUser" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="step" property="step" />
+		<result column="status" property="status" />
+		<result column="date" property="date" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<association property="user" column="user_id" select="com.youyisi.sports.domain.user.User.getById"></association>
+	</resultMap>
+	
+	<sql id="commonSelect" >
+		select s.id, s.user_id, s.step, s.date, s.create_time, s.update_time,s.status
+		from dada_sports.step s
+	</sql>
+	<select id="getById" resultMap="stepResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where s.id = #{id}
+	</select>
+	
+	
+	<select id="getByUserIdAndDate" resultMap="stepResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where s.user_id = #{userId} and s.date = UNIX_TIMESTAMP(CURDATE())
+	</select>
+	
+	<select id="getByUserIdAndAnyDate" resultMap="stepResult" >
+		<include refid="commonSelect"/>
+		where s.user_id = #{userId} and s.date = #{date}
+	</select>
+	
+	<select id="getTeamStep" resultType="java.lang.Integer">
+		select sum(case when s.step>#{maxStep} then #{maxStep} else s.step end)
+		from dada_sports.step s
+		where  s.date>=#{begin} and #{end}>=s.date and s.user_id in(select user_id from dada_sports.relay_member where team_id=#{teamId} and status=1 and pay_status=1)
+	</select>
+	
+	
+	<select id="getUserStep" resultType="java.lang.Integer">
+		select sum(case when s.step>#{maxStep} then #{maxStep} else s.step end)
+		from dada_sports.step s
+		where  s.date>=#{begin} and #{end}>=s.date and s.user_id=#{userId}
+	</select>
+	
+	<select id="getMyRanking" resultType="java.lang.Long">
+		select count(DISTINCT(s.step))
+		from dada_sports.step s
+		where  s.step > #{step}  and s.date = UNIX_TIMESTAMP(CURDATE())
+	</select>
+	
+	<select id="queryPageRanklist" resultMap="stepWithUserResult">
+		<include refid="commonSelect"/>
+		where s.date = UNIX_TIMESTAMP(CURDATE()) GROUP BY s.step
+		order by s.step desc,s.id desc
+	</select>
+	
+	<select id="queryPage" resultMap="stepResult">
+		<include refid="commonSelect"/>
+		order by s.id asc
+	</select>
+	<delete id="delete" parameterType="Step" >
+		delete from dada_sports.step
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="Step" >
+		insert into dada_sports.step (id,user_id,step,date,create_time,update_time,status
+		)
+ 		values (#{id},#{userId},#{step},#{date},#{createTime},#{updateTime},#{status}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="Step" >
+		update dada_sports.step set user_id=#{userId},step=#{step},date=#{date},create_time=#{createTime},update_time=#{updateTime},status=#{status}
+		where id = #{id}
+</update>
+</mapper>

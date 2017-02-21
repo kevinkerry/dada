@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.snatch.SnatchActivity">
+	<resultMap id="snatchActivityResult" type="SnatchActivity">
+		<id column="id" property="id" />
+		<result column="activity_num" property="activityNum" />
+		<result column="activity_id" property="activityId" />
+		<result column="initial_bonus" property="initialBonus" />
+		<result column="min_num" property="minNum" />
+		<result column="win_num" property="winNum" />
+		<result column="expiry_day" property="expiryDay" />
+		<result column="contribute_bonus" property="contributeBonus" />
+		<result column="step_to_distance" property="stepToDistance" />
+		<result column="max_step" property="maxStep" />
+		<result column="max_distance" property="maxDistance" />
+		<result column="activity_medal" property="activityMedal" />
+		<result column="win_medal" property="winMedal" />
+		<result column="rule" property="rule" />
+		<result column="message" property="message" />
+		<result column="cron_expression" property="cronExpression" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+		<result column="settle" property="settle" />
+	</resultMap>
+	<sql id="commonSelect">
+		select s.id, s.activity_num, s.activity_id,
+		s.initial_bonus, s.min_num, s.win_num, s.expiry_day,
+		s.contribute_bonus, s.step_to_distance, s.max_step, s.max_distance,
+		s.activity_medal, s.win_medal, s.rule, s.message, s.cron_expression,
+		s.create_time, s.update_time, s.settle
+		from dada_sports.snatch_activity
+		s
+	</sql>
+	<select id="getById" resultMap="snatchActivityResult"
+		parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where s.id = #{id}
+	</select>
+	
+	<select id="getByActivityId" resultMap="snatchActivityResult"
+		parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where s.activity_id = #{activityId}
+	</select>
+	
+	<select id="queryPage" resultMap="snatchActivityResult">
+		<include refid="commonSelect" />
+		order by s.id asc
+	</select>
+	<delete id="delete" parameterType="SnatchActivity">
+		delete from
+		dada_sports.snatch_activity
+		where id = #{id}
+	</delete>
+	
+	<delete id="delByActivityId" parameterType="SnatchActivity">
+		delete from
+		dada_sports.snatch_activity
+		where activity_id = #{activityId}
+	</delete>
+	
+	<insert id="save" parameterType="SnatchActivity">
+		insert into dada_sports.snatch_activity
+		(id,activity_num,activity_id,initial_bonus,min_num,win_num,expiry_day,contribute_bonus,step_to_distance,max_step,max_distance,activity_medal,win_medal,rule,message,cron_expression,create_time,update_time,settle
+		)
+		values
+		(#{id},#{activityNum},#{activityId},#{initialBonus},#{minNum},#{winNum},#{expiryDay},#{contributeBonus},#{stepToDistance},#{maxStep},#{maxDistance},#{activityMedal},#{winMedal},#{rule},#{message},#{cronExpression},#{createTime},#{updateTime},#{settle}
+		)
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="SnatchActivity">
+		update
+		dada_sports.snatch_activity set
+		activity_num=#{activityNum},activity_id=#{activityId},initial_bonus=#{initialBonus},min_num=#{minNum},win_num=#{winNum},expiry_day=#{expiryDay},contribute_bonus=#{contributeBonus},step_to_distance=#{stepToDistance},max_step=#{maxStep},max_distance=#{maxDistance},activity_medal=#{activityMedal},win_medal=#{winMedal},rule=#{rule},message=#{message},cron_expression=#{cronExpression},create_time=#{createTime},update_time=#{updateTime},settle=#{settle}
+		where id = #{id}
+	</update>
+</mapper>

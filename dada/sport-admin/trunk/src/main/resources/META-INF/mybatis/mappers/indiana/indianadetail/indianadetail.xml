@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.indiana.indianadetail.IndianaDetail" >
+	<resultMap id="indianaDetailResult" type="IndianaDetail" >
+		<result column="INDIANA_DETAIL_ID" property="indianaDetailId" />
+		<result column="USER_ID" property="userId" />
+		<result column="GIFT_ID" property="giftId" />
+		<result column="INDIANA_ID" property="indianaId" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="STATUS" property="status" />
+		<association property="user" column="USER_ID" javaType="com.youyisi.admin.domain.sportuser.SportUser" select="com.youyisi.admin.domain.sportuser.SportUser.getById"></association>
+		<association property="gift" column="GIFT_ID" javaType="com.youyisi.admin.domain.gift.Gift" select="com.youyisi.admin.domain.gift.Gift.getById"></association>
+		<association property="indiana" column="INDIANA_ID" javaType="com.youyisi.admin.domain.indiana.Indiana" select="com.youyisi.admin.domain.indiana.Indiana.getById"></association>
+	</resultMap>
+	<sql id="commonSelect" >
+		select t.INDIANA_DETAIL_ID, t.USER_ID, t.GIFT_ID, t.INDIANA_ID, t.CREATE_TIME, t.STATUS
+		from sports.T_SPORT_INDIANA_DETAIL t
+	</sql>
+	<select id="getById" resultMap="indianaDetailResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where t.INDIANA_DETAIL_ID = #{indianaDetailId}
+	</select>
+	<select id="queryPage" resultMap="indianaDetailResult">
+		<include refid="commonSelect"/>
+		<where>
+		    1=1 
+		    <if test="params.user != null and params.user.userName != null and params.user.userName != ''">
+		        and t.USER_ID in (select user.USER_ID from sports.T_SPORT_USER user left join sports.T_SPORT_MEMBER member on user.USER_ID = member.USER_ID 
+		        	where user.USER_NAME like concat(concat('%',#{params.user.userName}),'%')
+		       	    or member.MEMBER_NAME like concat(concat('%',#{params.user.userName}),'%') 
+		            or member.MEMBER_ALIAS like concat(concat('%',#{params.user.userName}),'%'))
+		    </if>
+		    <if test="params.status != null">
+		        and t.STATUS = #{params.status}
+		    </if>
+		</where>
+		order by t.CREATE_TIME desc
+	</select>
+	<delete id="delete" parameterType="IndianaDetail" >
+		delete from sports.T_SPORT_INDIANA_DETAIL
+		where INDIANA_DETAIL_ID = #{indianaDetailId}
+	</delete>
+	<insert id="save" parameterType="IndianaDetail" >
+		insert into sports.T_SPORT_INDIANA_DETAIL (INDIANA_DETAIL_ID,USER_ID,GIFT_ID,INDIANA_ID,CREATE_TIME,STATUS
+		)
+ 		values (#{indianaDetailId},#{userId},#{giftId},#{indianaId},#{createTime},#{status}
+		)
+		<selectKey keyProperty="indianaDetailId" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="IndianaDetail" >
+		update sports.T_SPORT_INDIANA_DETAIL set INDIANA_DETAIL_ID=#{indianaDetailId},USER_ID=#{userId},GIFT_ID=#{giftId},INDIANA_ID=#{indianaId},CREATE_TIME=#{createTime},STATUS=#{status}
+		where INDIANA_DETAIL_ID = #{indianaDetailId}
+	</update>
+</mapper>

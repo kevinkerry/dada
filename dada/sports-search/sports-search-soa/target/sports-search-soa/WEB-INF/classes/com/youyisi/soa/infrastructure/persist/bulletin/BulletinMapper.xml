@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.soa.infrastructure.persist.bulletin.BulletinMapper" >
+  <resultMap id="BaseResultMap" type="Bulletin" >
+    <id column="ACTIVITY_ID" property="activityId" jdbcType="BIGINT" />
+    <result column="ACTIVITY_CODE" property="activityCode" jdbcType="VARCHAR" />
+    <result column="ACTIVITY_TITLE" property="activityTitle" jdbcType="VARCHAR" />
+    <result column="ACTIVITY_DESC" property="activityDesc" jdbcType="VARCHAR" />
+    <result column="PARENT_CATEGORY" property="parentCategory" jdbcType="VARCHAR" />
+    <result column="CATEGORY_CODE" property="categoryCode" jdbcType="VARCHAR" />
+    <result column="ACTIVITY_STATE" property="activityState" jdbcType="INTEGER" />
+    <result column="CITY" property="city" jdbcType="VARCHAR" />
+    <result column="DISTRICT" property="district" jdbcType="VARCHAR" />
+    <result column="VIEW_QUANTITY" property="viewQuantity" jdbcType="INTEGER" />
+    <result column="CREATOR" property="creator" jdbcType="BIGINT" />
+    <result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="MODIFIER" property="modifier" jdbcType="BIGINT" />
+    <result column="UPDATED_TIME" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="STATUS" property="status" jdbcType="CHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from T_SPORT_BULLETIN
+    where ACTIVITY_ID = #{activityId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="Bulletin" >
+    insert into T_SPORT_BULLETIN (ACTIVITY_ID, ACTIVITY_CODE, ACTIVITY_TITLE, 
+      ACTIVITY_DESC, PARENT_CATEGORY, CATEGORY_CODE, 
+      ACTIVITY_STATE, CITY, DISTRICT, 
+      VIEW_QUANTITY, CREATOR, CREATED_TIME, 
+      MODIFIER, UPDATED_TIME, STATUS
+      )
+    values (#{activityId,jdbcType=BIGINT}, #{activityCode,jdbcType=VARCHAR}, #{activityTitle,jdbcType=VARCHAR}, 
+      #{activityDesc,jdbcType=VARCHAR}, #{parentCategory,jdbcType=VARCHAR}, #{categoryCode,jdbcType=VARCHAR}, 
+      #{activityState,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR}, #{district,jdbcType=VARCHAR}, 
+      #{viewQuantity,jdbcType=INTEGER}, #{creator,jdbcType=BIGINT}, #{createdTime,jdbcType=TIMESTAMP}, 
+      #{modifier,jdbcType=BIGINT}, #{updatedTime,jdbcType=TIMESTAMP}, #{status,jdbcType=CHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="Bulletin" >
+    update T_SPORT_BULLETIN
+    set ACTIVITY_CODE = #{activityCode,jdbcType=VARCHAR},
+      ACTIVITY_TITLE = #{activityTitle,jdbcType=VARCHAR},
+      ACTIVITY_DESC = #{activityDesc,jdbcType=VARCHAR},
+      PARENT_CATEGORY = #{parentCategory,jdbcType=VARCHAR},
+      CATEGORY_CODE = #{categoryCode,jdbcType=VARCHAR},
+      ACTIVITY_STATE = #{activityState,jdbcType=INTEGER},
+      CITY = #{city,jdbcType=VARCHAR},
+      DISTRICT = #{district,jdbcType=VARCHAR},
+      VIEW_QUANTITY = #{viewQuantity,jdbcType=INTEGER},
+      CREATOR = #{creator,jdbcType=BIGINT},
+      CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      MODIFIER = #{modifier,jdbcType=BIGINT},
+      UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+      STATUS = #{status,jdbcType=CHAR}
+    where ACTIVITY_ID = #{activityId,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select ACTIVITY_ID, ACTIVITY_CODE, ACTIVITY_TITLE, ACTIVITY_DESC, PARENT_CATEGORY, 
+    CATEGORY_CODE, ACTIVITY_STATE, CITY, DISTRICT, VIEW_QUANTITY, CREATOR, CREATED_TIME, 
+    MODIFIER, UPDATED_TIME, STATUS
+    from T_SPORT_BULLETIN
+    where ACTIVITY_ID = #{activityId,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select ACTIVITY_ID, ACTIVITY_CODE, ACTIVITY_TITLE, ACTIVITY_DESC, PARENT_CATEGORY, 
+    CATEGORY_CODE, ACTIVITY_STATE, CITY, DISTRICT, VIEW_QUANTITY, CREATOR, CREATED_TIME, 
+    MODIFIER, UPDATED_TIME, STATUS
+    from T_SPORT_BULLETIN
+  </select>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.annual.AnnualYield" >
+	<resultMap id="annualYieldResult" type="AnnualYield" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="date" property="date" />
+		<result column="annual_yield" property="annualYield" />
+		<result column="base_annual_yield" property="baseAnnualYield" />
+		<result column="activity_annual_yield" property="activityAnnualYield" />
+		<result column="create_time" property="createTime" />
+		<result column="update_time" property="updateTime" />
+	</resultMap>
+	<sql id="commonSelect" >
+		select a.id, a.user_id, a.date, a.annual_yield, a.base_annual_yield, a.create_time, a.update_time,a.activity_annual_yield
+		from dada_sports.annual_yield a
+	</sql>
+	<select id="getById" resultMap="annualYieldResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where a.id = #{id}
+	</select>
+	<select id="queryPage" resultMap="annualYieldResult">
+		<include refid="commonSelect"/>
+		where 1=1
+		<if test="params.date!=null">
+		and a.date=#{params.date}
+		</if>
+		order by a.id asc
+	</select>
+	<select id="getByUserAndDate" resultMap="annualYieldResult">
+		<include refid="commonSelect"/>
+		where a.user_id=#{userId} and a.date=#{date}
+	</select>
+	
+	<delete id="delete" parameterType="AnnualYield" >
+		delete from dada_sports.annual_yield
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="AnnualYield" >
+		insert into dada_sports.annual_yield (id,user_id,date,annual_yield,base_annual_yield,create_time,update_time,activity_annual_yield
+		)
+ 		values (#{id},#{userId},#{date},#{annualYield},#{baseAnnualYield},#{createTime},#{updateTime},#{activityAnnualYield}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="AnnualYield" >
+		update dada_sports.annual_yield set user_id=#{userId},date=#{date},annual_yield=#{annualYield},base_annual_yield=#{baseAnnualYield},create_time=#{createTime},update_time=#{updateTime},activity_annual_yield=#{activityAnnualYield}
+		where id = #{id}
+</update>
+</mapper>

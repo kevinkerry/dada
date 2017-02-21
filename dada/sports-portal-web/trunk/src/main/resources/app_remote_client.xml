@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"  
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:util="http://www.springframework.org/schema/util"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd    
+           http://www.springframework.org/schema/context     
+            http://www.springframework.org/schema/context/spring-context-3.0.xsd
+            http://www.springframework.org/schema/util
+            http://www.springframework.org/schema/util/spring-util-3.0.xsd ">
+            
+      <!-- 活动 -->
+         <bean name="userService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/user"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.user.UserServiceRemote"/>
+        </bean> 
+        
+          <bean name="annualYieldService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/annualYield"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.annual.AnnualYieldServiceRemote"/>
+        </bean> 
+        
+         <bean name="annualYieldDetailService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/annualYieldDetail"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.annual.AnnualYieldDetailServiceRemote"/>
+        </bean> 
+        
+         <bean name="distanceService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/distance"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.distance.DistanceServiceRemote"/>
+        </bean> 
+        
+         <bean name="experienceAccountService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/experienceAccount"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.experience.ExperienceAccountServiceRemote"/>
+        </bean> 
+        
+         <bean name="ordersService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/orders"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.orders.OrdersServiceRemote"/>
+        </bean> 
+         <bean name="orderFlowService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/orderFlow"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.orders.OrderFlowServiceRemote"/>
+        </bean>
+        
+          <bean name="runService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/run"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.run.RunServiceRemote"/>
+        </bean>
+        
+          <bean name="runningTrackService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/runningTrack"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.run.RunningTrackServiceRemote"/>
+        </bean>
+        
+         <bean name="stepService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/step"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.step.StepServiceRemote"/>
+        </bean>
+        
+         <bean name="walletService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/wallet"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.wallet.WalletServiceRemote"/>
+        </bean>
+        
+         <bean name="walletDetailService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/walletDetail"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.wallet.WalletDetailServiceRemote"/>
+        </bean>
+        
+        <bean name="withdrawService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/withdraw"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.withdraw.WithdrawServiceRemote"/>
+        </bean>
+        
+          <bean name="feedbackService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/feedback"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.feedback.FeedbackServiceRemote"/>
+        </bean>
+        
+         <bean name="alipayService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/alipay"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.alipay.AlipayServiceRemote"/>
+        </bean>
+        
+          <bean name="areaService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/area"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.area.AreaServiceRemote"/>
+        </bean>
+        
+          <bean name="activityService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/activity"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.activity.ActivityServiceRemote"/>
+        </bean> 
+        
+          <bean name="couponService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/coupon"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.coupon.CouponServiceRemote"/>
+        </bean>
+        
+        
+          <bean name="userCouponService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/userCoupon"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.coupon.UserCouponServiceRemote"/>
+        </bean>
+        
+         <bean name="thighService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/thigh"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.thigh.ThighServiceRemote"/>
+        </bean>
+        
+         <bean name="hugThighService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/hugThigh"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.thigh.HugThighServiceRemote"/>
+        </bean>
+        
+         <bean name="hugThighActivityService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/hugThighActivity"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.thigh.HugThighActivityServiceRemote"/>
+        </bean>
+         <bean name="inviteFriendActivityService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/inviteFriendActivity"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.activity.InviteFriendActivityServiceRemote"/>
+        </bean>
+        
+         <bean name="integralWallService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/integralWall"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.integralwall.IntegralWallServiceRemote"/>
+        </bean>
+        
+         <bean name="doumIntegralWallService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/doumIntegralWall"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.integralwall.DoumIntegralWallServiceRemote"/>
+        </bean>
+        <bean name="runAssistService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/runAssist"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.run.RunAssistServiceRemote"/>
+        </bean>
+        
+         <bean name="appVersionService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/appVersion"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.version.AppVersionServiceRemote"/>
+        </bean>
+        
+         <bean name="relayRaceActivityService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/relayRaceActivity"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.activity.RelayRaceActivityServiceRemote"/>
+        </bean>
+        
+        <bean name="relayMemberService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/relayMember"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.relay.RelayMemberServiceRemote"/>
+        </bean>
+        
+        <bean name="relayMemberFavourService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/relayMemberFavour"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.relay.RelayMemberFavourServiceRemote"/>
+        </bean>
+         <bean name="relayLineService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/relayLine"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.relay.RelayLineServiceRemote"/>
+        </bean>
+        
+        <bean name="relayMessageService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/relayMessage"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.relay.RelayMessageServiceRemote"/>
+        </bean>
+         <bean name="relayTeamService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/relayTeam"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.relay.RelayTeamServiceRemote"/>
+        </bean>
+        
+          <bean name="medalService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/medal"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.medal.MedalServiceRemote"/>
+        </bean>
+       <bean name="userMedalService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/userMedal"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.medal.UserMedalServiceRemote"/>
+        </bean>
+        
+          <bean name="userSnatchService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/userSnatch"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.snatch.UserSnatchServiceRemote"/>
+        </bean>
+        
+         <bean name="snatchFeeService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/snatchFee"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.snatch.SnatchFeeServiceRemote"/>
+        </bean>
+        
+             <bean name="snatchWinService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/snatchWin"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.snatch.SnatchWinServiceRemote"/>
+        </bean>
+        
+        <bean name="snatchActivityService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/snatchActivity"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.snatch.SnatchActivityServiceRemote"/>
+        </bean>
+        
+        
+        <bean name="goldBeanService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/goldBean"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.goldbean.GoldBeanServiceRemote"/>
+        </bean>
+        
+          <bean name="goldBeanCashService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/goldBeanCash"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.goldbean.GoldBeanCashServiceRemote"/>
+        </bean>
+          <bean name="goldBeanDetailService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/goldBeanDetail"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.goldbean.GoldBeanDetailServiceRemote"/>
+        </bean>
+          <bean name="goldBeanRechargeService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/goldBeanRecharge"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.goldbean.GoldBeanRechargeServiceRemote"/>
+        </bean>
+          <bean name="userGoldBeanService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/userGoldBean"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.goldbean.UserGoldBeanServiceRemote"/>
+        </bean>
+        
+          <bean name="lotteryService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/lottery"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.lottery.LotteryServiceRemote"/>
+        </bean>
+        
+         <bean name="lotteryWinService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/lotteryWin"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.lottery.LotteryWinServiceRemote"/>
+        </bean>
+        
+         <bean name="userLotteryWinService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/userLotteryWin"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.lottery.UserLotteryWinServiceRemote"/>
+        </bean>
+        
+           <bean name="userLotteryService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/userLottery"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.lottery.UserLotteryServiceRemote"/>
+        </bean>
+        
+         <bean name="betCountService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+                <property name="serviceUrl" value="${app_soa_url}/betCount"/>
+                <property name="serviceInterface" value="com.youyisi.app.soa.remote.lottery.BetCountServiceRemote"/>
+        </bean>
+         
+</beans>

@@ -1,0 +1,229 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>  
+  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans    
+         http://www.springframework.org/schema/beans/spring-beans-2.5.xsd    
+         http://www.springframework.org/schema/context    
+         http://www.springframework.org/schema/context/spring-context-2.5.xsd">  
+  
+    <!-- 配置JMS连接工厂 -->  
+    <bean id="myConnectionFactory"  
+        class="org.springframework.jms.connection.CachingConnectionFactory">  
+        <!-- Session缓存数量 -->  
+        <property name="sessionCacheSize" value="10" />  
+        <property name="targetConnectionFactory">  
+            <bean class="org.apache.activemq.ActiveMQConnectionFactory">  
+                <!-- MQ地址 -->  
+                <property name="brokerURL" value="tcp://10.1.80.200:61616" />  
+                 <!-- 是否异步发送 -->  
+                <property name="useAsyncSend" value="true" />  
+            </bean>  
+        </property>  
+    </bean>  
+    
+    
+    
+     <!--    ======================   活动                          ================== --> 
+    <!-- 发送消息的目的地（一个主题） -->  
+    <bean id="activityQueueDestination" class="org.apache.activemq.command.ActiveMQQueue">  
+        <!-- 设置消息主题的名字 -->  
+        <constructor-arg index="0" value="DaDa.Queue.Activity" />  
+    </bean>
+  
+    <!-- 生产消息配置 （自己定义）-->  
+    <bean id="activityQueueConsumer" class="com.youyisi.soa.infrastructure.search.message.activity.ActivityMqLitener" />  
+  
+    <!-- 消息监听器 -->  
+    <bean id="activityQueueListener"  
+        class="org.springframework.jms.listener.adapter.MessageListenerAdapter">  
+        <constructor-arg ref="activityQueueConsumer" />  
+        <!-- 接收消息的方法名称 -->  
+        <property name="defaultListenerMethod" value="receive" />  
+        <!-- 不进行消息转换 -->  
+        <property name="messageConverter"><null/></property>  
+    </bean>  
+  
+    <!-- 消息监听容器 -->  
+    <bean id="activityQueueListenerContainer"  
+        class="org.springframework.jms.listener.DefaultMessageListenerContainer">  
+        <property name="connectionFactory" ref="myConnectionFactory" />  
+        <property name="destination" ref="activityQueueDestination" />  
+        <property name="messageListener" ref="activityQueueListener" />  
+    </bean> 
+    
+      <!--    =================================   俱乐部                          =======================================--> 
+      <!-- 发送消息的目的地（一个主题） -->  
+    <bean id="clubQueueDestination" class="org.apache.activemq.command.ActiveMQQueue">  
+        <!-- 设置消息主题的名字 -->  
+        <constructor-arg index="0" value="DaDa.Queue.Club" />  
+    </bean>  
+  
+    <!-- 生产消息配置 （自己定义）-->  
+    <bean id="clubQueueConsumer" class="com.youyisi.soa.infrastructure.search.message.club.ClubMqLitener" />  
+  
+    <!-- 消息监听器 -->  
+    <bean id="clubQueueListener"  
+        class="org.springframework.jms.listener.adapter.MessageListenerAdapter">  
+        <constructor-arg ref="clubQueueConsumer" />  
+        <!-- 接收消息的方法名称 -->  
+        <property name="defaultListenerMethod" value="receive" />  
+        <!-- 不进行消息转换 -->  
+        <property name="messageConverter"><null/></property>  
+    </bean>  
+  
+    <!-- 消息监听容器 -->  
+    <bean id="clubQueueListenerContainer"  
+        class="org.springframework.jms.listener.DefaultMessageListenerContainer">  
+        <property name="connectionFactory" ref="myConnectionFactory" />  
+        <property name="destination" ref="clubQueueDestination" />  
+        <property name="messageListener" ref="clubQueueListener" />  
+    </bean>  
+       <!--    ===============================  达人秀                        ===============================--> 
+       
+         <!-- 发送消息的目的地（一个主题） -->  
+    <bean id="showQueueDestination" class="org.apache.activemq.command.ActiveMQQueue">  
+        <!-- 设置消息主题的名字 -->  
+        <constructor-arg index="0" value="DaDa.Queue.Show" />  
+    </bean>  
+  
+    <!-- 生产消息配置 （自己定义）-->  
+    <bean id="showQueueConsumer" class="com.youyisi.soa.infrastructure.search.message.show.ShowMqLitener" />  
+  
+    <!-- 消息监听器 -->  
+    <bean id="showQueueListener"  
+        class="org.springframework.jms.listener.adapter.MessageListenerAdapter">  
+        <constructor-arg ref="showQueueConsumer" />  
+        <!-- 接收消息的方法名称 -->  
+        <property name="defaultListenerMethod" value="receive" />  
+        <!-- 不进行消息转换 -->  
+        <property name="messageConverter"><null/></property>  
+    </bean>  
+  
+    <!-- 消息监听容器 -->  
+    <bean id="showQueueListenerContainer"  
+        class="org.springframework.jms.listener.DefaultMessageListenerContainer">  
+        <property name="connectionFactory" ref="myConnectionFactory" />  
+        <property name="destination" ref="showQueueDestination" />  
+        <property name="messageListener" ref="showQueueListener" />  
+    </bean> 
+    
+    
+     <!--    ===============================  会员                        ===============================--> 
+       
+         <!-- 发送消息的目的地（一个主题） -->  
+    <bean id="memberQueueDestination" class="org.apache.activemq.command.ActiveMQQueue">  
+        <!-- 设置消息主题的名字 -->  
+        <constructor-arg index="0" value="DaDa.Queue.Member" />  
+    </bean>  
+  
+    <!-- 生产消息配置 （自己定义）-->  
+    <bean id="memberQueueConsumer" class="com.youyisi.soa.infrastructure.search.message.member.MemberMqLitener" />  
+  
+    <!-- 消息监听器 -->  
+    <bean id="memberQueueListener"  
+        class="org.springframework.jms.listener.adapter.MessageListenerAdapter">  
+        <constructor-arg ref="memberQueueConsumer" />  
+        <!-- 接收消息的方法名称 -->  
+        <property name="defaultListenerMethod" value="receive" />  
+        <!-- 不进行消息转换 -->  
+        <property name="messageConverter"><null/></property>  
+    </bean>  
+  
+    <!-- 消息监听容器 -->  
+    <bean id="memberQueueListenerContainer"  
+        class="org.springframework.jms.listener.DefaultMessageListenerContainer">  
+        <property name="connectionFactory" ref="myConnectionFactory" />  
+        <property name="destination" ref="memberQueueDestination" />  
+        <property name="messageListener" ref="memberQueueListener" />  
+    </bean> 
+    
+    
+     <!--    ===============================  topic                     ===============================--> 
+       
+         <!-- 发送消息的目的地（一个主题） -->  
+    <bean id="topicQueueDestination" class="org.apache.activemq.command.ActiveMQQueue">  
+        <!-- 设置消息主题的名字 -->  
+        <constructor-arg index="0" value="DaDa.Queue.Topic" />  
+    </bean>  
+  
+    <!-- 生产消息配置 （自己定义）-->  
+    <bean id="topicQueueConsumer" class="com.youyisi.soa.infrastructure.search.message.topic.TopicMqLitener" />  
+  
+    <!-- 消息监听器 -->  
+    <bean id="topicQueueListener"  
+        class="org.springframework.jms.listener.adapter.MessageListenerAdapter">  
+        <constructor-arg ref="topicQueueConsumer" />  
+        <!-- 接收消息的方法名称 -->  
+        <property name="defaultListenerMethod" value="receive" />  
+        <!-- 不进行消息转换 -->  
+        <property name="messageConverter"><null/></property>  
+    </bean>  
+  
+    <!-- 消息监听容器 -->  
+    <bean id="topicQueueListenerContainer"  
+        class="org.springframework.jms.listener.DefaultMessageListenerContainer">  
+        <property name="connectionFactory" ref="myConnectionFactory" />  
+        <property name="destination" ref="topicQueueDestination" />  
+        <property name="messageListener" ref="topicQueueListener" />  
+    </bean> 
+    
+    <!--    ===============================  场馆                       ===============================--> 
+       
+         <!-- 发送消息的目的地（一个主题） -->  
+    <bean id="venuesQueueDestination" class="org.apache.activemq.command.ActiveMQQueue">  
+        <!-- 设置消息主题的名字 -->  
+        <constructor-arg index="0" value="DaDa.Queue.Venues" />  
+    </bean>  
+  
+    <!-- 生产消息配置 （自己定义）-->  
+    <bean id="venuesQueueConsumer" class="com.youyisi.soa.infrastructure.search.message.venues.VenuesMqLitener" />  
+  
+    <!-- 消息监听器 -->  
+    <bean id="venuesQueueListener"  
+        class="org.springframework.jms.listener.adapter.MessageListenerAdapter">  
+        <constructor-arg ref="venuesQueueConsumer" />  
+        <!-- 接收消息的方法名称 -->  
+        <property name="defaultListenerMethod" value="receive" />  
+        <!-- 不进行消息转换 -->  
+        <property name="messageConverter"><null/></property>  
+    </bean>  
+  
+    <!-- 消息监听容器 -->  
+    <bean id="venuesQueueListenerContainer"  
+        class="org.springframework.jms.listener.DefaultMessageListenerContainer">  
+        <property name="connectionFactory" ref="myConnectionFactory" />  
+        <property name="destination" ref="venuesQueueDestination" />  
+        <property name="messageListener" ref="venuesQueueListener" />  
+    </bean> 
+    
+      <!--    ===============================  场馆                       ===============================--> 
+       
+         <!-- 发送消息的目的地（一个主题） -->  
+    <bean id="indianaGpsQueueDestination" class="org.apache.activemq.command.ActiveMQQueue">  
+        <!-- 设置消息主题的名字 -->  
+        <constructor-arg index="0" value="DaDa.Queue.IndianaGps" />  
+    </bean>  
+  
+    <!-- 生产消息配置 （自己定义）-->  
+    <bean id="indianaGpsQueueConsumer" class="com.youyisi.soa.infrastructure.search.message.IndianaGpsMqLitener" />  
+  
+    <!-- 消息监听器 -->  
+    <bean id="indianaGpsQueueListener"  
+        class="org.springframework.jms.listener.adapter.MessageListenerAdapter">  
+        <constructor-arg ref="indianaGpsQueueConsumer" />  
+        <!-- 接收消息的方法名称 -->  
+        <property name="defaultListenerMethod" value="receive" />
+        <!-- 不进行消息转换 -->  
+        <property name="messageConverter"><null/></property>  
+    </bean>  
+  
+    <!-- 消息监听容器 -->  
+    <bean id="indianaGpsQueueListenerContainer"  
+        class="org.springframework.jms.listener.DefaultMessageListenerContainer">  
+        <property name="connectionFactory" ref="myConnectionFactory" />  
+        <property name="destination" ref="indianaGpsQueueDestination" />  
+        <property name="messageListener" ref="indianaGpsQueueListener" />  
+    </bean> 
+     
+</beans> 

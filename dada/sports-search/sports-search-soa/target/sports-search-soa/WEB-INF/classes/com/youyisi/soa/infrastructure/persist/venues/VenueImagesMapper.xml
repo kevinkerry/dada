@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.soa.infrastructure.persist.venues.VenueImagesMapper">
+	<resultMap id="VenueImagesMap" type="VenueImages">
+		<id column="IMG_ID" property="imgId" jdbcType="BIGINT" />
+		<result column="VENUE_ID" property="venueId" jdbcType="BIGINT" />
+		<result column="IMG_URL" property="imgUrl" jdbcType="VARCHAR" />
+		<result column="IMG_ORDER" property="imgOrder" jdbcType="INTEGER" />
+		<result column="CREATOR" property="creator" jdbcType="BIGINT" />
+		<result column="CREATED_TIME" property="createdTime" jdbcType="TIMESTAMP" />
+		<result column="STATUS" property="status" jdbcType="CHAR" />
+	</resultMap>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from T_SPORT_VENUE_IMAGES
+		where IMG_ID = #{imgId,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="VenueImages" useGeneratedKeys="true" keyProperty="imgId">
+		insert into T_SPORT_VENUE_IMAGES (VENUE_ID, IMG_URL,
+		IMG_ORDER, CREATOR, CREATED_TIME,
+		STATUS)
+		values (#{venueId,jdbcType=BIGINT},
+		#{imgUrl,jdbcType=VARCHAR},
+		#{imgOrder,jdbcType=INTEGER}, #{creator,jdbcType=BIGINT}, #{createdTime,jdbcType=TIMESTAMP},
+		#{status,jdbcType=CHAR})
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="VenueImages">
+		update T_SPORT_VENUE_IMAGES
+		set VENUE_ID = #{venueId,jdbcType=BIGINT},
+		IMG_URL = #{imgUrl,jdbcType=VARCHAR},
+		IMG_ORDER = #{imgOrder,jdbcType=INTEGER},
+		CREATOR = #{creator,jdbcType=BIGINT},
+		CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+		STATUS = #{status,jdbcType=CHAR}
+		where IMG_ID = #{imgId,jdbcType=BIGINT}
+	</update>
+	<select id="selectByPrimaryKey" resultMap="VenueImagesMap"
+		parameterType="java.lang.Long">
+		select IMG_ID, VENUE_ID, IMG_URL, IMG_ORDER, CREATOR, CREATED_TIME, STATUS
+		from T_SPORT_VENUE_IMAGES
+		where IMG_ID = #{imgId,jdbcType=BIGINT}
+	</select>
+	
+<select id="selectByVenueId" resultMap="VenueImagesMap" parameterType="java.lang.Long">
+		select IMG_ID, VENUE_ID, IMG_URL, IMG_ORDER, CREATOR, CREATED_TIME, STATUS
+		from T_SPORT_VENUE_IMAGES
+		where VENUE_ID = #{venueId,jdbcType=BIGINT}
+		and STATUS='A'
+		ORDER BY CREATED_TIME 
+	</select>
+	<select id="selectAll" resultMap="VenueImagesMap">
+		select IMG_ID, VENUE_ID, IMG_URL, IMG_ORDER, CREATOR, CREATED_TIME, STATUS
+		from T_SPORT_VENUE_IMAGES
+	</select>
+	
+	
+	
+
+	<select id="queryPage" resultMap="VenueImagesMap" parameterType="java.util.Map">
+		select IMG_ID, VENUE_ID, IMG_URL, IMG_ORDER, CREATOR, CREATED_TIME, STATUS
+		from T_SPORT_VENUE_IMAGES t
+		where 1=1
+		<include refid="query" />
+		<if test="pageSize!=0">
+			limit ${offset},${pageSize}
+		</if>
+	</select>
+	
+	<select id="getCount" parameterType="java.util.Map" resultType="java.lang.Long">
+		select count(1) from T_SPORT_VENUE_IMAGES t
+		where 1=1
+		<include refid="query" />
+	</select>
+	
+	<sql id="query">
+		<if test="venueId != null">
+			and t.VENUE_ID=#{venueId}
+		</if>
+	</sql>
+</mapper>

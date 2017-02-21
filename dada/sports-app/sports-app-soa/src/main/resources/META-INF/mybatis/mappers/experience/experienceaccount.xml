@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.sports.domain.experience.ExperienceAccount" >
+	<resultMap id="experienceAccountResult" type="ExperienceAccount" >
+	<id column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="money" property="money" />
+		<result column="create_time" property="createTime" />
+		<result column="expiry_time" property="expiryTime" />
+		<result column="level" property="level" />
+		
+	</resultMap>
+	<sql id="commonSelect" >
+		select e.id, e.user_id, e.money, e.create_time, e.expiry_time,e.level
+		from dada_sports.experience_account e
+	</sql>
+	<select id="getById" resultMap="experienceAccountResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where e.id = #{id}
+	</select>
+	<select id="getByUserId" resultMap="experienceAccountResult" parameterType="java.lang.Long" >
+		<include refid="commonSelect"/>
+		where e.user_id = #{userId}
+	</select>
+	<select id="queryPage" resultMap="experienceAccountResult">
+		<include refid="commonSelect"/>
+		order by e.id asc
+	</select>
+	<delete id="delete" parameterType="ExperienceAccount" >
+		delete from dada_sports.experience_account
+		where id = #{id}
+	</delete>
+	<insert id="save" parameterType="ExperienceAccount" >
+		insert into dada_sports.experience_account (id,user_id,money,create_time,expiry_time,level
+		)
+ 		values (#{id},#{userId},#{money},#{createTime},#{expiryTime},#{level}
+		)
+			<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="ExperienceAccount" >
+		update dada_sports.experience_account set user_id=#{userId},money=#{money},create_time=#{createTime},expiry_time=#{expiryTime},level=#{level}
+		where id = #{id}
+</update>
+</mapper>

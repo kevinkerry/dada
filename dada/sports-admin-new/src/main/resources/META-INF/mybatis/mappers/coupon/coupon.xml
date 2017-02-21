@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.youyisi.admin.domain.coupon.Coupon">
+	<resultMap id="couponResult" type="Coupon">
+		<id column="id" property="id" />
+		<result column="activity_id" property="activityId" />
+		<result column="annual_yield" property="annualYield" />
+		<result column="bonus" property="bonus" />
+		<result column="type" property="type" />
+		<result column="expiry_day" property="expiryDay" />
+		<result column="distance" property="distance" />
+		<result column="commission" property="commission" />
+		<result column="commission_rate" property="commissionRate" />
+	</resultMap>
+	<sql id="commonSelect">
+		select c.id, c.activity_id, c.annual_yield,
+		c.bonus, c.type, c.expiry_day, c.distance, c.commission,
+		c.commission_rate
+		from dada_sports.coupon c
+	</sql>
+	<select id="getById" resultMap="couponResult" parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where c.id = #{id}
+	</select>
+
+	<select id="getByActivityId" resultMap="couponResult"
+		parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where c.activity_id = #{activityId}
+	</select>
+
+
+	<select id="queryPage" resultMap="couponResult">
+		<include refid="commonSelect" />
+		where 1=1
+		<if test="params.type != null">
+			and c.type = #{params.type}
+		</if>
+		order by c.id asc
+	</select>
+	
+	<delete id="delete" parameterType="Coupon">
+		delete from
+		dada_sports.coupon
+		where id = #{id}
+	</delete>
+
+	<delete id="delByActivityId" parameterType="java.lang.Long">
+		delete from dada_sports.coupon
+		where activity_id = #{activityId}
+	</delete>
+
+	<insert id="save" parameterType="Coupon">
+		insert into dada_sports.coupon
+		(id,activity_id,annual_yield,bonus,type,expiry_day,distance,commission,commission_rate
+		)
+		values
+		(#{id},#{activityId},#{annualYield},#{bonus},#{type},#{expiryDay},#{distance},#{commission},#{commissionRate}
+		)
+		<selectKey keyProperty="id" resultType="Long" statementType="PREPARED">
+			select LAST_INSERT_ID() as value
+		</selectKey>
+	</insert>
+	<update id="update" parameterType="Coupon">
+		update
+		dada_sports.coupon set
+		activity_id=#{activityId},annual_yield=#{annualYield},bonus=#{bonus},type=#{type},expiry_day=#{expiryDay},distance=#{distance},commission=#{commission},commission_rate=#{commissionRate}
+		where id = #{id}
+	</update>
+	
+	
+	<select id="countCouponNum"  resultType="java.lang.Integer" >
+		 SELECT 
+		 <if test="resultType == 1">
+		 	count(u.id) 
+		 </if>
+		 <if test="resultType == 2">
+		 	sum(c.commission)
+		 </if>
+		 FROM dada_sports.user_coupon u LEFT JOIN dada_sports.coupon c ON u.coupon_id=c.id
+		  WHERE c.activity_id = #{activityId}
+	</select>
+	
+	
+	<select id="getCouponByActivityIdAndType" resultMap="couponResult">
+		<include refid="commonSelect" />
+		 where c.activity_id = #{activityId} and c.type = #{type}
+	</select>
+	
+	<select id="sumCouponMoney" resultType="java.lang.Double" parameterType="java.lang.Long">
+		 SELECT sum(c.commission)  FROM dada_sports.user_coupon u LEFT JOIN dada_sports.coupon c ON c.id = u.coupon_id WHERE c.activity_id=#{activityId}
+	</select>
+	
+	
+	<select id="sumSlackerMoney" resultMap="couponResult" parameterType="java.lang.Long">
+		SELECT c.* FROM dada_sports.user_coupon u LEFT JOIN dada_sports.coupon  c ON u.coupon_id = c.id WHERE c.activity_id = #{activityId} and   u.`status` = 1 
+	</select>
+	
+	
+	<select id="getCouponByActivityId" resultMap="couponResult" parameterType="java.lang.Long">
+		<include refid="commonSelect" />
+		where c.activity_id = #{activityId}
+	</select>
+	
+	<select id="getBonusByFirst" resultType="java.lang.Double" >
+		select c.bonus from dada_sports.coupon c 
+		LEFT JOIN dada_sports.user_coupon uc ON c.id = uc.coupon_id
+		where c.activity_id = #{activityId} and c.type = 12 
+		      and  uc.user_id=#{userId} and uc.category = 4
+	</select>
+	
+	
+	<select id="sumCouponMoneyByActivityId" resultType="java.lang.Double" >
+		 SELECT sum(c.bonus) FROM  dada_sports.coupon c
+		 LEFT JOIN dada_sports.user_coupon u  ON c.id = u.coupon_id 
+		 WHERE   c.activity_id=#{activityId}  and ((c.type=11 or c.type=12) and  (u.category=3 or u.category=4))
+	</select>
+	
+	
+	<select id="sumUnusedMoney" resultType="java.lang.Double" >
+		SELECT sum(c.bonus) FROM  dada_sports.coupon c
+		 LEFT JOIN dada_sports.user_coupon u  ON c.id = u.coupon_id 
+		 WHERE  c.activity_id=#{activityId} AND (c.type = 11 OR c.type=12)
+		 	and u.status = 0 AND u.user_id = #{userId} AND (u.category=3 or u.category=4 )
+	</select>
+	
+	<select id="sumRelayRaceMoney" resultType="java.lang.Double" >
+		SELECT sum(c.bonus) FROM  dada_sports.coupon c
+		 LEFT JOIN dada_sports.user_coupon u  ON c.id = u.coupon_id 
+		 WHERE  c.activity_id=#{activityId}   AND u.user_id = #{userId} AND  u.category=3 
+	</select>
+	
+	
+	<select id="getSnatchBonusStatus" resultType="java.lang.Integer" >
+		SELECT u.status FROM  dada_sports.coupon c
+		 LEFT JOIN dada_sports.user_coupon u  ON c.id = u.coupon_id 
+		 WHERE  c.activity_id=#{activityId}   AND u.user_id = #{userId} AND  c.type=13 LIMIT 0,1
+	</select>
+	
+	
+	<select id="getInviteRegister" resultType="java.lang.Integer" >
+		SELECT count(
+					<if test="type == 1">
+						DISTINCT(uc.user_id)
+					</if>
+					<if test="type == 2">
+						uc.user_id
+					</if>
+				) 
+		FROM dada_sports.user_coupon uc  
+		LEFT JOIN dada_sports.coupon c ON c.id = uc.coupon_id 
+		WHERE c.type = 8 AND uc.category = 1 AND c.activity_id = #{activityId}
+	</select>
+	
+	<select id="sumInviteMoney" resultType="java.lang.Double" >
+		SELECT  sum(c.bonus) FROM dada_sports.user_coupon uc  LEFT JOIN dada_sports.coupon c ON c.id = uc.coupon_id
+		WHERE   uc.category = 1 AND c.activity_id = #{activityId} AND (c.type = 9 OR c.type = 8)
+	</select>
+</mapper>
